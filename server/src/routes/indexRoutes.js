@@ -1,5 +1,5 @@
 const userRouter = require("./userRouter")
-const { notFound, errHandler } = require("../controllers/middlewares/errorHandler")
+const { notFound, errHandler } = require("../middlewares/errorHandler")
 
 const indexRoutes = (app) => {
     app.use("/user", userRouter)
