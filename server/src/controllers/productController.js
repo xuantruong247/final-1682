@@ -4,9 +4,17 @@ const slugify = require("slugify")
 
 
 const createProduct = asyncHandler(async (req, res) => {
-    if (Object.keys(req.body).length === 0) throw new Error('Missing text')
-    if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
-    const newProduct = await Product.create(req.body)
+    const { title, description, brandId, price, quantity, categoryId } = req.body
+    if (!title || !description || !brandId || !price, !quantity, !categoryId) throw new Error('Missing text')
+    console.log(req.body);
+    if (req.body && req.body.title) {
+        req.body.slug = slugify(req.body.title)
+    } else {
+        req.body.slug = slugify(title)
+    }
+    const brand = { id: brandId, title: req.body.brand }
+    const category = { id: categoryId, title: req.body.category }
+    const newProduct = await Product.create({ title, description, brand: { id: brandId }, category: { id: categoryId }, price, quantity, slug: req.body.slug })
     return res.status(200).json({
         success: newProduct ? true : false,
         createdProduct: newProduct ? newProduct : 'Cannot create new product'
@@ -70,9 +78,45 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
 
 const updateProduct = asyncHandler(async (req, res) => {
+
     const { pid } = req.params
-    if (req.body && req.body.title) req.body.slug = slugify(req.body.title)
-    const updatedProduct = await Product.findByIdAndUpdate(pid, req.body, { new: true })
+
+    const { title, description, brandId, price, quantity } = req.body
+
+    const product = await Product.findById(pid)
+
+    if (!product) {
+        res.status(404)
+        throw new Error('Product not found')
+    }
+
+    if (title) {
+        product.slug = slugify(title)
+        product.title = title
+    }
+
+    if (description) {
+        product.description = description
+    }
+
+    if (brandId) {
+        product.brand.id = brandId
+    }
+
+    if (categoryId) {
+        product.category.id = categoryId
+    }
+
+    if (price) {
+        product.price = price
+    }
+
+    if (quantity) {
+        product.quantity = quantity
+    }
+
+    const updatedProduct = await product.save()
+
     return res.status(200).json({
         success: updatedProduct ? true : false,
         updatedProduct: updatedProduct ? updatedProduct : 'Cannot update product'

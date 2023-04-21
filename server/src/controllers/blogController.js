@@ -31,14 +31,6 @@ const getAllBlogs = asyncHandler(async (req, res) => {
 })
 
 
-// LIKE
-// DISLIKE
-/**
- Khi người dùng like một bài blog thì:
- 1. check ngườI dùng trước đó đã like chưa, nếu đã like mà chuyển qua dislike thì like sẽ 0 dislike 1
- 2. Check người dùng like chưa nếu chưa like thì like + 1 
- */
-
 
 const likeBlog = asyncHandler(async (req, res) => {
     const { _id } = req.user

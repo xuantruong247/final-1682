@@ -5,7 +5,7 @@ const createNewBrand = aysncHandler(async (req, res) => {
     const response = await Brand.create(req.body)
     return res.status(200).json({
         success: response ? true : false,
-        createdCategory: response ? response : "Cannot create new brand"
+        createdBrand: response ? response : "Cannot create new brand"
     })
 })
 
