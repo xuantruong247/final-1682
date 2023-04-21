@@ -189,6 +189,39 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     })
 })
 
+
+const updateAddressUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    if (!req.body.address) throw new Error("Missting text")
+    const response = await User.findByIdAndUpdate(_id, { $push: { address: req.body.address } }, { new: true }).select('-refreshToken -password -role')
+    return res.status(200).json({
+        success: response ? true : false,
+        updatedUser: response ? response : "Something went wrong"
+    })
+})
+
+
+const updateCart = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const { pid, quantity } = req.body
+    if (!pid || !quantity) throw new Error("Missting text")
+    const user = await User.findById(_id).select("cart")
+    const alreadyProduct = user?.cart?.find(el => el.product.toString() === pid)
+    if (alreadyProduct) {
+        const response = await User.updateOne({ cart: { $elemMatch: alreadyProduct } }, { $set: { "cart.$.quantity": quantity } }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            updatedUser: response ? "Update quantity successfully" : "Something went wrong"
+        })
+    } else {
+        const response = await User.findByIdAndUpdate(_id, { $push: { cart: { product: pid, quantity } } }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            updatedUser: response ? response : "Something went wrong"
+        })
+    }
+})
+
 module.exports = {
     register,
     login,
@@ -200,5 +233,7 @@ module.exports = {
     getUsers,
     deleteUser,
     updateUser,
-    updateUserByAdmin
+    updateUserByAdmin,
+    updateAddressUser,
+    updateCart
 }
