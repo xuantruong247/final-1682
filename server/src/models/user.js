@@ -18,6 +18,9 @@ var userSchema = new mongoose.Schema({
         required: true,
         enique: true
     },
+    avatar: {
+        type: String
+    },
     mobile: {
         type: String,
         required: true,
@@ -51,6 +54,9 @@ var userSchema = new mongoose.Schema({
         type: String
     },
     passwordResetExpires: {
+        type: String
+    },
+    registerToken: {
         type: String
     }
 }, {

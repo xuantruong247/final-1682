@@ -4,17 +4,26 @@ const slugify = require("slugify")
 
 
 const createProduct = asyncHandler(async (req, res) => {
-    const { title, description, brandId, price, quantity, categoryId } = req.body
-    if (!title || !description || !brandId || !price, !quantity, !categoryId) throw new Error('Missing text')
+    const { title, description, price, quantity, category_id, brand_id } = req.body
+    if (!title || !description || !price || !quantity || !category_id || !brand_id) throw new Error('Missing text')
     console.log(req.body);
     if (req.body && req.body.title) {
         req.body.slug = slugify(req.body.title)
     } else {
         req.body.slug = slugify(title)
     }
-    const brand = { id: brandId, title: req.body.brand }
-    const category = { id: categoryId, title: req.body.category }
-    const newProduct = await Product.create({ title, description, brand: { id: brandId }, category: { id: categoryId }, price, quantity, slug: req.body.slug })
+    const avatar = req?.files?.avatar[0]?.path
+    const images = req.files?.images?.map(el => el.path)
+    if (avatar) {
+        req.body.avatar = avatar
+    }
+    if (images) {
+        req.body.images = images
+
+    }
+    const newBrand = req.body.brand_id
+    const newCategory = req.body.category_id
+    const newProduct = await Product.create({ title, description, brand: newBrand, category: newCategory, price, quantity, slug: req.body.slug, avatar, images })
     return res.status(200).json({
         success: newProduct ? true : false,
         createdProduct: newProduct ? newProduct : 'Cannot create new product'
@@ -24,7 +33,13 @@ const createProduct = asyncHandler(async (req, res) => {
 const getDetailProduct = asyncHandler(async (req, res) => {
 
     const { pid } = req.params
-    const product = await Product.findById(pid)
+    const product = await Product.findById(pid).populate({
+        path: 'ratings',
+        populate: {
+            path: "postedBy",
+            select: "firstname lastname avatar"
+        }
+    })
     return res.status(200).json({
         success: product ? true : false,
         productData: product ? product : 'Cannot not get product'
@@ -33,95 +48,144 @@ const getDetailProduct = asyncHandler(async (req, res) => {
 
 // Filtering, sorting & pagination
 const getAllProducts = asyncHandler(async (req, res) => {
-    const queries = { ...req.query }
-    // Tách các trường đặc biệt ra khỏi query
+    const { categoriesId, brandId, userMinPrice, userMaxPrice, sort, ...queries } = req.query
+    // console.log(req.query);
     const excludeFields = ['limit', 'sort', 'page', 'fields']
     excludeFields.forEach(el => delete queries[el])
 
-    // Format lại các operators cho đúng cú pháp của mongoose
-    let queryString = JSON.stringify(queries)
-    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, macthedEl => `$${macthedEl}`)
-    const formatedQueries = JSON.parse(queryString)
+    const perPage = 12; // Số lượng mục trên mỗi trang
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là 1
 
-    /// Filtering
-    if (queries?.title) formatedQueries.title = { $regex: queries.title, $options: 'i' }
-    let queryCommand = Product.find(formatedQueries)
 
-    // Sorting
-    if (req.query.sort) {
-        const sortBy = req.query.sort.split(',').join(' ')
-        queryCommand = queryCommand.sort(sortBy)
+    let categoryArray = [];
+    if (categoriesId) {
+        categoryArray = categoriesId.split(','); // Tách chuỗi thành mảng dựa trên dấu phẩy
     }
 
-    // Fields limiting
-    if (req.query.fields) {
-        const fields = req.query.fields.split(',').join(' ')
-        queryCommand = queryCommand.select(fields)
+    let brandArray = []
+    if (brandId) {
+        brandArray = brandId.split(',')
+    }
+    // Filter
+    let objectFind = {};
+    if (categoryArray.length > 0) {
+        objectFind.category = { $in: categoryArray }; // Sử dụng $in để tìm các danh mục trong mảng
+    }
+    if (brandArray.length > 0) {
+        objectFind.brand = { $in: brandArray }
+    }
+    if (queries.title) {
+        objectFind.title = { $regex: queries.title, $options: 'i' };
     }
 
-    //Pagination
-    const page = +req.query.page || 1
-    const limit = +req.query.limit || process.env.LIMIT_PRODUCTS
-    const skip = (page - 1) * limit
-    queryCommand.skip(skip).limit(limit)
+    // Thêm điều kiện lọc theo giá trị
+    if (userMinPrice || userMaxPrice) {
+        objectFind.price = {}; // Khởi tạo điều kiện giá tiền
+        if (userMinPrice) {
+            objectFind.price.$gte = parseFloat(userMinPrice); // Lớn hơn hoặc bằng giá trị nhập vào
+        }
+        if (userMaxPrice) {
+            objectFind.price.$lte = parseFloat(userMaxPrice); // Nhỏ hơn hoặc bằng giá trị nhập vào
+        }
+    }
 
-    // Execute query
-    // Số lượng sp thoả mãn điều điện !== số lượng sp trả về 1 lần gọi API
-    const response = await queryCommand.exec()
-    const counts = await Product.find(formatedQueries).countDocuments()
+    const counts = await Product.find(objectFind).countDocuments();
+
+    let query = Product.find(objectFind);
+
+    // Sort
+    if (sort) {
+        let sortOption = {};
+        let isSort = false;
+
+        switch (sort) {
+            case "title-asc":
+                sortOption.title = 1;
+                isSort = true;
+                break;
+            case "title-desc":
+                sortOption.title = -1;
+                isSort = true;
+                break;
+
+            case 'price-asc':
+                sortOption.price = 1;
+                isSort = true;
+                break;
+
+            case "price-desc":
+                sortOption.price = -1;
+                isSort = true;
+                break;
+            case "sold":
+                sortOption.sold = -1;
+                isSort = true;
+                break;
+
+            default:
+                break;
+        }
+
+        if (isSort === true) {
+            console.log(sortOption);
+            query = query.sort(sortOption)
+        }
+    }
+
+
+    // Query
+
+    // Pagination
+    query = query.skip((page - 1) * perPage).limit(perPage);
+    query = query.populate("category", "title").populate("brand", "title");
+
+    const response = await query.exec();
+
     return res.status(200).json({
         success: response ? true : false,
         counts,
-        products: response ? response : 'Cannot get product'
-    })
+        products: response ? response : 'Cannot get products'
+    });
 })
 
 
 const updateProduct = asyncHandler(async (req, res) => {
+    const { pid } = req.params;
 
-    const { pid } = req.params
-
-    const { title, description, brandId, price, quantity } = req.body
-
-    const product = await Product.findById(pid)
-
-    if (!product) {
-        res.status(404)
-        throw new Error('Product not found')
+    const files = req?.files;
+    if (files) {
+        if (files.avatar) req.body.avatar = files.avatar[0].path;
+        if (files.images) req.body.images = files.images.map(el => el.path);
     }
 
-    if (title) {
-        product.slug = slugify(title)
-        product.title = title
+    if (req.body && req.body.title) {
+        req.body.slug = slugify(req.body.title);
     }
 
-    if (description) {
-        product.description = description
+    const updatedFields = { ...req.body }; // Tạo một bản sao của req.body để lưu thông tin cập nhật
+
+    // Xử lý cập nhật category nếu có
+    if (req.body.category_id) {
+        updatedFields.category = req.body.category_id;
     }
 
-    if (brandId) {
-        product.brand.id = brandId
+    // Xử lý cập nhật brand nếu có
+    if (req.body.brand_id) {
+        updatedFields.brand = req.body.brand_id;
     }
 
-    if (categoryId) {
-        product.category.id = categoryId
-    }
-
-    if (price) {
-        product.price = price
-    }
-
-    if (quantity) {
-        product.quantity = quantity
-    }
-
-    const updatedProduct = await product.save()
+    // Cập nhật sản phẩm
+    const updatedProduct = await Product.findByIdAndUpdate(pid, updatedFields, { new: true });
 
     return res.status(200).json({
-        success: updatedProduct ? true : false,
+        success: updatedProduct !== null,
         updatedProduct: updatedProduct ? updatedProduct : 'Cannot update product'
-    })
-})
+    });
+});
+
+
+
+
 
 const deleteProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
@@ -134,40 +198,57 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 
 const ratings = asyncHandler(async (req, res) => {
-    const { _id } = req.user
-    const { star, comment, pid } = req.body
-    if (!star || !pid) throw new Error('Missting text')
-    const ratingProduct = await Product.findById(pid)
-    const alreadyRating = ratingProduct?.ratings?.find(el => el.postedBy.toString() === _id)
-    console.log({ alreadyRating });
-    if (alreadyRating) {
-        // update start & comment
-        await Product.updateOne({
-            ratings: { $elemMatch: alreadyRating }
-        }, {
-            $set: { "ratings.$.star": star, "ratings.$.comment": comment }
-        }, { new: true })
-    } else {
-        // add start & comment
-        await Product.findByIdAndUpdate(pid, {
-            $push: { ratings: { star, comment, postedBy: _id } }
-        }, { new: true })
+    const { _id } = req.user;
+    const { star, comment, pid, updatedAt } = req.body;
+    if (!star || !pid) {
+        throw new Error('Missing text');
     }
 
-    // Sum ratings
-    const updatedProduct = await Product.findById(pid)
-    const ratingCount = updatedProduct.ratings.length
-    const sumRatings = updatedProduct.ratings.reduce((sum, el) => sum + +el.star, 0)
-    updatedProduct.totalRatings = Math.round(sumRatings * 10 / ratingCount) / 10
+    const ratingProduct = await Product.findById(pid);
+    const alreadyRating = ratingProduct?.ratings?.find(el => el.postedBy.toString() === _id);
 
-    await updatedProduct.save()
+    if (alreadyRating) {
+        // Nếu người dùng đã đánh giá, thêm đánh giá mới nhưng không ghi đè lên đánh giá cũ
+        ratingProduct.ratings.push({ star, comment, postedBy: _id, updatedAt });
+        await ratingProduct.save();
+    } else {
+        // Nếu người dùng chưa đánh giá, thêm đánh giá mới
+        ratingProduct.ratings.push({ star, comment, postedBy: _id, updatedAt });
+        await ratingProduct.save();
+    }
+
+    // Tính tổng số ratings và điểm trung bình
+    const ratingCount = ratingProduct.ratings.length;
+    const sumRatings = ratingProduct.ratings.reduce((sum, el) => sum + +el.star, 0);
+    ratingProduct.totalRatings = Math.round((sumRatings / ratingCount) * 10) / 10;
+
+    await ratingProduct.save();
 
     return res.status(200).json({
         status: true,
-        updatedProduct
+        updatedProduct: ratingProduct
+    });
+});
 
-    })
-})
+
+const uploadAvatarProduct = asyncHandler(async (req, res) => {
+    const { pid } = req.params;
+    if (!req.file) throw new Error("Missing file");
+
+    const avatarPath = req.file.path;
+
+    const response = await Product.findByIdAndUpdate(
+        pid,
+        { $set: { avatar: avatarPath } }, // Sử dụng $set để ghi đè trường avatar
+        { new: true }
+    );
+
+    return res.status(200).json({
+        status: response ? true : false,
+        updatedProduct: response ? response : "Cannot upload product image"
+    });
+});
+
 
 
 const uploadImagesProduct = asyncHandler(async (req, res) => {
@@ -188,5 +269,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     ratings,
+    uploadAvatarProduct,
     uploadImagesProduct
 }

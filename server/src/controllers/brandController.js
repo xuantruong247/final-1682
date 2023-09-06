@@ -14,7 +14,7 @@ const getAllBrands = aysncHandler(async (req, res) => {
     const response = await Brand.find()
     return res.status(200).json({
         success: response ? true : false,
-        getblogsCategory: response ? response : "Cannot get all brand"
+        getBrandCategory: response ? response : "Cannot get all brand"
     })
 })
 

@@ -13,27 +13,22 @@ var productSchema = new mongoose.Schema({
         lowercase: true
     },
     description: {
-        type: String,
+        type: Array,
         required: true,
     },
     brand: {
-        id: {
-            type: mongoose.Types.ObjectId,
-            ref: "Brand"
-        },
-        title: String
+        type: mongoose.Types.ObjectId,
+        ref: "Brand"
     },
     price: {
         type: Number,
         required: true
     },
     category: {
-        id: {
-            type: mongoose.Types.ObjectId,
-            ref: 'Category'
-        },
-        title: String
+        type: mongoose.Types.ObjectId,
+        ref: "ProductCategory"
     },
+
     quantity: {
         type: Number,
         default: 0
@@ -42,6 +37,10 @@ var productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    avatar: {
+        type: String,
+        default: ""
+    },
     images: {
         type: Array
     },
@@ -49,7 +48,8 @@ var productSchema = new mongoose.Schema({
         {
             star: { type: Number },
             postedBy: { type: mongoose.Types.ObjectId, ref: 'User' },
-            comment: { type: String }
+            comment: { type: String },
+            updatedAt: { type: Date, }
         }
     ],
     totalRatings: {
