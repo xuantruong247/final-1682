@@ -11,18 +11,19 @@ const SearchItem = ({
   changeActiveFilter,
   type = "checkbox",
   onChangeCategoriesSelected,
+  onChangBrandSelected,
 }) => {
   const { categories } = useSelector((state) => state.category);
   const { brands } = useSelector((state) => state.brand);
 
-
   const [selected, setSelected] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState([]);
   const [priceFormat, setPriceFormat] = useState(null);
   const [price, setPrice] = useState({
     from: "",
     to: "",
   });
-  const { category } = useParams();
+  const { category, brand } = useParams();
   const navigate = useNavigate();
   const handleSeletec = (e) => {
     const alreadyEl = selected.find((el) => el === e.target.value);
@@ -30,24 +31,37 @@ const SearchItem = ({
       setSelected((prev) => prev.filter((el) => el !== e.target.value));
     else setSelected((prev) => [...prev, e.target.value]);
   };
+
+  const handleSeletedBrand = (e) => {
+    const alreadyEl = selectedBrand.find((el) => el === e.target.value);
+    if (alreadyEl)
+      setSelectedBrand((prev) => prev.filter((el) => el !== e.target.value));
+    else setSelectedBrand((prev) => [...prev, e.target.value]);
+  };
+
   useEffect(() => {
     navigate({
       pathname: `/${category}`,
       search: createSearchParams({
         category: selected,
+        brand: selectedBrand,
       }).toString(),
     });
-    if (onChangeCategoriesSelected) {
-      onChangeCategoriesSelected(selected);
+    if (onChangeCategoriesSelected || onChangBrandSelected) {
+      if (onChangeCategoriesSelected) {
+        onChangeCategoriesSelected(selected);
+      }
+      if (onChangBrandSelected) {
+        onChangBrandSelected(selectedBrand);
+      }
     }
-  }, [selected]);
+  }, [selected, selectedBrand]);
 
   const fetchBestPriceProduct = async () => {
     const response = await apiGetAllProducts({ sort: "price-desc" });
     if (response.data.products) {
       setPriceFormat(response.data.products[0].price);
     }
-    console.log(response.data.products);
   };
 
   useEffect(() => {
@@ -75,8 +89,6 @@ const SearchItem = ({
       });
     }
   }, [deboucePriceFrom, deboucePriceTo]);
-
- 
 
   return (
     <div
@@ -142,9 +154,11 @@ const SearchItem = ({
                         type="checkbox"
                         value={item._id}
                         id={item._id}
-                        onChange={handleSeletec}
+                        onChange={handleSeletedBrand}
                         checked={
-                          selected.some((selected) => selected === item._id)
+                          selectedBrand.some(
+                            (selectedBrand) => selectedBrand === item._id
+                          )
                             ? true
                             : false
                         }

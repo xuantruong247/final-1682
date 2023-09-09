@@ -7,7 +7,7 @@ export const productSlide = createSlice({
     name: 'product',
     initialState: {
         newProduct: null,
-        errorMessage: ''
+        errorMessage: '',
     },
     reducers: {
     },

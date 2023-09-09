@@ -11,7 +11,6 @@ import { FcAddImage } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { getBase64, validate } from "../../../utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
-import { RiDeleteBin2Fill } from "react-icons/ri";
 import { apiUpdateProduct } from "../../../apis";
 import { showModal } from "../../../redux/category/categorySlide";
 import Swal from "sweetalert2";
@@ -120,10 +119,9 @@ const UpdateProduct = ({ editProduct, setEditProduct, render }) => {
         data.images?.length === 0 ? preview.images : data.images;
       for (let image of finalPayload.images) formData.append("images", image);
 
-      // dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }));
+      dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }));
       const response = await apiUpdateProduct(formData, editProduct._id);
-      // dispatch(showModal({ isShowModal: false, modalChildren: null }));
-      console.log(response);
+      dispatch(showModal({ isShowModal: false, modalChildren: null }));
       if (response) {
         Swal.fire({
           icon: "success",

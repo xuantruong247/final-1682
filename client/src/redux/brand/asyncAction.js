@@ -4,7 +4,6 @@ import * as apis from "../../apis"
 export const getBrands = createAsyncThunk("brand/brands", async (data, { rejectWithValue }) => {
     const response = await apis.apiGetBrand()
     if(response.err) return rejectWithValue(response)
-    console.log(response);
     return response.data.getBrandCategory
 
 })

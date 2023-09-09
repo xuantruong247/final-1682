@@ -14,7 +14,6 @@ const CreateBrand = () => {
 
   const handleCreateBrand = async (data) => {
     const response = await apiCreateBrand(data);
-    console.log(response);
 
     if (response) {
       Swal.fire({

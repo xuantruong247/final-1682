@@ -18,7 +18,7 @@ const ProductCard = ({ avatar, title, price, totalRatings,productData }) => {
               <span key={index}>{item}</span>
             ))}
           </span>
-          <span>{`${formatMoney(price)} Vnd`}</span>
+          <span>{`${formatMoney(price)} VND`}</span>
         </div>
       </div>
     </NavLink>

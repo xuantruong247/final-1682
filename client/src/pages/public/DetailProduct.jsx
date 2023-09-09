@@ -1,17 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { apiGetProduct, apiGetAllProducts } from "../../apis";
+import { useNavigate, useParams } from "react-router-dom";
+import { apiGetProduct, apiGetAllProducts, apiUpdateCart } from "../../apis";
 import Slider from "react-slick";
 import { formatMoney, renderStarFromNumber } from "../../utils/helpers";
 import DOMPurify from "dompurify";
 import {
   Button,
-  SelectQuantity,
   ProductExtrainfo,
   ProductInformation,
   SliderCustomer,
 } from "../../components";
 import { ProductExtraInformation } from "../../utils/contants";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { getCurrent } from "../../redux/user/asyncAction";
+import { toast } from "react-toastify";
 
 const settings = {
   dots: false,
@@ -22,12 +25,15 @@ const settings = {
 };
 
 const DetailProduct = () => {
-  const { pid, title } = useParams();
+  const { pid, category } = useParams();
   const [product, setProduct] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
   const [update, setUpdate] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { current } = useSelector((state) => state.user);
 
   const fetchProductData = async () => {
     const response = await apiGetProduct(pid);
@@ -36,13 +42,11 @@ const DetailProduct = () => {
       setCurrentImage(response?.data?.productData?.avatar);
     }
   };
-
   const fetchProducts = async () => {
-    const response = await apiGetAllProducts();
+    const response = await apiGetAllProducts({ category });
     if (response?.data?.products) {
       setRelatedProducts(response?.data?.products);
     }
-    console.log(response?.data?.products);
   };
 
   useEffect(() => {
@@ -56,35 +60,40 @@ const DetailProduct = () => {
     setUpdate(!update);
   });
 
-  const handleQuantity = useCallback(
-    (number) => {
-      if (!Number(number) || Number(number) < 0) {
-        return;
-      } else {
-        setQuantity(number);
-      }
-    },
-    [quantity]
-  );
-
-  const handleChangeQuantity = useCallback(
-    (flag) => {
-      if (flag === "minus" && quantity === 1) return;
-      if (flag === "minus") setQuantity((prev) => +prev - 1);
-      if (flag === "plus") setQuantity((prev) => +prev + 1);
-    },
-    [quantity]
-  );
-
   const handleClickImages = (item) => {
     setCurrentImage(item);
+  };
+
+  const handleAddToCart = async () => {
+    if (!current) {
+      return Swal.fire({
+        icon: "error",
+        text: "Please log in to add products to cart!",
+        cancelButtonText: "Cancel",
+        confirmButtonText: "Go login",
+        title: "Oops...!",
+        showCancelButton: true,
+      }).then((rs) => {
+        if (rs.isConfirmed) {
+          navigate(`/${path.LOGIN}`);
+        }
+      });
+    }
+    setQuantity(quantity + 1);
+    const response = await apiUpdateCart({ pid: product._id });
+    if (response) {
+      toast.success("Add product to cart success!");
+      dispatch(getCurrent());
+    } else {
+      toast.error("Add product to cart fail");
+    }
   };
 
   return (
     <div className="w-full">
       <div className="h-[81px] flex items-center justify-center bg-gray-100">
         <div className="w-main">
-          <h3 className="font-medium uppercase">{title}</h3>
+          <h3 className="font-medium uppercase">{product?.title}</h3>
         </div>
       </div>
       <div className="w-main m-auto mt-4 flex">
@@ -112,7 +121,7 @@ const DetailProduct = () => {
         <div className="w-2/5 flex flex-col gap-4 mr-4">
           <h2 className="text-[30px] font-semibold">{`${formatMoney(
             product?.price
-          )} VNĐ`}</h2>
+          )} VND`}</h2>
           <div className="flex items-center gap-2">
             <span className="flex  gap-1">
               {renderStarFromNumber(product?.totalRatings)?.map(
@@ -132,11 +141,6 @@ const DetailProduct = () => {
                   {item}
                 </li>
               ))}
-            {/* {product?.description?.map((item, index) => (
-                <li className=" leading-6" key={index}>
-                  {item}
-                </li>
-              ))} */}
             {product?.description?.length === 1 && (
               <div
                 className="text-sm"
@@ -146,17 +150,13 @@ const DetailProduct = () => {
               ></div>
             )}
           </ul>
-          <div className="flex flex-col gap-8">
-            <div className="flex items-center gap-4">
-              <span className="font-semibold">Quantity</span>
-              <SelectQuantity
-                quantity={quantity}
-                handleQuantity={handleQuantity}
-                handleChangeQuantity={handleChangeQuantity}
-              />
-            </div>
-            <Button>ADD TO CART</Button>
-          </div>
+          <Button
+            handlerOnclick={() => {
+              handleAddToCart();
+            }}
+          >
+            ADD TO CART
+          </Button>
         </div>
         <div className=" w-1/5">
           {ProductExtraInformation.map((item, index) => (

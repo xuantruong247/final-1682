@@ -22,7 +22,6 @@ const ProductInformation = ({
   const navigate = useNavigate();
 
   const handleSubmitVoteOptione = async ({ comment, score }) => {
-    console.log({ score, comment, pid });
     if (!score || !comment || !pid) {
       alert("Missing vote when click submit");
       return;

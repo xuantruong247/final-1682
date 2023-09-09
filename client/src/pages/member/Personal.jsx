@@ -42,7 +42,6 @@ const Personal = () => {
     dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }));
     const response = await apiUpdateCurrent(formData);
     dispatch(showModal({ isShowModal: false, modalChildren: null }));
-    console.log(response);
     if (response) {
       dispatch(getCurrent());
       Swal.fire({

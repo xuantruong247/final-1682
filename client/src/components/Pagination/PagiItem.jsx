@@ -14,7 +14,6 @@ const PagiItem = ({ children }) => {
 
   const handlePagination = () => {
     const queries = Object.fromEntries([...params]);
-    console.log(queries);
     if (Number(children)) {
       queries.page = children;
     }
@@ -23,7 +22,6 @@ const PagiItem = ({ children }) => {
       search: createSearchParams(queries).toString(),
     });
 
-    console.log(queries);
   };
 
   return (

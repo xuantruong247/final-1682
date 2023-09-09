@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import path from "../../utils/path";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/user/userSlice";
+import { showCart } from "../../redux/category/categorySlide";
 
 const Header = () => {
   const { current } = useSelector((state) => state.user);
@@ -26,7 +27,7 @@ const Header = () => {
     };
   }, []);
 
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   return (
     <div className=" w-main h-[110px] py-[35px] flex justify-between">
@@ -50,9 +51,14 @@ const dispatch = useDispatch()
         </div>
         {current && (
           <Fragment>
-            <div className="flex items-center justify-center gap-2 px-6 border-r cursor-pointer">
+            <div
+              onClick={() => {
+                dispatch(showCart());
+              }}
+              className="flex items-center justify-center gap-2 px-6 border-r cursor-pointer"
+            >
               <BsFillCartCheckFill color="red" />
-              <span>0 items(s)</span>
+              <span>{`${current.cart.length || 0} item(s)`}</span>
             </div>
             <div
               className="flex items-center justify-center px-6 gap-2 cursor-pointer relative"
@@ -83,7 +89,7 @@ const dispatch = useDispatch()
                   <Link
                     className=" hover:bg-main hover:text-white rounded-sm p-1 hover:font-semibold"
                     onClick={() => {
-                      dispatch(logout())
+                      dispatch(logout());
                     }}
                   >
                     Logout

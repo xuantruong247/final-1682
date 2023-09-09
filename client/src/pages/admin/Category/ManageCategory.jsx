@@ -26,7 +26,6 @@ const ManageCategory = () => {
   const fetchApiGetCategory = async () => {
     const response = await apiGetCategories();
     setMapCategory(response.data.getProductsCategory);
-    console.log(response);
   };
 
   const render = useCallback(() => {

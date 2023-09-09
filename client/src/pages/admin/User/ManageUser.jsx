@@ -46,7 +46,6 @@ const ManageUser = () => {
 
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
-    console.log(queries);
     fetchUser(queries);
   }, [params, update]);
 
@@ -61,7 +60,6 @@ const ManageUser = () => {
     setFilteredUsers(filtered);
   }, [q, mapUser]);
 
-  console.log(mapUser);
 
   // handle edit
   const handleUpdate = async (data) => {

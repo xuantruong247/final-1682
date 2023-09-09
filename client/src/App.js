@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from "react-router-dom"
-import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog } from "./pages/public"
+import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailCart } from "./pages/public"
 import { Admin, CreateBrand, CreateCategory, CreateProduct, Dashboard, ManageBrand, ManageCategory, ManageOder, ManageProduct, ManageUser } from './pages/admin'
 import { History, Menber, MyCart, Personal, Wishlist } from './pages/member'
 import path from "./utils/path"
@@ -9,14 +9,16 @@ import { useDispatch, useSelector } from "react-redux"
 import "./index.css"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Modal } from "./components"
+import { Cart, Modal } from "./components"
 import { getBrands } from './redux/brand/asyncAction';
+import { showCart } from './redux/category/categorySlide';
+
 
 function App() {
 
   const dispatch = useDispatch()
 
-  const { isShowModal, modalChildren } = useSelector(state => state.category)
+  const { isShowModal, modalChildren, isShowCart } = useSelector(state => state.category)
 
   useEffect(() => {
     dispatch(getCategories())
@@ -24,7 +26,12 @@ function App() {
   }, [])
 
   return (
-    <div className="font-main relative">
+    <div className="font-main h-screen relative">
+      {isShowCart && <div onClick={() => {
+        dispatch(showCart())
+      }} className='absolute inset-0 bg-overlay z-50 flex justify-end'>
+        <Cart />
+      </div>}
       {isShowModal && <Modal>
         {modalChildren}
       </Modal>}
@@ -32,11 +39,14 @@ function App() {
         <Route path={path.PUBLIC} element={<Public />}>
           <Route path={path.HOME} element={<Home />} />
           <Route path={path.PRODUCTS} element={<Products />} />
+          <Route path={path.PRODUCTS} element={<Products />} />
           <Route path={path.DETAIL_PRODUCT__PID__TITLE} element={<DetailProduct />} />
           <Route path={path.BLOG} element={<Blog />} />
           <Route path={path.CONTACT} element={<Contact />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.ALL} element={<Home />} />
+          <Route path={path.DETAIL_CART} element={<DetailCart />} />
+
 
         </Route>
 

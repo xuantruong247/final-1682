@@ -32,6 +32,9 @@ export { default as Select } from "./Inputs/Select"
 export { default as Blogs } from "./Blog/Blogs"
 export { default as MarkdownEditor } from "./Inputs/MarkdownEditor"
 export { default as MemberSidebar } from "./SideBar/MemberSidebar"
+export { default as QuickView } from "./Products/QuickView"
+export { default as Cart } from "./Products/Cart"
+export { default as OrderItem } from "./Products/OrderItem"
 
 
 

@@ -7,7 +7,6 @@ const createNewOrder = aysncHandler(async (req, res) => {
     const { _id } = req.user
     const { coupon } = req.body
     const userCart = await User.findById(_id).select('cart').populate("cart.product", "title price")
-    console.log(userCart);
     const products = userCart?.cart?.map(el => ({
         product: el.product._id,
         count: el.quantity
@@ -20,7 +19,6 @@ const createNewOrder = aysncHandler(async (req, res) => {
         createData.total = total
         createData.coupon = coupon
     }
-    console.log(total);
     const response = await Order.create(createData)
     return res.status(200).json({
         success: response ? true : false,

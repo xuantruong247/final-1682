@@ -25,7 +25,6 @@ const MemberSidebar = () => {
   };
 
   const { current } = useSelector((state) => state.user);
-  console.log(current);
 
   return (
     <div className="bg-white h-full flex flex-col justify-between">

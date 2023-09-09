@@ -17,10 +17,8 @@ const FeatureProducts = () => {
     });
     if (response.data.products) {
       setProducts(response.data.products);
-      console.log(response.data.products);
     }
   };
-
   useEffect(() => {
     getProducts();
   }, []);

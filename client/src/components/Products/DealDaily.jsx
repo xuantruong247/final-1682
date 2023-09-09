@@ -11,10 +11,9 @@ const DealDaily = () => {
   const [minute, setMinute] = useState(0);
   const [second, setSecond] = useState(0);
   const [expireTime, setExpireTime] = useState(false);
-
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const getDealdaily = async () => {
     const response = await apiGetAllProducts({
-      
       // page: 5,
       // random images
       page: Math.round() * 2,
@@ -28,16 +27,11 @@ const DealDaily = () => {
       setHour(h);
       setMinute(m);
       setSecond(s);
-      console.log(response.data.products);
     }
   };
-  
-  useEffect(() => {
-    idInterval && clearInterval(idInterval);
-    getDealdaily();
-  }, [expireTime]);
 
   useEffect(() => {
+    getDealdaily();
     idInterval = setInterval(() => {
       if (second > 0) {
         setSecond((prev) => prev - 1);
@@ -51,7 +45,13 @@ const DealDaily = () => {
             setMinute(59);
             setSecond(59);
           } else {
-            setExpireTime(!expireTime);
+            if (currentProductIndex < dealdaily.length - 1) {
+              setCurrentProductIndex((prevIndex) => prevIndex + 1);
+              getDealdaily(); // Lấy thông tin sản phẩm mới
+            } else {
+              setExpireTime(true); // Đánh dấu là hết thời gian cho sản phẩm cuối cùng
+              clearInterval(idInterval); // Dừng hẹn giờ
+            }
           }
         }
       }
@@ -59,7 +59,15 @@ const DealDaily = () => {
     return () => {
       clearInterval(idInterval);
     };
-  }, [second, minute, hour]);
+  }, [second, minute, hour, expireTime]);
+
+  if (idInterval) {
+    return (
+      <div className="border w-full flex-auto">
+        <p>Time out!!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="border w-full flex-auto">
@@ -80,11 +88,13 @@ const DealDaily = () => {
         />
         <span className="line-clamp-1 text-center">{dealdaily?.title}</span>
         <span className="flex h-4 text-xl">
-          {renderStarFromNumber(dealdaily[0]?.totalRatings)?.map((item, index) => (
-            <span key={index}>{item}</span>
-          ))}
+          {renderStarFromNumber(dealdaily[0]?.totalRatings)?.map(
+            (item, index) => (
+              <span key={index}>{item}</span>
+            )
+          )}
         </span>
-        <span>{`${formatMoney(dealdaily[0]?.price)} Vnd`}</span>
+        <span>{`${formatMoney(dealdaily[0]?.price)} VND`}</span>
       </div>
       <div className="px-4 mt-10">
         <div className="flex gap-2 items-center justify-center mb-5">

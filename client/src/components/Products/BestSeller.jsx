@@ -26,8 +26,8 @@ const BestSeller = () => {
 
   const getAllProducts = async () => {
     const response = await Promise.all([
-      apiGetAllProducts({ sort: "-sold" }),
-      apiGetAllProducts({ sort: "-craetedAt" }),
+      apiGetAllProducts({ sort: "sold" }),
+      apiGetAllProducts({ sort: "createdAt" }),
     ]);
     if (response[0]?.data?.products) {
       setBestSeller(response[0].data?.products);
@@ -43,9 +43,12 @@ const BestSeller = () => {
     getAllProducts();
   }, []);
   useEffect(() => {
-    if (activeTab === 1) setProducts(bestSeller);
-    if (activeTab === 2) setProducts(newProduct);
-  }, [activeTab]);
+    if (activeTab === 1) {
+      setProducts(bestSeller);
+    } else if (activeTab === 2) {
+      setProducts(newProduct);
+    }
+  }, [activeTab, bestSeller, newProduct]);
 
   return (
     <div>

@@ -3,26 +3,48 @@ import label_red from "../../assets/image/label_red.png";
 import label_yellow from "../../assets/image/label_yellow.png";
 import { renderStarFromNumber, formatMoney } from "../../utils/helpers";
 import SelectOption from "../Search/SelectOption";
-import { AiOutlineEye, AiFillHeart, AiOutlineMenu } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { AiFillHeart } from "react-icons/ai";
+import { BsFillCartCheckFill, BsFillCartPlusFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
+import { useDispatch, useSelector } from "react-redux";
+import { apiUpdateCart } from "../../apis";
+import Swal from "sweetalert2";
+import { getCurrent } from "../../redux/user/asyncAction";
+import { toast } from "react-toastify";
 
 const ItemProduct = ({ productData, isNew, normal }) => {
   const [isShowOption, setIsShowOption] = useState(false);
   const navigate = useNavigate();
-
-  const handleClickOptions = (e, flag) => {
+  const dispatch = useDispatch();
+  const { current } = useSelector((state) => state.user);
+  const handleClickOptions = async (e, flag) => {
     e.stopPropagation();
-    if (flag === "QUICK_VIEW") {
-      console.log("QUICK_VIEW");
-    }
-    if (flag === "MENU") {
-      navigate(
-        `/${path.DETAIL_PRODUCT}/${productData?._id}/${productData?.title}`
-      );
-    }
     if (flag === "WISHLIST") {
       console.log("WISHLIST");
+    }
+    if (flag === "ADD-CART") {
+      if (!current) {
+        return Swal.fire({
+          icon: "error",
+          text: "Please log in to add products to cart!",
+          cancelButtonText: "Cancel",
+          confirmButtonText: "Go login",
+          title: "Oops...!",
+          showCancelButton: true,
+        }).then((rs) => {
+          if (rs.isConfirmed) {
+            navigate(`/${path.LOGIN}`);
+          }
+        });
+      }
+      const response = await apiUpdateCart({ pid: productData._id });
+      if (response) {
+        toast.success("Add product to cart success!");
+        dispatch(getCurrent());
+      } else {
+        toast.error("Add product to cart fail");
+      }
     }
   };
 
@@ -34,7 +56,7 @@ const ItemProduct = ({ productData, isNew, normal }) => {
             `/${path.DETAIL_PRODUCT}/${productData?._id}/${productData?.title}`
           );
         }}
-        className="w-full border p-[15px] flex flex-col items-center"
+        className="w-full border p-[15px] flex flex-col items-center cursor-pointer"
         onMouseEnter={(e) => {
           e.stopPropagation();
           setIsShowOption(true);
@@ -48,26 +70,29 @@ const ItemProduct = ({ productData, isNew, normal }) => {
           {isShowOption && (
             <div className="absolute bottom-[-10px] left-0 right-0 gap-2 flex justify-center animate-slide-top">
               <span
-                onClick={(e) => {
-                  handleClickOptions(e, "QUICK_VIEW");
-                }}
-              >
-                <SelectOption icon={<AiFillHeart />} />
-              </span>
-              <span
-                onClick={(e) => {
-                  handleClickOptions(e, "MENU");
-                }}
-              >
-                <SelectOption icon={<AiOutlineMenu />} />
-              </span>
-              <span
+                title="Quick view"
                 onClick={(e) => {
                   handleClickOptions(e, "WISHLIST");
                 }}
               >
-                <SelectOption icon={<AiOutlineEye />} />
+                <SelectOption icon={<AiFillHeart />} />
               </span>
+              {current?.cart?.some(
+                (el) => el.product._id === productData._id
+              ) ? (
+                <span title="Added to cart">
+                  <SelectOption icon={<BsFillCartCheckFill color="green" />} />
+                </span>
+              ) : (
+                <span
+                  title="Add to cart"
+                  onClick={(e) => {
+                    handleClickOptions(e, "ADD-CART");
+                  }}
+                >
+                  <SelectOption icon={<BsFillCartPlusFill />} />
+                </span>
+              )}
             </div>
           )}
           <img
@@ -92,7 +117,7 @@ const ItemProduct = ({ productData, isNew, normal }) => {
             )}
           </span>
           <span className="line-clamp-1">{productData?.title}</span>
-          <span>{`${formatMoney(productData?.price)} VNĐ`}</span>
+          <span>{`${formatMoney(productData?.price)} VND`}</span>
         </div>
       </div>
     </div>

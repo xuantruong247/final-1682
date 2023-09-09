@@ -25,12 +25,10 @@ const ManageProduct = () => {
     setMapProduct(response.data.products);
     setFilterProduct(response.data.products);
     setTotalCount(response.data.counts);
-    console.log(response.data.products);
   };
 
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
-    console.log(queries);
     fetchGetProducts(queries);
   }, [params, update]);
 
@@ -50,7 +48,6 @@ const ManageProduct = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const response = await apiDeleteProduct(pid);
-        console.log(response);
         if (response) {
           Swal.fire({
             icon: "success",

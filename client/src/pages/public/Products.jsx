@@ -24,6 +24,8 @@ const breakpointColumnsObj = {
 
 const Products = () => {
   const [categoriesId, setCategoriesId] = useState([]);
+  const [brandId, setBrandId] = useState([]);
+
   const [products, setProducts] = useState(null);
   const [params] = useSearchParams();
   const [sort, setSort] = useState("");
@@ -39,9 +41,12 @@ const Products = () => {
   const { category } = useParams();
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
-    console.log(queries);
     const arrCategoriesId = categoriesId.join(",");
     queries.categoriesId = arrCategoriesId;
+
+    const arrBrandId = brandId.join(",");
+    queries.brandId = arrBrandId;
+
     if (queries.from) {
       queries.price = { gte: queries.from };
       delete queries.from;
@@ -50,7 +55,6 @@ const Products = () => {
       queries.price = { lte: queries.to };
       delete queries.to;
     }
-    console.log(queries);
     fetchProductByCategory(queries);
     window.scrollTo(0, 0);
   }, [params]);
@@ -65,8 +69,11 @@ const Products = () => {
   );
 
   const onChangeCategoriesSelected = (data) => {
-    console.log(data);
     setCategoriesId(data);
+  };
+
+  const onChangBrandSelected = (data) => {
+    setBrandId(data);
   };
 
   const changeValue = useCallback(
@@ -91,7 +98,9 @@ const Products = () => {
     <div className="w-full">
       <div className="h-[81px] flex  items-center justify-center bg-gray-100">
         <div className="w-main">
-          <h3 className="font-medium uppercase">Product</h3>
+          <h3 className="font-medium uppercase">
+            {category ? category : "Product"}
+          </h3>
         </div>
       </div>
       <div className="w-main border p-4 flex m-auto justify-between">
@@ -109,6 +118,7 @@ const Products = () => {
               activeClick={activeClick}
               changeActiveFilter={changeActiveFilter}
               type="checkbox"
+              onChangBrandSelected={onChangBrandSelected}
             />
             <SearchItem
               name="Category"

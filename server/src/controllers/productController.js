@@ -6,7 +6,6 @@ const slugify = require("slugify")
 const createProduct = asyncHandler(async (req, res) => {
     const { title, description, price, quantity, category_id, brand_id } = req.body
     if (!title || !description || !price || !quantity || !category_id || !brand_id) throw new Error('Missing text')
-    console.log(req.body);
     if (req.body && req.body.title) {
         req.body.slug = slugify(req.body.title)
     } else {
@@ -49,7 +48,6 @@ const getDetailProduct = asyncHandler(async (req, res) => {
 // Filtering, sorting & pagination
 const getAllProducts = asyncHandler(async (req, res) => {
     const { categoriesId, brandId, userMinPrice, userMaxPrice, sort, ...queries } = req.query
-    // console.log(req.query);
     const excludeFields = ['limit', 'sort', 'page', 'fields']
     excludeFields.forEach(el => delete queries[el])
 
@@ -121,13 +119,15 @@ const getAllProducts = asyncHandler(async (req, res) => {
                 sortOption.sold = -1;
                 isSort = true;
                 break;
-
+            case "createdAt":
+                sortOption.createdAt = -1;
+                isSort = true;
+                break;
             default:
                 break;
         }
 
         if (isSort === true) {
-            console.log(sortOption);
             query = query.sort(sortOption)
         }
     }

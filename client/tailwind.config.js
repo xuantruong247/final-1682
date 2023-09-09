@@ -5,7 +5,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      main: ['Poppins', 'sans-serif;']
+      main: ['Poppins', 'sans-serif']
     },
     extend: {
       width: {
@@ -76,7 +76,17 @@ module.exports = {
         "slide-top-sm": "slide-top 0.2s linear both;",
         "slide-right": "slide-right 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;",
         "scale-up-center": "scale-up-center 0.15s cubic-bezier(0.390, 0.575, 0.565, 1.000) both"
-      }
+      },
+      gridTemplateRows: {
+        // Simple 8 row grid
+        '10': 'repeat(10, minmax(0, 1fr))',
+
+        // Complex site-specific row configuration
+        'layout': '200px minmax(900px, 1fr) 100px',
+      },
+      gridRow: {
+        'span-7': 'span 7 / span 7', // Thêm row-span-7 tại đây
+      },
     },
     listStyleType: {
       square: 'square',

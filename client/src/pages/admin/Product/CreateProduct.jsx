@@ -91,7 +91,6 @@ const CreateProduct = () => {
         data.brand = brands?.find((el) => el._id === data.brand_id)?.title;
       }
       const finalPayload = { ...data, ...payload };
-      // console.log(finalPayload);
       const formData = new FormData();
       for (let i of Object.entries(finalPayload)) formData.append(i[0], i[1]);
       if (finalPayload.avatar) {
@@ -123,7 +122,6 @@ const CreateProduct = () => {
         });
       }
 
-      console.log(response.data.createdProduct);
     }
   };
 
