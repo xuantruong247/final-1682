@@ -1,10 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { apiGetProduct, apiGetAllProducts, apiUpdateCart } from "../../apis";
 import Slider from "react-slick";
 import { formatMoney, renderStarFromNumber } from "../../utils/helpers";
 import DOMPurify from "dompurify";
 import {
+  Breakcrumb,
   Button,
   ProductExtrainfo,
   ProductInformation,
@@ -15,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { getCurrent } from "../../redux/user/asyncAction";
 import { toast } from "react-toastify";
+import path from "../../utils/path";
 
 const settings = {
   dots: false,
@@ -75,7 +81,12 @@ const DetailProduct = () => {
         showCancelButton: true,
       }).then((rs) => {
         if (rs.isConfirmed) {
-          navigate(`/${path.LOGIN}`);
+          navigate({
+            pathname: `/${path.LOGIN}`,
+            search: createSearchParams({
+              redirect: location.pathname,
+            }).toString(),
+          });
         }
       });
     }
@@ -92,8 +103,9 @@ const DetailProduct = () => {
   return (
     <div className="w-full">
       <div className="h-[81px] flex items-center justify-center bg-gray-100">
-        <div className="w-main">
+        <div className="w-main flex flex-col gap-1">
           <h3 className="font-medium uppercase">{product?.title}</h3>
+          <Breakcrumb title={product?.title}/>
         </div>
       </div>
       <div className="w-main m-auto mt-4 flex">

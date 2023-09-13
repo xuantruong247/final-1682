@@ -79,7 +79,7 @@ const BestSeller = () => {
           ))}
         </Slider>
       </div>
-      <div className="flex gap-4 mt-6 w-full">
+      <div className="flex gap-4 mt-1 w-full">
         <div className="hovertitle w-[49%]">
           <img src={sale_1} alt="banner" className="saller" />
           <div className="overlay1"></div>

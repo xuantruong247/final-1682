@@ -95,20 +95,22 @@ const Cart = () => {
         <span className="flex justify-center text-gray-500 italic text-sm">
           Shipping, taxes, and discounts calculated at checkout.
         </span>
-        <Button
-          handlerOnclick={() => {
-            navigate(`/${path.DETAIL_CART}`);
-            dispatch(showCart());
-          }}
-          style="rounded-none w-full bg-main py-3 flex items-center justify-center"
-        >
-          <span>Shopping Cart</span>
-          <BsArrowRightShort />
-        </Button>
-        <Button style="rounded-none w-full bg-main py-3 flex items-center justify-center">
-          <span>Checkout</span>
-          <BsArrowRightShort />
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            handlerOnclick={() => {
+              navigate(`/${path.DETAIL_CART}`);
+              dispatch(showCart());
+            }}
+            style="rounded-none w-full bg-main py-2 flex items-center justify-center"
+          >
+            <span>Shopping Cart</span>
+            <BsArrowRightShort />
+          </Button>
+          <Button style="rounded-none w-full bg-main py-2 flex items-center justify-center">
+            <span>Checkout</span>
+            <BsArrowRightShort />
+          </Button>
+        </div>
       </div>
     </div>
   );

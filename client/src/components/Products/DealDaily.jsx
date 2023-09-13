@@ -3,6 +3,8 @@ import { AiFillStar, AiOutlineMenu } from "react-icons/ai";
 import { apiGetAllProducts } from "../../apis/product";
 import { formatMoney, renderStarFromNumber } from "../../utils/helpers";
 import Countdown from "../Common/Countdown";
+import { useNavigate } from "react-router-dom";
+import path from "../../utils/path";
 
 const DealDaily = () => {
   let idInterval;
@@ -12,6 +14,7 @@ const DealDaily = () => {
   const [second, setSecond] = useState(0);
   const [expireTime, setExpireTime] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const navigate = useNavigate()
   const getDealdaily = async () => {
     const response = await apiGetAllProducts({
       // page: 5,
@@ -70,7 +73,7 @@ const DealDaily = () => {
   }
 
   return (
-    <div className="border w-full flex-auto">
+    <div className="border w-full pb-11 flex-auto">
       <div className="flex items-center justify-between p-4">
         <span className="flex-1 flex justify-center">
           <AiFillStar color="#dd1111" />
@@ -97,12 +100,15 @@ const DealDaily = () => {
         <span>{`${formatMoney(dealdaily[0]?.price)} VND`}</span>
       </div>
       <div className="px-4 mt-10">
-        <div className="flex gap-2 items-center justify-center mb-5">
+        <div className="flex gap-2 items-center justify-center mb-10">
           <Countdown unit={"Hours"} number={hour} />
           <Countdown unit={"Minutes"} number={minute} />
           <Countdown unit={"Seconds"} number={second} />
         </div>
         <button
+        onClick={() => {
+          navigate(`/${path.PRODUCTS}`)
+        }}
           className="flex gap-2 items-center justify-center w-full bg-main hover:bg-gray-800 text-white font-medium py-2"
           type="button"
         >

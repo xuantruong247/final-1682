@@ -1,21 +1,12 @@
 import React, { memo } from "react";
-import { NavLink } from "react-router-dom";
-import { createSlug } from "../../utils/helpers";
-import { useSelector } from "react-redux";
+import demo from "../../assets/image/voucher_1.png";
+import demo1 from "../../assets/image/voucher_2.png";
 
 const Sidebar = () => {
-  const { categories } = useSelector((state) => state.category);
   return (
-    <div className="flex flex-col border ">
-      {categories?.map((item, index) => (
-        <NavLink
-          key={index}
-          to={createSlug(item.title)}
-          className="px-2 my-6 pt-[10px] pb-[17px] hover:text-main"
-        >
-          {item.title}
-        </NavLink>
-      ))}
+    <div className="flex flex-col h-[300px] gap-2">
+      <img src={demo} alt="" className="h-[150px]" />
+      <img src={demo1} alt="" className="h-[150px]" />
     </div>
   );
 };

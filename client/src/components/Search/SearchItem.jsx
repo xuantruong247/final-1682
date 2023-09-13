@@ -4,6 +4,7 @@ import { createSearchParams, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { apiGetAllProducts } from "../../apis";
 import useDebounce from "../../hooks/useDebounce";
+import path from "../../utils/path";
 
 const SearchItem = ({
   name,
@@ -23,7 +24,7 @@ const SearchItem = ({
     from: "",
     to: "",
   });
-  const { category, brand } = useParams();
+  const { category } = useParams();
   const navigate = useNavigate();
   const handleSeletec = (e) => {
     const alreadyEl = selected.find((el) => el === e.target.value);
@@ -41,7 +42,7 @@ const SearchItem = ({
 
   useEffect(() => {
     navigate({
-      pathname: `/${category}`,
+      pathname: `/${category ? category : path.PRODUCTS}`,
       search: createSearchParams({
         category: selected,
         brand: selectedBrand,
@@ -84,7 +85,7 @@ const SearchItem = ({
     }
     if (Number(price.from) > 0 || Number(price.to) > 0) {
       navigate({
-        pathname: `/${category}`,
+        pathname: `/${category ? category : path.PRODUCTS}`,
         search: createSearchParams(data).toString(),
       });
     }

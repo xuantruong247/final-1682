@@ -34,6 +34,7 @@ const ItemProduct = ({ productData, isNew, normal }) => {
           showCancelButton: true,
         }).then((rs) => {
           if (rs.isConfirmed) {
+            localStorage.setItem("redirectPath", window.location.pathname);
             navigate(`/${path.LOGIN}`);
           }
         });

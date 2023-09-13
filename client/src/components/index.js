@@ -35,6 +35,8 @@ export { default as MemberSidebar } from "./SideBar/MemberSidebar"
 export { default as QuickView } from "./Products/QuickView"
 export { default as Cart } from "./Products/Cart"
 export { default as OrderItem } from "./Products/OrderItem"
+export { default as NewArrivals } from "./Products/NewArrivals"
+export { default as Breakcrumb } from "./Breakcrumb/Breakcrumb"
 
 
 

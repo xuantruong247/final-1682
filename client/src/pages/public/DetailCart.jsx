@@ -1,10 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Button, OrderItem } from "../../components";
+import { Breakcrumb, Button, OrderItem } from "../../components";
 import { formatMoney } from "../../utils/helpers";
 import { BsArrowRightShort } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
+import { AiOutlineRight } from 'react-icons/ai'
 
 const DetailCart = () => {
   const { currentCart } = useSelector((state) => state.user);
@@ -15,6 +16,10 @@ const DetailCart = () => {
       <div className="h-[81px] flex  items-center justify-center bg-gray-100">
         <div className="w-main">
           <h3 className="font-medium uppercase">Your Cart</h3>
+          <span className="flex gap-1">
+          <Breakcrumb/>
+          <span className="flex items-center gap-1 text-sm"><AiOutlineRight size={10}/>Your cart</span>
+          </span>
         </div>
       </div>
       <div className="grid grid-cols-10 w-main mx-auto border p-3 text-center mt-8 text-xl font-semibold">

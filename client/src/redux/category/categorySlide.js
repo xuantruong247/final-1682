@@ -18,7 +18,7 @@ export const categorySlice = createSlice({
             state.modalChildren = action.payload.modalChildren
         },
         showCart: (state) => {
-            state.isShowCart = state.isShowCart === false ? true : false
+            state.isShowCart = !state.isShowCart;
         }
     },
     extraReducers: (builder) => {

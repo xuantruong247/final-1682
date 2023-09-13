@@ -71,7 +71,7 @@ const Header = () => {
               <FaUserCircle color="red" />
               <span>Profile</span>
               {isShowOption && (
-                <div className="absolute top-full  bg-gray-50 p-2 min-w-[150px] left-[13px] flex flex-col gap-2">
+                <div className="absolute top-full  bg-gray-50 p-2 min-w-[150px] left-[13px] flex flex-col">
                   <Link
                     className=" hover:bg-main hover:text-white rounded-sm p-1 hover:font-semibold"
                     to={`/${path.MEMBER}/${path.PERSONAL}`}

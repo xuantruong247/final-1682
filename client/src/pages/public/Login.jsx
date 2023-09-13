@@ -7,7 +7,7 @@ import {
   apiFinalRegister,
 } from "../../apis/user";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import path from "../../utils/path";
 import { login } from "../../redux/user/userSlice";
 import { showModal } from "../../redux/category/categorySlide";
@@ -15,7 +15,6 @@ import { useDispatch } from "react-redux";
 import { validate } from "../../utils/helpers";
 
 const Login = () => {
-
   const dispacth = useDispatch();
 
   const [payload, setPayload] = useState({
@@ -29,12 +28,14 @@ const Login = () => {
   const [invalidFields, setInvalidFields] = useState([]);
 
   const [email, setEmail] = useState("");
-
+  const navigate = useNavigate();
   const [token, setToken] = useState("");
-
+  const [searchParams] = useSearchParams();
+  console.log(searchParams.get("redirect"));
   const handleForgotPassword = async () => {
-    const response = await apiForgotPassword({ email });
     dispacth(showModal({ isShowModal: true, modalChildren: <Loading /> }));
+    const response = await apiForgotPassword({ email });
+    dispacth(showModal({ isShowModal: false, modalChildren: null }));
     if (response.data.success) {
       Swal.fire({
         icon: "success",
@@ -102,7 +103,10 @@ const Login = () => {
               userData: resp?.data?.userData,
             })
           );
-          window.location.replace(`/${path.HOME}`);
+          // searchParams.get("redirect")
+          //   ? navigate(searchParams.get("redirect"))
+          //   : 
+            window.location.replace(`/${path.HOME}`);
           Swal.fire({
             icon: "success",
             title: "Login is successfully!",
@@ -244,7 +248,7 @@ const Login = () => {
             invalidFields={invalidFields}
             setInvalidFieds={setInvalidFields}
           />
-          <Button  handlerOnclick={handlerSubmit}>
+          <Button handlerOnclick={handlerSubmit}>
             {isRegister ? "Register" : "Login"}
           </Button>
           <div className="flex justify-between my-2">
