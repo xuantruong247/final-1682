@@ -30,6 +30,8 @@ const ManageUser = () => {
   const [params] = useSearchParams();
   const [totalCount, setTotalCount] = useState(0);
   const [update, setUpdate] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // State để lưu trang hiện tại
+
 
   const fetchUser = async (params) => {
     const response = await apiGetUsers(params);
@@ -279,7 +281,7 @@ const ManageUser = () => {
           </table>
         </form>
         <div className="w-full flex justify-center items-center">
-          <Pagination totalCount={totalCount} />
+          <Pagination totalCount={totalCount} currentPage={currentPage}/>
         </div>
       </div>
     </div>

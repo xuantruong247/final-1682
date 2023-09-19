@@ -8,28 +8,6 @@ const makeToken = require("uniqid")
 const { users } = require("../utils/constant")
 
 
-//create
-// const register = asyncHandler(async (req, res) => {
-//     const { email, password, firstname, lastname, mobile } = req.body
-//     if (!email || !password || !firstname || !lastname || !mobile) {
-//         return res.status(400).json({
-//             sucess: false,
-//             message: "Missing Text"
-//         })
-//     }
-//     const checkEmail = await User.findOne({ email })
-//     if (checkEmail) throw new Error("Email has existed")
-//     const checkMobile = await User.findOne({ mobile })
-//     if (checkMobile) throw new Error("Mobile has existed")
-//     else {
-//         const newUser = await User.create(req.body)
-//         return res.status(200).json({
-//             success: newUser ? true : false,
-//             message: newUser ? "Register is successfully. Please go login~" : "Something went wrong"
-//         })
-//     }
-// })
-
 const register = asyncHandler(async (req, res) => {
     const { email, password, firstname, lastname, mobile } = req.body
     if (!email || !password || !firstname || !lastname || !mobile) {
@@ -63,7 +41,6 @@ const register = asyncHandler(async (req, res) => {
             message: newUser ? "Please check your email to active account" : "Something went wrong, please try later"
         })
     }
-
 
 })
 

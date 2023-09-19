@@ -105,8 +105,8 @@ const Login = () => {
           );
           // searchParams.get("redirect")
           //   ? navigate(searchParams.get("redirect"))
-          //   : 
-            window.location.replace(`/${path.HOME}`);
+          //   :
+          window.location.replace(`/${path.HOME}`);
           Swal.fire({
             icon: "success",
             title: "Login is successfully!",
@@ -137,6 +137,7 @@ const Login = () => {
         title: "Oops...",
         text: res?.data?.response,
       });
+      setIsVeryfiedEmail(true);
     }
     setIsVeryfiedEmail(false);
     setToken("");

@@ -335,3 +335,76 @@ export const memberSidebar = [
 
 
 ]
+
+export const mapFAQs = [
+    {
+        id: 1,
+        title: "1. Question",
+        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa saepe possimus earum repellendus molestias, harum id minus veniam. Veritatis suscipit quos quas iure quidem nisi ea consectetur nobis error!
+        Fugit quas quidem voluptates quibusdam cumque, officiis eos laborum atque maxime odit saepe doloribus nostrum vel accusantium iste culpa, molestiae sint minus aliquid rerum perspiciatis cum. Quas, iusto? Quo, tempora?
+        Tenetur soluta quo illum nobis earum vel quae recusandae repellat ut sed sint veritatis explicabo assumenda reiciendis fugiat eveniet officiis, iste cumque non adipisci laborum neque! Fuga distinctio necessitatibus laborum.
+        Ab asperiores veritatis dolores provident, repudiandae, ullam magni voluptatem excepturi, exercitationem et similique. Aspernatur quos pariatur corrupti harum doloremque enim eligendi vitae tempora voluptas, quibusdam sint dolorem deserunt modi repellat.
+        Porro, non voluptatibus. Vel, temporibus! Minima rem temporibus distinctio iste omnis alias, porro fuga sequi praesentium ullam saepe iure. Odio cum ipsum labore nisi ab pariatur vitae quia harum minus!
+        Fugiat molestiae ducimus incidunt quisquam accusantium eum, voluptate laboriosam nam, quibusdam odit iusto natus saepe perferendis. Esse in quae quo voluptate porro quos veniam. In vitae totam repudiandae similique nesciunt!
+        Ratione ab ipsa voluptas veniam, maxime ipsam voluptates aliquam exercitationem aut nobis ut officiis quas ex ducimus nam magni vitae facilis odit sint porro ullam nemo sapiente. Repudiandae, nemo dolor?
+        Neque quaerat ut a libero eligendi iure maiores, quibusdam veniam ullam odio error facere quos excepturi perspiciatis, sapiente repellendus, accusantium rem omnis autem nostrum soluta doloremque eum facilis illo? Ipsam?
+        Veritatis reiciendis unde nam, amet, dolor labore eligendi totam nobis minima quis consequatur aut. Recusandae fugit molestias dolore perferendis ea, voluptatibus natus nam odio eos tempora quas laborum distinctio sapiente!
+        Quidem, quae in illo inventore suscipit dolore mollitia aperiam amet. Rerum, aut. Inventore iusto hic suscipit et nesciunt omnis commodi, ducimus libero vero quisquam eius placeat voluptatum. Laudantium, quasi fugiat!`
+    },
+    {
+        id: 2,
+        title: "2. Question",
+        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa saepe possimus earum repellendus molestias, harum id minus veniam. Veritatis suscipit quos quas iure quidem nisi ea consectetur nobis error!
+        Fugit quas quidem voluptates quibusdam cumque, officiis eos laborum atque maxime odit saepe doloribus nostrum vel accusantium iste culpa, molestiae sint minus aliquid rerum perspiciatis cum. Quas, iusto? Quo, tempora?
+        Tenetur soluta quo illum nobis earum vel quae recusandae repellat ut sed sint veritatis explicabo assumenda reiciendis fugiat eveniet officiis, iste cumque non adipisci laborum neque! Fuga distinctio necessitatibus laborum.
+        Ab asperiores veritatis dolores provident, repudiandae, ullam magni voluptatem excepturi, exercitationem et similique. Aspernatur quos pariatur corrupti harum doloremque enim eligendi vitae tempora voluptas, quibusdam sint dolorem deserunt modi repellat.
+        Porro, non voluptatibus. Vel, temporibus! Minima rem temporibus distinctio iste omnis alias, porro fuga sequi praesentium ullam saepe iure. Odio cum ipsum labore nisi ab pariatur vitae quia harum minus!
+        Fugiat molestiae ducimus incidunt quisquam accusantium eum, voluptate laboriosam nam, quibusdam odit iusto natus saepe perferendis. Esse in quae quo voluptate porro quos veniam. In vitae totam repudiandae similique nesciunt!
+        Ratione ab ipsa voluptas veniam, maxime ipsam voluptates aliquam exercitationem aut nobis ut officiis quas ex ducimus nam magni vitae facilis odit sint porro ullam nemo sapiente. Repudiandae, nemo dolor?
+        Neque quaerat ut a libero eligendi iure maiores, quibusdam veniam ullam odio error facere quos excepturi perspiciatis, sapiente repellendus, accusantium rem omnis autem nostrum soluta doloremque eum facilis illo? Ipsam?
+        Veritatis reiciendis unde nam, amet, dolor labore eligendi totam nobis minima quis consequatur aut. Recusandae fugit molestias dolore perferendis ea, voluptatibus natus nam odio eos tempora quas laborum distinctio sapiente!
+        Quidem, quae in illo inventore suscipit dolore mollitia aperiam amet. Rerum, aut. Inventore iusto hic suscipit et nesciunt omnis commodi, ducimus libero vero quisquam eius placeat voluptatum. Laudantium, quasi fugiat!`
+    },
+    {
+        id: 3,
+        title: "3. Question",
+        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa saepe possimus earum repellendus molestias, harum id minus veniam. Veritatis suscipit quos quas iure quidem nisi ea consectetur nobis error!
+        Fugit quas quidem voluptates quibusdam cumque, officiis eos laborum atque maxime odit saepe doloribus nostrum vel accusantium iste culpa, molestiae sint minus aliquid rerum perspiciatis cum. Quas, iusto? Quo, tempora?
+        Tenetur soluta quo illum nobis earum vel quae recusandae repellat ut sed sint veritatis explicabo assumenda reiciendis fugiat eveniet officiis, iste cumque non adipisci laborum neque! Fuga distinctio necessitatibus laborum.
+        Ab asperiores veritatis dolores provident, repudiandae, ullam magni voluptatem excepturi, exercitationem et similique. Aspernatur quos pariatur corrupti harum doloremque enim eligendi vitae tempora voluptas, quibusdam sint dolorem deserunt modi repellat.
+        Porro, non voluptatibus. Vel, temporibus! Minima rem temporibus distinctio iste omnis alias, porro fuga sequi praesentium ullam saepe iure. Odio cum ipsum labore nisi ab pariatur vitae quia harum minus!
+        Fugiat molestiae ducimus incidunt quisquam accusantium eum, voluptate laboriosam nam, quibusdam odit iusto natus saepe perferendis. Esse in quae quo voluptate porro quos veniam. In vitae totam repudiandae similique nesciunt!
+        Ratione ab ipsa voluptas veniam, maxime ipsam voluptates aliquam exercitationem aut nobis ut officiis quas ex ducimus nam magni vitae facilis odit sint porro ullam nemo sapiente. Repudiandae, nemo dolor?
+        Neque quaerat ut a libero eligendi iure maiores, quibusdam veniam ullam odio error facere quos excepturi perspiciatis, sapiente repellendus, accusantium rem omnis autem nostrum soluta doloremque eum facilis illo? Ipsam?
+        Veritatis reiciendis unde nam, amet, dolor labore eligendi totam nobis minima quis consequatur aut. Recusandae fugit molestias dolore perferendis ea, voluptatibus natus nam odio eos tempora quas laborum distinctio sapiente!
+        Quidem, quae in illo inventore suscipit dolore mollitia aperiam amet. Rerum, aut. Inventore iusto hic suscipit et nesciunt omnis commodi, ducimus libero vero quisquam eius placeat voluptatum. Laudantium, quasi fugiat!`
+    },
+    {
+        id: 4,
+        title: "4. Question",
+        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa saepe possimus earum repellendus molestias, harum id minus veniam. Veritatis suscipit quos quas iure quidem nisi ea consectetur nobis error!
+        Fugit quas quidem voluptates quibusdam cumque, officiis eos laborum atque maxime odit saepe doloribus nostrum vel accusantium iste culpa, molestiae sint minus aliquid rerum perspiciatis cum. Quas, iusto? Quo, tempora?
+        Tenetur soluta quo illum nobis earum vel quae recusandae repellat ut sed sint veritatis explicabo assumenda reiciendis fugiat eveniet officiis, iste cumque non adipisci laborum neque! Fuga distinctio necessitatibus laborum.
+        Ab asperiores veritatis dolores provident, repudiandae, ullam magni voluptatem excepturi, exercitationem et similique. Aspernatur quos pariatur corrupti harum doloremque enim eligendi vitae tempora voluptas, quibusdam sint dolorem deserunt modi repellat.
+        Porro, non voluptatibus. Vel, temporibus! Minima rem temporibus distinctio iste omnis alias, porro fuga sequi praesentium ullam saepe iure. Odio cum ipsum labore nisi ab pariatur vitae quia harum minus!
+        Fugiat molestiae ducimus incidunt quisquam accusantium eum, voluptate laboriosam nam, quibusdam odit iusto natus saepe perferendis. Esse in quae quo voluptate porro quos veniam. In vitae totam repudiandae similique nesciunt!
+        Ratione ab ipsa voluptas veniam, maxime ipsam voluptates aliquam exercitationem aut nobis ut officiis quas ex ducimus nam magni vitae facilis odit sint porro ullam nemo sapiente. Repudiandae, nemo dolor?
+        Neque quaerat ut a libero eligendi iure maiores, quibusdam veniam ullam odio error facere quos excepturi perspiciatis, sapiente repellendus, accusantium rem omnis autem nostrum soluta doloremque eum facilis illo? Ipsam?
+        Veritatis reiciendis unde nam, amet, dolor labore eligendi totam nobis minima quis consequatur aut. Recusandae fugit molestias dolore perferendis ea, voluptatibus natus nam odio eos tempora quas laborum distinctio sapiente!
+        Quidem, quae in illo inventore suscipit dolore mollitia aperiam amet. Rerum, aut. Inventore iusto hic suscipit et nesciunt omnis commodi, ducimus libero vero quisquam eius placeat voluptatum. Laudantium, quasi fugiat!`
+    },
+    {
+        id: 5,
+        title: "5. Question",
+        text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa saepe possimus earum repellendus molestias, harum id minus veniam. Veritatis suscipit quos quas iure quidem nisi ea consectetur nobis error!
+        Fugit quas quidem voluptates quibusdam cumque, officiis eos laborum atque maxime odit saepe doloribus nostrum vel accusantium iste culpa, molestiae sint minus aliquid rerum perspiciatis cum. Quas, iusto? Quo, tempora?
+        Tenetur soluta quo illum nobis earum vel quae recusandae repellat ut sed sint veritatis explicabo assumenda reiciendis fugiat eveniet officiis, iste cumque non adipisci laborum neque! Fuga distinctio necessitatibus laborum.
+        Ab asperiores veritatis dolores provident, repudiandae, ullam magni voluptatem excepturi, exercitationem et similique. Aspernatur quos pariatur corrupti harum doloremque enim eligendi vitae tempora voluptas, quibusdam sint dolorem deserunt modi repellat.
+        Porro, non voluptatibus. Vel, temporibus! Minima rem temporibus distinctio iste omnis alias, porro fuga sequi praesentium ullam saepe iure. Odio cum ipsum labore nisi ab pariatur vitae quia harum minus!
+        Fugiat molestiae ducimus incidunt quisquam accusantium eum, voluptate laboriosam nam, quibusdam odit iusto natus saepe perferendis. Esse in quae quo voluptate porro quos veniam. In vitae totam repudiandae similique nesciunt!
+        Ratione ab ipsa voluptas veniam, maxime ipsam voluptates aliquam exercitationem aut nobis ut officiis quas ex ducimus nam magni vitae facilis odit sint porro ullam nemo sapiente. Repudiandae, nemo dolor?
+        Neque quaerat ut a libero eligendi iure maiores, quibusdam veniam ullam odio error facere quos excepturi perspiciatis, sapiente repellendus, accusantium rem omnis autem nostrum soluta doloremque eum facilis illo? Ipsam?
+        Veritatis reiciendis unde nam, amet, dolor labore eligendi totam nobis minima quis consequatur aut. Recusandae fugit molestias dolore perferendis ea, voluptatibus natus nam odio eos tempora quas laborum distinctio sapiente!
+        Quidem, quae in illo inventore suscipit dolore mollitia aperiam amet. Rerum, aut. Inventore iusto hic suscipit et nesciunt omnis commodi, ducimus libero vero quisquam eius placeat voluptatum. Laudantium, quasi fugiat!`
+    },
+]

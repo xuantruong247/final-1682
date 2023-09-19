@@ -30,19 +30,19 @@ const Header = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className=" w-main h-[110px] py-[35px] flex justify-between">
+    <div className="w-main m2xl:min-w-[1440px] h-[110px] py-[35px] flex items-center justify-between mmd:flex mmd:justify-between mmd:max-w-[768px] ">
       <Link to={`${path.HOME}`}>
-        <img src={logo} alt="logo" className="w-[250px] h-[45px]" />
+        <img src={logo} alt="logo" className="w-[250px] h-[45px] msm:w-[150px] msm:h-[30px]" />
       </Link>
       <div className="flex text-[13px]">
-        <div className="flex flex-col items-center px-6 border-r">
+        <div className="flex flex-col items-center px-6 border-r mmd:hidden">
           <p className="flex gap-4 items-center">
             <BsFillTelephoneFill color="red" />
             <span className="font-semibold">(0856) 93 2222 </span>
           </p>
           <span>Mon-Sat 9:00AM - 8:00 PM</span>
         </div>
-        <div className="flex flex-col items-center px-6 border-r">
+        <div className="flex flex-col items-center px-6 border-r mmd:hidden">
           <p className="flex gap-4 items-center">
             <MdMarkEmailUnread color="red" />
             <span className="font-semibold">TRUONGNXGCS190087@FPT.EDU.VN </span>

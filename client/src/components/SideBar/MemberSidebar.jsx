@@ -6,7 +6,6 @@ import { AiFillCaretDown, AiFillCaretRight } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import avatar from "../../assets/image/avatar.png";
 import path from "../../utils/path";
-import { AiOutlineArrowLeft } from "react-icons/ai";
 
 const activeStype =
   "px-4 py-2 flex items-center gap-2 text-white bg-main font-medium border rounded-lg";
@@ -92,10 +91,12 @@ const MemberSidebar = () => {
             </Fragment>
           ))}
         </div>
-        <Link to={`/${path.HOME}`} className="flex justify-center mt-20 flex-none">
+        <Link
+          to={`/${path.HOME}`}
+          className="flex justify-center mt-20 flex-none"
+        >
           <button className="bg-extra hover:bg-main text-white px-3 py-2 rounded mr-3 flex gap-1 items-center">
-            <AiOutlineArrowLeft />
-            Back
+            Go home
           </button>
         </Link>
       </div>

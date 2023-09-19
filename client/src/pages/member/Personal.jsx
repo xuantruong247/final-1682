@@ -62,7 +62,7 @@ const Personal = () => {
         <span>Personal</span>
       </h1>
       <form onSubmit={handleSubmit(handleUpdateInfor)}>
-        <div className="w-3/5 mx-auto my-8 flex flex-col gap-20">
+        <div className="w-3/5 mx-auto my-4 flex flex-col gap-16">
           <InputForm
             label={"Firstname"}
             register={register}
@@ -109,20 +109,20 @@ const Personal = () => {
             }}
           />
         </div>
-        <div className="flex flex-col mt-16 w-3/5 mx-auto">
+        <div className="flex flex-col mt-14 w-3/5 mx-auto">
           <div className="flex gap-2">
             <span className="font-medium">Account status:</span>
             <span>{current?.isBlocked ? "Blocked" : "Actived"}</span>
           </div>
-          <div className="flex gap-2 mt-4">
+          <div className="flex gap-2 mt-2">
             <span className="font-medium">Role:</span>
             <span>{current?.role}</span>
           </div>
-          <div className="flex gap-2 mt-4">
+          <div className="flex gap-2 mt-2">
             <span className="font-medium">Create At:</span>
             <span>{moment(current?.createdAt).fromNow()}</span>
           </div>
-          <div className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-col gap-2 mt-2">
             <span className="font-medium">Profile image:</span>
             <label htmlFor="file">
               <img
@@ -136,7 +136,7 @@ const Personal = () => {
           </div>
         </div>
         {isDirty && (
-          <div className="w-full flex justify-center mt-4">
+          <div className="w-full flex justify-center mt-2">
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded"

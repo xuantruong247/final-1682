@@ -8,7 +8,7 @@ const sendMail = asyncHandler(async ({ email, html, subject }) => {
         secure: false, // true for 465, false for other ports
         auth: {
             user: process.env.EMAIL_NAME, // generated ethereal user
-            pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
+            pass:  process.env.EMAIL_APP_PASSWORD, // generated ethereal password
         },
     });
 
@@ -19,7 +19,6 @@ const sendMail = asyncHandler(async ({ email, html, subject }) => {
         subject: subject, // Subject line
         html: html, // html body
     });
-
     return info
 })
 

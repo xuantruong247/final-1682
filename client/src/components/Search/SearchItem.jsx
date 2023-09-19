@@ -42,7 +42,7 @@ const SearchItem = ({
 
   useEffect(() => {
     navigate({
-      pathname: `/${category ? category : path.PRODUCTS}`,
+      pathname: `/${path.PRODUCTS}`,
       search: createSearchParams({
         category: selected,
         brand: selectedBrand,
@@ -85,7 +85,7 @@ const SearchItem = ({
     }
     if (Number(price.from) > 0 || Number(price.to) > 0) {
       navigate({
-        pathname: `/${category ? category : path.PRODUCTS}`,
+        pathname: `/${path.PRODUCTS}`,
         search: createSearchParams(data).toString(),
       });
     }
@@ -113,6 +113,7 @@ const SearchItem = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelected([]);
+                    setSelectedBrand([])
                   }}
                   className="underline hover:text-main"
                 >

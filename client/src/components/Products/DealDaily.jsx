@@ -17,16 +17,13 @@ const DealDaily = () => {
   const navigate = useNavigate()
   const getDealdaily = async () => {
     const response = await apiGetAllProducts({
-      // page: 5,
-      // random images
-      page: Math.round() * 2,
-      totalRatings: 5,
+sort:"totalRatings"
     });
     if (response.data.products) {
       setDealdaily(response?.data?.products);
-      const h = 24 - new Date().getHours();
-      const m = 60 - new Date().getMinutes();
-      const s = 60 - new Date().getSeconds();
+      const h = 23 - new Date().getHours();
+      const m = 59 - new Date().getMinutes();
+      const s = 59 - new Date().getSeconds();
       setHour(h);
       setMinute(m);
       setSecond(s);

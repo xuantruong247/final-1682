@@ -1,9 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  createSearchParams,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createSearchParams, useNavigate, useParams } from "react-router-dom";
 import { apiGetProduct, apiGetAllProducts, apiUpdateCart } from "../../apis";
 import Slider from "react-slick";
 import { formatMoney, renderStarFromNumber } from "../../utils/helpers";
@@ -15,7 +11,7 @@ import {
   ProductInformation,
   SliderCustomer,
 } from "../../components";
-import { ProductExtraInformation } from "../../utils/contants";
+import { ProductExtraInformation, productInfoTabs } from "../../utils/contants";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { getCurrent } from "../../redux/user/asyncAction";
@@ -30,16 +26,31 @@ const settings = {
   slidesToScroll: 1,
 };
 
-const DetailProduct = () => {
-  const { pid, category } = useParams();
+const DetailProduct = ({ data }) => {
+  const titleRef = useRef();
+  const params = useParams();
   const [product, setProduct] = useState(null);
   const [currentImage, setCurrentImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
   const [update, setUpdate] = useState(false);
+  const [activeTabs, setActiveTabs] = useState(1);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { current } = useSelector((state) => state.user);
+  const [pid, setPid] = useState(null);
+  const [category, setCategory] = useState(null);
+
+  useEffect(() => {
+    if (data) {
+      setPid(data.pid);
+      setCategory(data.category);
+    } else if (params && params.pid) {
+      setPid(params.pid);
+      setCategory(params.category);
+    }
+  }, [data, params]);
 
   const fetchProductData = async () => {
     const response = await apiGetProduct(pid);
@@ -59,6 +70,14 @@ const DetailProduct = () => {
     if (pid) {
       fetchProductData();
       fetchProducts();
+    }
+    window.scrollTo(0, 0);
+    titleRef.current.scrollIntoView({ block: "center" });
+  }, [pid, params.pid]);
+
+  useEffect(() => {
+    if (pid) {
+      fetchProductData();
     }
   }, [update]);
 
@@ -103,9 +122,9 @@ const DetailProduct = () => {
   return (
     <div className="w-full">
       <div className="h-[81px] flex items-center justify-center bg-gray-100">
-        <div className="w-main flex flex-col gap-1">
+        <div ref={titleRef} className="w-main flex flex-col gap-1">
           <h3 className="font-medium uppercase">{product?.title}</h3>
-          <Breakcrumb title={product?.title}/>
+          <Breakcrumb title={product?.title} />
         </div>
       </div>
       <div className="w-main m-auto mt-4 flex">
@@ -181,6 +200,17 @@ const DetailProduct = () => {
           ))}
         </div>
       </div>
+      <div className="w-main mx-auto">
+        <div className="flex items-center gap-2 relative bottom-[-1px]">
+          <span
+            className="p-2 rounded-sm px-4 cursor-pointer bg-white border border-b-0 text-main"
+          >
+            DESCRIPTION
+          </span>
+        </div>
+        <div className="w-full border p-4">{product?.description}</div>
+      </div>
+
       <div className="w-main m-auto mt-8">
         <ProductInformation
           totalRatings={product?.totalRatings}

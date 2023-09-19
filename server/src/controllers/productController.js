@@ -123,6 +123,10 @@ const getAllProducts = asyncHandler(async (req, res) => {
                 sortOption.createdAt = -1;
                 isSort = true;
                 break;
+            case "totalRatings":
+                sortOption.totalRatings = -1;
+                isSort = true;
+                break;
             default:
                 break;
         }

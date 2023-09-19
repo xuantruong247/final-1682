@@ -17,7 +17,7 @@ import { apiGetAllProducts } from "../../apis/product";
 import Masonry from "react-masonry-css";
 import { sorts } from "../../utils/contants";
 import path from "../../utils/path";
-import { AiOutlineRight } from 'react-icons/ai'
+import { AiOutlineRight } from "react-icons/ai";
 
 const breakpointColumnsObj = {
   default: 4,
@@ -42,7 +42,6 @@ const Products = () => {
     }
   };
 
-  const { category } = useParams();
 
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
@@ -51,14 +50,6 @@ const Products = () => {
 
     const arrBrandId = brandId.join(",");
     queries.brandId = arrBrandId;
-
-    navigate({
-      pathname: `/${category ? category : path.PRODUCTS}`,
-      search: createSearchParams({
-        category: categoriesId,
-        brand: brandId,
-      }).toString(),
-    });
 
     if (queries.from) {
       queries.price = { gte: queries.from };
@@ -99,7 +90,7 @@ const Products = () => {
   useEffect(() => {
     if (sort) {
       navigate({
-        pathname: `/${category ? category : path.PRODUCTS}`,
+        pathname: `/${path.PRODUCTS}`,
         search: createSearchParams({
           sort,
         }).toString(),
@@ -111,10 +102,13 @@ const Products = () => {
     <div className="w-full">
       <div className="h-[81px] flex  items-center justify-center bg-gray-100">
         <div className="w-main">
-          <h3 className="font-medium uppercase">Products</h3>
+          <h3 className="font-medium">Products</h3>
           <span className="flex gap-1">
-          <Breakcrumb/>
-          <span className="flex items-center gap-1 text-sm"><AiOutlineRight size={10}/>Product</span>
+            <Breakcrumb />
+            <span className="flex items-center gap-1 text-sm">
+              <AiOutlineRight size={10} />
+              Product
+            </span>
           </span>
         </div>
       </div>
@@ -174,7 +168,6 @@ const Products = () => {
       <div className="w-main m-auto my-4 flex justify-center">
         <Pagination totalCount={products?.counts} />
       </div>
-      <div className="h-[500px]"></div>
     </div>
   );
 };

@@ -12,6 +12,7 @@ const path = {
     FINAL_REGISTER: 'finalregister/:status',
     RESET_PASSWORD: 'reset-password/:token',
     DETAIL_CART:"my-cart",
+    NOT_FOUND_404:"*",
 
 
 
@@ -34,8 +35,8 @@ const path = {
     PERSONAL: "personal",
     MY_CART: "my-cart",
     HISTORY: "buy-history",
-    WISHLIST: "wishlist"
-
+    WISHLIST: "wishlist",
+    CHECKOUT:"checkout"
 
 
 }

@@ -29,7 +29,7 @@ export { default as Loading } from "./Common/Loading"
 export { default as AdminSidebar } from "./SideBar/AdminSidebar"
 export { default as InputForm } from "./Inputs/InputForm"
 export { default as Select } from "./Inputs/Select"
-export { default as Blogs } from "./Blog/Blogs"
+export { default as BlogsComponent } from "./Blog/BlogsComponent"
 export { default as MarkdownEditor } from "./Inputs/MarkdownEditor"
 export { default as MemberSidebar } from "./SideBar/MemberSidebar"
 export { default as QuickView } from "./Products/QuickView"
@@ -37,6 +37,9 @@ export { default as Cart } from "./Products/Cart"
 export { default as OrderItem } from "./Products/OrderItem"
 export { default as NewArrivals } from "./Products/NewArrivals"
 export { default as Breakcrumb } from "./Breakcrumb/Breakcrumb"
+export { default as Paypal } from "./Common/Paypal"
+export { default as NotFound404 } from "./NotFound404/NotFound404"
+export { default as BlogCard } from "./Blog/BlogCard"
 
 
 

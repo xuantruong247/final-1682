@@ -6,7 +6,9 @@ const router = express.Router()
 
 
 router.get("/", ctrls.getAllBlogs)
-router.post("/create", [verifyAccessToken, isAdmin], ctrls.createNewBlog)
+router.post("/create", [verifyAccessToken, isAdmin], uploader.fields([
+    { name: "image", maxCount: 1 }
+]), ctrls.createNewBlog)
 
 router.delete("/delete/:bid", [verifyAccessToken, isAdmin], ctrls.deleteBlog)
 router.get("/:bid", [verifyAccessToken], ctrls.getBlog)

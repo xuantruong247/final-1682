@@ -5,7 +5,7 @@ import {
   BestSeller,
   DealDaily,
   FeatureProducts,
-  Blogs,
+  BlogsComponent,
 } from "../../components";
 import { Helmet } from "react-helmet";
 
@@ -35,7 +35,7 @@ const Home = () => {
         <FeatureProducts />
       </div>
       <div className="my-8 w-main m-auto">
-        <Blogs />
+        <BlogsComponent />
       </div>
     </>
   );

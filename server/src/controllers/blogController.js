@@ -2,9 +2,18 @@ const Blog = require("../models/blog")
 const asyncHandler = require("express-async-handler")
 
 const createNewBlog = asyncHandler(async (req, res) => {
-    const { title, description, category } = req.body
-    if (!title || !description || !category) throw new Error("Missting text")
-    const response = await Blog.create(req.body)
+    const { title, description, } = req.body
+    if (!title || !description) throw new Error("Missting text")
+
+    const image = req.files.image[0].path
+    // console.log(req.files.image[0].path);
+    if (image) {
+        req.body.image = image
+    }
+    console.log(image);
+
+    const response = await Blog.create({ title, description, image })
+    console.log(response);
     return res.status(200).json({
         success: response ? true : false,
         createdBlog: response ? response : "Cannot create new blog "
@@ -26,7 +35,7 @@ const getAllBlogs = asyncHandler(async (req, res) => {
     const response = await Blog.find()
     return res.status(200).json({
         success: response ? true : false,
-        updatedBlog: response ? response : "Cannot update blog "
+        getBlogs: response ? response : "Cannot update blog "
     })
 })
 

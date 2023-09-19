@@ -67,27 +67,6 @@ const ProductInformation = ({
 
   return (
     <div>
-      <div className="flex items-center gap-2 relative bottom-[-1px]">
-        {productInfoTabs.map((item, index) => (
-          <span
-            onClick={() => {
-              setActiveTabs(item.id);
-            }}
-            className={`p-2 rounded-sm px-4 cursor-pointer ${
-              activeTabs === item.id
-                ? "bg-white border border-b-0  text-main"
-                : "bg-gray-200 "
-            }`}
-            key={index}
-          >
-            {item.name}
-          </span>
-        ))}
-      </div>
-      <div className="w-full border p-4">
-        {productInfoTabs.some((item) => item.id === activeTabs) &&
-          productInfoTabs.find((item) => item.id === activeTabs)?.content}
-      </div>
       <div>
         <div className="flex flex-col py-8">
           <div className="flex border">

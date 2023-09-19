@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { Breakcrumb } from "../../components";
 import { AiOutlineRight, AiOutlineMinus } from "react-icons/ai";
 import { GrFormAdd } from "react-icons/gr";
+import { mapFAQs } from "../../utils/contants";
 
 const activeStyle = "bg-main text-white";
 const notActiveStyle = "";
 
 const FAQ = () => {
-  const [isActive, setIsActive] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
-  const toggleActive = () => {
-    setIsActive(!isActive);
+  const toggleActive = (index) => {
+    setActiveIndex((prevIndex) => (prevIndex === index ? -1 : index));
   };
 
   return (
@@ -22,15 +23,33 @@ const FAQ = () => {
             <Breakcrumb />
             <span className="flex items-center gap-1 text-sm">
               <AiOutlineRight size={10} />
-              FAQs
+              <span>FAQs</span>
             </span>
           </span>
         </div>
       </div>
-      <div className="w-main m-auto p-4">
-       
+      <div className="w-main m-auto mt-4 mb-16 flex flex-col gap-2">
+        {mapFAQs.map((item, index) => (
+          <div key={index}>
+            <div
+              className={`border flex items-center justify-between p-4 cursor-pointer ${
+                activeIndex === index ? activeStyle : notActiveStyle
+              }`}
+              onClick={() => toggleActive(index)}
+            >
+              <span>{item.title}</span>
+              {activeIndex === index ? (
+                <AiOutlineMinus />
+              ) : (
+                <GrFormAdd size={18} />
+              )}
+            </div>
+            {activeIndex === index && (
+              <span className="block border w-full p-4">{item.text}</span>
+            )}
+          </div>
+        ))}
       </div>
-      
     </div>
   );
 };

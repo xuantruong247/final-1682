@@ -9,7 +9,7 @@ import { BsTrash } from "react-icons/bs";
 import { apiRemoveCart } from "../../apis";
 import { getCurrent } from "../../redux/user/asyncAction";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import path from "../../utils/path";
 
 const Cart = () => {
@@ -98,7 +98,7 @@ const Cart = () => {
         <div className="flex flex-col gap-2">
           <Button
             handlerOnclick={() => {
-              navigate(`/${path.DETAIL_CART}`);
+              navigate(`/${path.MEMBER}/${path.DETAIL_CART}`);
               dispatch(showCart());
             }}
             style="rounded-none w-full bg-main py-2 flex items-center justify-center"
@@ -106,10 +106,16 @@ const Cart = () => {
             <span>Shopping Cart</span>
             <BsArrowRightShort />
           </Button>
-          <Button style="rounded-none w-full bg-main py-2 flex items-center justify-center">
+          <Link
+            target="_blank"
+            to={`/${path.CHECKOUT}`}
+            className=" 
+            rounded-none w-full bg-main py-2 flex items-center justify-center
+            "
+          >
             <span>Checkout</span>
             <BsArrowRightShort />
-          </Button>
+          </Link>
         </div>
       </div>
     </div>

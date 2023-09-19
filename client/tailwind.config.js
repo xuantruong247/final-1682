@@ -91,6 +91,34 @@ module.exports = {
     listStyleType: {
       square: 'square',
     },
+    screens: {
+      'sm': '640px',
+      // => @media (min-width: 640px) { ... }
+
+      'md': '768px',
+      // => @media (min-width: 768px) { ... }
+
+      'lg': '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '1280px',
+      // => @media (min-width: 1280px) { ... }
+      'm2xl': { 'max': '1440px' },
+      // => @media (max-width: 1440px) { ... }
+      'mxl': { 'max': '1280px' },
+      // => @media (max-width: 1279px) { ... }
+
+      'mlg': { 'max': '1024px' },
+      // => @media (max-width: 1023px) { ... }
+
+      'mmd': { 'max': '768px' },
+      // => @media (max-width: 767px) { ... }
+
+      'mmdqa': { 'max': '769px' },
+
+      'msm': { 'max': '640px' },
+      // => @media (max-width: 639px) { ... }
+    }
   },
   plugins: [
     "@tailwindcss/line-clamp"

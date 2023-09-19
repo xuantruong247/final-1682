@@ -10,13 +10,10 @@ const FeatureProducts = () => {
   const [products, setProducts] = useState([]);
 
   const getProducts = async () => {
-    const response = await apiGetAllProducts({
-      limit: 9,
-      page: Math.round(Math.random() * 0),
-      totalRatings: 5,
-    });
+    const response = await apiGetAllProducts({ sort: "totalRatings" });
     if (response.data.products) {
       setProducts(response.data.products);
+      console.log(response.data.products);
     }
   };
   useEffect(() => {

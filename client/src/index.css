@@ -164,8 +164,7 @@ button.slick-prev::before {
     width: 500px;
 }
 
-
-.recharts-surface {
-    width: 700px;
-    /* height: 500px; */
+.map-container {
+    width: 100%;
+    height: 65vh;
 }

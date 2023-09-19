@@ -106,7 +106,7 @@ const Dashboard = () => {
           beginAtZero: true,
           title: {
             display: true,
-            text: "Số lượng sản phẩm",
+            text: "The number of products",
             font: {
               weight: "bold",
               size: 16,
@@ -164,12 +164,13 @@ const Dashboard = () => {
           <div className="border-b h-[40px] px-4 flex items-center">
             <span className="text-lg font-semibold">Products by category</span>
           </div>
-          <div className="h-[500px]">
+          <div className="min-h-[430px]">
             <Bar options={chartOptions} data={chartData} />
           </div>
         </div>
         <div className="flex-3 bg-slate-50">dasd</div>
       </div>
+      <div>order</div>
     </div>
   );
 };

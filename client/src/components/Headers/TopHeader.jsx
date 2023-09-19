@@ -17,8 +17,10 @@ const TopHeader = () => {
 
   return (
     <div className="h-[38px] w-full bg-main flex items-center justify-center">
-      <div className="w-main flex items-center justify-between text-sm text-white">
-        <span>ORDER ONLINE OR CALL US (0856) 93 2222 </span>
+      <div className="w-main flex justify-between items-center text-sm text-white msm:justify-center">
+        <span className="msm:hidden inline">
+          ORDER ONLINE OR CALL US (0856) 93 2222
+        </span>
         {isLogindIn ? (
           <small className="flex justify-center gap-2 items-center">
             <span className="text-xs font-semibold">
@@ -36,5 +38,3 @@ const TopHeader = () => {
 };
 
 export default memo(TopHeader);
-
-
