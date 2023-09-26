@@ -11,7 +11,7 @@ import {
   ProductInformation,
   SliderCustomer,
 } from "../../components";
-import { ProductExtraInformation, productInfoTabs } from "../../utils/contants";
+import { ProductExtraInformation } from "../../utils/contants";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { getCurrent } from "../../redux/user/asyncAction";
@@ -34,7 +34,6 @@ const DetailProduct = ({ data }) => {
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState(null);
   const [update, setUpdate] = useState(false);
-  const [activeTabs, setActiveTabs] = useState(1);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

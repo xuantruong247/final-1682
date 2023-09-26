@@ -5,15 +5,11 @@ const createNewBlog = asyncHandler(async (req, res) => {
     const { title, description, } = req.body
     if (!title || !description) throw new Error("Missting text")
 
-    const image = req.files.image[0].path
-    // console.log(req.files.image[0].path);
-    if (image) {
-        req.body.image = image
+    const imageThum = req.files.imageThum[0].path
+    if (imageThum) {
+        req.body.imageThum = imageThum
     }
-    console.log(image);
-
-    const response = await Blog.create({ title, description, image })
-    console.log(response);
+    const response = await Blog.create({ title, description, imageThum })
     return res.status(200).json({
         success: response ? true : false,
         createdBlog: response ? response : "Cannot create new blog "
@@ -23,19 +19,33 @@ const createNewBlog = asyncHandler(async (req, res) => {
 
 const updateBlog = asyncHandler(async (req, res) => {
     const { bid } = req.params
-    if (Object.keys(req.body).length === 0) throw new Error("Missting text")
-    const response = await Blog.findByIdAndUpdate(bid, req.body, { new: true })
+    const file = req?.files
+
+    if (file) {
+        if (file.imageThum) {
+            req.body.imageThum = file.imageThum[0].path
+        }
+    }
+
+        const updatedFields = {...req.body}
+
+    const response = await Blog.findByIdAndUpdate(bid, updatedFields, { new: true })
     return res.status(200).json({
-        success: response ? true : false,
+        success: response !== null,
         updatedBlog: response ? response : "Cannot update blog "
     })
 })
 
 const getAllBlogs = asyncHandler(async (req, res) => {
-    const response = await Blog.find()
+    const { page = 1, limit = 7 } = req.query;
+    let query = Blog.find()
+    const counts = await Blog.find().countDocuments();
+    query = query.limit(parseInt(limit)).skip((page - 1) * limit)
+    const response = await query.exec()
     return res.status(200).json({
         success: response ? true : false,
-        getBlogs: response ? response : "Cannot update blog "
+        getBlogs: response ? response : "Cannot update blog ",
+        counts
     })
 })
 
@@ -108,7 +118,7 @@ const getBlog = asyncHandler(async (req, res) => {
     const blog = await Blog.findByIdAndUpdate(bid, { $inc: { numberViews: 1 } }, { new: true }).populate("likes", "firstname lastname").populate("dislikes", "firstname lastname")
     return res.status(200).json({
         success: blog ? true : false,
-        message: blog
+        getBlog: blog ? blog : "Something went wrong"
     })
 })
 

@@ -13,7 +13,6 @@ const FeatureProducts = () => {
     const response = await apiGetAllProducts({ sort: "totalRatings" });
     if (response.data.products) {
       setProducts(response.data.products);
-      console.log(response.data.products);
     }
   };
   useEffect(() => {

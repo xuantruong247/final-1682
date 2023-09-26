@@ -129,6 +129,7 @@ const UpdateProduct = ({ editProduct, setEditProduct, render }) => {
         });
         setEditProduct(null);
         render();
+        
       } else {
         Swal.fire({
           icon: "error",
@@ -147,7 +148,7 @@ const UpdateProduct = ({ editProduct, setEditProduct, render }) => {
   return (
     <div className="w-full h-full">
       <h1 className="h-[60px] flex justify-between items-center text-2xl font-bold px-4 border-b border-sky-300">
-        <span>Update Products</span>
+        <span>Update Product</span>
         <span
           onClick={() => {
             setEditProduct(null);

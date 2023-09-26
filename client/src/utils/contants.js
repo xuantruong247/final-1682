@@ -3,7 +3,7 @@ import { BsShieldShaded, BsTruck, BsReplyAll } from "react-icons/bs";
 import { FaTty } from "react-icons/fa";
 import { AiOutlineGift, AiFillDashboard, AiOutlineUsergroupAdd } from "react-icons/ai"
 import { RiBillFill, RiProductHuntFill } from 'react-icons/ri'
-import { TbCategory, TbBrandCodesandbox } from "react-icons/tb";
+import { TbCategory, TbBrandCodesandbox, TbBrandBlogger } from "react-icons/tb";
 
 
 export const navigation = [
@@ -296,6 +296,22 @@ export const adminSidebar = [
     },
     {
         id: 6,
+        type: "PARENT",
+        text: "Manage Blog",
+        icon: <TbBrandBlogger size={20} />,
+        subMenu: [
+            {
+                text: 'Create Blog',
+                path: `/${path.ADMIN}/${path.CREATE_BLOG}`
+            },
+            {
+                text: "Manage Blog",
+                path: `/${path.ADMIN}/${path.MANAGE_BLOG}`
+            }
+        ]
+    },
+    {
+        id: 7,
         type: "SINGLE",
         text: "Manage Order",
         path: `/${path.ADMIN}/${path.MANAGE_ORDER}`,

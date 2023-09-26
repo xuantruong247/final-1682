@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from "react-router-dom"
-import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailCart } from "./pages/public"
-import { Admin, CreateBrand, CreateCategory, CreateProduct, Dashboard, ManageBrand, ManageCategory, ManageOder, ManageProduct, ManageUser } from './pages/admin'
+import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailCart, DetailBlog } from "./pages/public"
+import { Admin, CreateBlog, CreateBrand, CreateCategory, CreateProduct, Dashboard, ManageBlog, ManageBrand, ManageCategory, ManageOder, ManageProduct, ManageUser } from './pages/admin'
 import { Checkout, History, Menber, MyCart, Personal, Wishlist } from './pages/member'
 import path from "./utils/path"
 import { getCategories } from './redux/category/asyncAction';
@@ -29,8 +29,8 @@ function App() {
 
 
   return (
-    <div className="font-main h-screen relative w-full">
-      {isShowCart && <div onClick={() => { 
+    <div className="font-main h-full relative w-full">
+      {isShowCart && <div onClick={() => {
         dispatch(showCart())
       }} className='absolute inset-0 bg-overlay z-50 flex justify-end'>
         <Cart />
@@ -48,6 +48,7 @@ function App() {
           <Route path={path.BLOG} element={<Blog />} />
           <Route path={path.CONTACT} element={<Contact />} />
           <Route path={path.FAQ} element={<FAQ />} />
+          <Route path={path.DETAIL_BLOG_BID_TITLE} element={<DetailBlog />} />
 
 
         </Route>
@@ -63,6 +64,8 @@ function App() {
           <Route path={path.MANAGE_CATEGORY} element={<ManageCategory />} />
           <Route path={path.CREATE_BRAND} element={<CreateBrand />} />
           <Route path={path.MANAGE_BRAND} element={<ManageBrand />} />
+          <Route path={path.MANAGE_BLOG} element={<ManageBlog />} />
+          <Route path={path.CREATE_BLOG} element={<CreateBlog />} />
 
         </Route>
 

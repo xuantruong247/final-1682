@@ -6,7 +6,7 @@ import {
   TbBrandCodesandbox,
   TbBrandProducthunt,
 } from "react-icons/tb";
-import { Bar } from "react-chartjs-2";
+import { Bar, Line, Pie } from "react-chartjs-2";
 import {
   apiGetAllProducts,
   apiGetBrand,
@@ -17,41 +17,69 @@ import {
 const Dashboard = () => {
   const [productCount, setProductCount] = useState([]);
   const [chartProductData, setChartProductData] = useState([]);
-  const [userCount, setUserCount] = useState([]);
+  const [userCount, setUserCount] = useState(0);
+  const [blockedUserCount, setBlockedUserCount] = useState(0);
+  const [activeUserCount, setActiveUserCount] = useState(0);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [top10Products, setTop10Products] = useState([]);
 
   const fetchAllProducts = async () => {
     const perPage = 12; // Số lượng sản phẩm trên mỗi trang
     let allProducts = [];
     let page = 1;
     let totalPages = 1;
-  
+
     while (page <= totalPages) {
-      const resp = await apiGetAllProducts({ page });
-  
+      const resp = await apiGetAllProducts({ page, sort: "sold" });
+
       if (resp.data.counts) {
         const products = resp.data.products;
         allProducts = allProducts.concat(products);
-  
+
         // Tính tổng số trang dựa trên số lượng sản phẩm và số lượng sản phẩm trên mỗi trang
         totalPages = Math.ceil(resp.data.counts / perPage);
-  
+
         page++;
       } else {
-        break; // Kết thúc vòng lặp nếu không còn dữ liệu
+        break;
       }
     }
-  
-    // Ở đây, allProducts chứa tất cả sản phẩm từ tất cả các trang
     setProductCount(allProducts.length);
     setChartProductData(allProducts);
-  };
-  
 
-  const fetchUser = async () => {
-    const resp = await apiGetUsers();
-    setUserCount(resp.data.counts);
+    const top10SellingProduct = allProducts.slice(0, 10);
+    setTop10Products(top10SellingProduct);
+  };
+
+  const fetchAllUsers = async () => {
+    let allUsers = [];
+    const limit = 12;
+    let page = 1;
+    let totalPages = 1;
+
+    while (page <= totalPages) {
+      const resp = await apiGetUsers({ page });
+
+      if (resp.data.counts) {
+        const users = resp.data.users;
+        allUsers = allUsers.concat(users);
+
+        // Tính tổng số trang dựa trên số lượng người dùng và số lượng người dùng trên mỗi trang
+        totalPages = Math.ceil(resp.data.counts / limit);
+
+        page++;
+      } else {
+        break;
+      }
+    }
+    setUserCount(allUsers.length);
+
+    const blockedCount = allUsers.filter(
+      (user) => user.isBlocked === true
+    ).length;
+    setBlockedUserCount(blockedCount);
+    setActiveUserCount(allUsers.length - blockedCount);
   };
 
   const fetchCategories = async () => {
@@ -66,15 +94,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchAllProducts();
-    fetchUser();
+    fetchAllUsers();
     fetchCategories();
     fetchBrands();
   }, []);
 
-  // Khởi tạo đối tượng để lưu số lượng sản phẩm cho từng danh mục
   const categoryCounts = {};
 
-  // Lặp qua toàn bộ danh sách sản phẩm và cập nhật số lượng sản phẩm cho từng danh mục
   chartProductData.forEach((item) => {
     const categoryTitle = item.category.title;
     if (categoryCounts.hasOwnProperty(categoryTitle)) {
@@ -85,7 +111,7 @@ const Dashboard = () => {
   });
 
   // Chuyển dữ liệu từ object categoryCounts thành mảng để sử dụng cho biểu đồ
-  const chartData = {
+  const productByCategory = {
     labels: Object.keys(categoryCounts), // Tên các danh mục
     datasets: [
       {
@@ -96,26 +122,44 @@ const Dashboard = () => {
     ],
   };
 
-  const chartOptions = {
-    scales: {
-      x: {
-        beginAtZero: true,
+  const userBlocks = {
+    labels: ["Block", "Active"],
+    datasets: [
+      {
+        data: [blockedUserCount, activeUserCount],
+        backgroundColor: ["red", "green"],
       },
-      y: [
-        {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "The number of products",
-            font: {
-              weight: "bold",
-              size: 16,
-            },
-          },
-        },
-      ],
-    },
+    ],
   };
+
+  const maxNameLength = 12;
+
+  const productName = top10Products.map((product) => {
+    if (product.title.length > maxNameLength) {
+      return product.title.slice(0, maxNameLength) + "...";
+    }
+    return product.title;
+  });
+
+  const productSellCounts = top10Products.map((product) => product.sold);
+
+  const top10SellProducts = {
+    labels: productName,
+    datasets: [
+      {
+        label: "Number of products sold",
+        data: productSellCounts,
+        fill: false,
+        borderColor: "rgb(255, 99, 132)",
+        tension: 0.5,
+      },
+    ],
+  };
+
+
+  // const accountsCreateEveryDay = {
+
+  // }
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -165,10 +209,34 @@ const Dashboard = () => {
             <span className="text-lg font-semibold">Products by category</span>
           </div>
           <div className="min-h-[430px]">
-            <Bar options={chartOptions} data={chartData} />
+            <Bar
+              data={productByCategory}
+            />
           </div>
         </div>
-        <div className="flex-3 bg-slate-50">dasd</div>
+        <div className="flex-3 bg-white">
+          <div className="border-b h-[40px] px-4 flex flex-col">
+            <span className="text-lg font-semibold">
+              Total number of active accounts
+            </span>
+            <canvas id="okCanvas2" width="400" height="100"></canvas>
+
+            <Pie data={userBlocks} width="300px" height="200px" />
+          </div>
+        </div>
+      </div>
+      <div className="mx-2 bg-white py-4">
+        <div className="border-b h-[40px] px-4 flex items-center">
+          <span className="text-lg font-semibold">
+            Top 10 most sold products
+          </span>
+        </div>
+        <div className="pr-4 pl-8">
+          <Line
+            data={top10SellProducts}
+            height="100px"
+          />
+        </div>
       </div>
       <div>order</div>
     </div>

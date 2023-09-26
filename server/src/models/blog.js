@@ -6,7 +6,7 @@ var blogSchema = new mongoose.Schema({
         required: true,
     },
     description: {
-        type: String,
+        type: Array,
         required: true,
     },
     numberViews: {
@@ -21,7 +21,7 @@ var blogSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User"
     }],
-    image: {
+    imageThum: {
         type: String,
         default: ""
     },

@@ -127,6 +127,11 @@ const getAllProducts = asyncHandler(async (req, res) => {
                 sortOption.totalRatings = -1;
                 isSort = true;
                 break;
+            case "5star": // Sắp xếp theo số lượt đánh giá sao giảm dần
+                sortOption.totalRatings = -1;
+                isSort = true;
+                query = query.where('totalRatings').equals(5); // Chỉ lấy sản phẩm có số sao là 5
+                break;
             default:
                 break;
         }

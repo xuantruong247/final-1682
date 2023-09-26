@@ -11,8 +11,10 @@ const path = {
     DETAIL_PRODUCT: 'product',
     FINAL_REGISTER: 'finalregister/:status',
     RESET_PASSWORD: 'reset-password/:token',
-    DETAIL_CART:"my-cart",
-    NOT_FOUND_404:"*",
+    DETAIL_CART: "my-cart",
+    NOT_FOUND_404: "*",
+    DETAIL_BLOG_BID_TITLE: 'blog/:bid/:title',
+    DETAIL_BLOG:'blog',
 
 
 
@@ -27,6 +29,8 @@ const path = {
     MANAGE_CATEGORY: "manage-category",
     CREATE_BRAND: "create-brand",
     MANAGE_BRAND: "manage-brand",
+    MANAGE_BLOG: "manage-blog",
+    CREATE_BLOG: "create-blog",
 
 
 
@@ -36,7 +40,7 @@ const path = {
     MY_CART: "my-cart",
     HISTORY: "buy-history",
     WISHLIST: "wishlist",
-    CHECKOUT:"checkout"
+    CHECKOUT: "checkout"
 
 
 }

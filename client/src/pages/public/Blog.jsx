@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { BlogCard, Breakcrumb } from "../../components";
+import { BlogCard, Breakcrumb, Pagination } from "../../components";
 import { AiOutlineRight } from "react-icons/ai";
-import { getApiBlogs } from "../../apis";
+import { apiGetBlogs } from "../../apis";
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
+  const [totalCounts, setTotalCounts] = useState(0)
   const fetchApiBlogs = async () => {
-    const repsonse = await getApiBlogs();
-    console.log(repsonse);
+    const repsonse = await apiGetBlogs();
     if (repsonse) {
       setBlogs(repsonse.data.getBlogs);
+      setTotalCounts(repsonse.data.counts)
     }
   };
 
@@ -17,6 +18,8 @@ const Blog = () => {
     fetchApiBlogs();
   }, []);
 
+
+  
   return (
     <div className="w-full">
       <div className="h-[81px] flex items-center justify-center bg-gray-100">
@@ -31,15 +34,20 @@ const Blog = () => {
           </span>
         </div>
       </div>
-      <div className="w-main mx-auto mt-4">
-        {blogs?.map((blog,index)=>(
+      <div className="w-main mx-auto py-4">
+        {blogs?.map((blog, index) => (
           <BlogCard
-          key={index}
-          title={blog.title}
-          description={blog.description}
-          image={blog.image}
-        />
+            key={index}
+            title={blog.title}
+            description={blog.description}
+            imageThum={blog.imageThum}
+            createdAt={blog.createdAt}
+            blogs={blog}
+          />
         ))}
+      <div className="w-full flex justify-center items-center pt-4">
+        <Pagination totalCount={totalCounts}/>
+      </div>
       </div>
     </div>
   );
