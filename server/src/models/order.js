@@ -3,22 +3,25 @@ const mongoose = require('mongoose');
 var orderSchema = new mongoose.Schema({
     products: [{
         product: { type: mongoose.Types.ObjectId, ref: "Product" },
-        count: Number,
+        quantity: Number,
+        price: Number,
+        avatar: String,
+        title: String,
     }],
     status: {
         type: String,
-        default: "Processing",
-        enum: ['Cancelled', "Processing", "Succeed"]
+        default: "Cancelled",
+        enum: ['Cancelled', "Succeed"]
     },
     total: Number,
-    coupon: {
-        type: mongoose.Types.ObjectId,
-        ref: "Coupon"
-    },
-    orderBy: {
+    postedBy: {
         type: mongoose.Types.ObjectId,
         ref: "User"
     }
-});
+
+},
+    {
+        timestamps: true
+    });
 
 module.exports = mongoose.model('Order', orderSchema);

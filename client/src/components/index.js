@@ -40,6 +40,8 @@ export { default as Breakcrumb } from "./Breakcrumb/Breakcrumb"
 export { default as Paypal } from "./Common/Paypal"
 export { default as NotFound404 } from "./NotFound404/NotFound404"
 export { default as BlogCard } from "./Blog/BlogCard"
+export { default as Congrat } from "./Common/Congrat"
+export { default as EditorQuill } from "./Common/EditorQuill"
 
 
 

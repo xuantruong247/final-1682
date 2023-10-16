@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import { Route, Routes } from "react-router-dom"
 import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailCart, DetailBlog } from "./pages/public"
 import { Admin, CreateBlog, CreateBrand, CreateCategory, CreateProduct, Dashboard, ManageBlog, ManageBrand, ManageCategory, ManageOder, ManageProduct, ManageUser } from './pages/admin'
-import { Checkout, History, Menber, MyCart, Personal, Wishlist } from './pages/member'
+import { Checkout, History, Menber, Personal, Wishlist } from './pages/member'
 import path from "./utils/path"
 import { getCategories } from './redux/category/asyncAction';
 import { useDispatch, useSelector } from "react-redux"
 import "./index.css"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "react-quill/dist/quill.snow.css";
 import { Cart, Modal, NotFound404 } from "./components"
 import { getBrands } from './redux/brand/asyncAction';
 import { showCart } from './redux/category/categorySlide';

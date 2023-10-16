@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { RiBillFill } from "react-icons/ri";
 import {
@@ -11,8 +11,12 @@ import {
   apiGetAllProducts,
   apiGetBrand,
   apiGetCategories,
+  apiGetOrders,
   apiGetUsers,
+  apiWeekSales,
 } from "../../apis";
+import moment from "moment";
+import { FaMoneyCheckAlt } from "react-icons/fa";
 
 const Dashboard = () => {
   const [productCount, setProductCount] = useState([]);
@@ -21,8 +25,12 @@ const Dashboard = () => {
   const [blockedUserCount, setBlockedUserCount] = useState(0);
   const [activeUserCount, setActiveUserCount] = useState(0);
   const [categories, setCategories] = useState([]);
+  const [getOrder, setGetOrder] = useState([]);
   const [brands, setBrands] = useState([]);
   const [top10Products, setTop10Products] = useState([]);
+  const [weekSale, setWeekSale] = useState([]);
+  const [getTableUser, setGetTableUser] = useState([]);
+  const [totalWeek, setTotalWeek] = useState([]);
 
   const fetchAllProducts = async () => {
     const perPage = 12; // Số lượng sản phẩm trên mỗi trang
@@ -92,12 +100,10 @@ const Dashboard = () => {
     setBrands(resp.data.getBrandCategory);
   };
 
-  useEffect(() => {
-    fetchAllProducts();
-    fetchAllUsers();
-    fetchCategories();
-    fetchBrands();
-  }, []);
+  const fetchOrder = async () => {
+    const response = await apiGetOrders();
+    setGetOrder(response.data);
+  };
 
   const categoryCounts = {};
 
@@ -156,11 +162,61 @@ const Dashboard = () => {
     ],
   };
 
+  const fetchApiWeekSale = async () => {
+    const response = await apiWeekSales();
+    const rawData = response.data.weekSale;
+    setGetTableUser(response.data.weekSale);
+    setTotalWeek(response.data);
+    const DAYS = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
 
-  // const accountsCreateEveryDay = {
+    const newData = DAYS.map((day) => {
+      const foundDay = rawData.find(
+        (item) => item._id === DAYS.indexOf(day) + 1
+      );
 
-  // }
+      if (foundDay) {
+        return {
+          day,
+          amount: foundDay.total / 100,
+        };
+      } else {
+        return {
+          day,
+          amount: 0,
+        };
+      }
+    });
 
+    setWeekSale(newData);
+  };
+  const orderWeekSale = {
+    labels: weekSale.map((data) => data.day),
+    datasets: [
+      {
+        label: "Revenue every day of the week",
+        data: weekSale.map((data) => data.amount),
+        fill: false,
+        borderColor: "rgb(255, 99, 132)",
+        tension: 0.5,
+      },
+    ],
+  };
+  useEffect(() => {
+    fetchAllProducts();
+    fetchAllUsers();
+    fetchCategories();
+    fetchBrands();
+    fetchOrder();
+    fetchApiWeekSale();
+  }, []);
   return (
     <div className="w-full flex flex-col gap-2">
       <h1 className="h-[60px] flex items-center text-2xl font-bold px-4 border-b border-sky-300">
@@ -199,19 +255,87 @@ const Dashboard = () => {
           <RiBillFill size={35} color="violet" />
           <div className="flex flex-col gap-2 items-center justify-between">
             <h3>Orders</h3>
-            <h1 className="font-semibold text-lg">300</h1>
+            <h1 className="font-semibold text-lg">{getOrder.counts}</h1>
           </div>
         </div>
       </div>
-      <div className="flex gap-2 mx-2 mt-5">
+      <div className="mx-2 bg-white">
+        <Line data={orderWeekSale} height="100px" />
+      </div>
+      <div className="grid grid-cols-10 gap-2 mx-2">
+        <div className="col-span-8 bg-white p-4">
+          <span className="text-lg font-semibold">
+            List of customers who made purchases during the week
+          </span>
+          <div className="h-[200px] w-full overflow-y-auto mt-2">
+            <table className="table border w-full mb-3 text-left">
+              <thead>
+                <tr>
+                  <th className="border-l-4 pl-2 px-2 py-1">ID</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">Name</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">Price</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">Status</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">CreatedAt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {getTableUser.map((el) => (
+                  <Fragment key={el._id}>
+                    {el.salesInfo.map((item, index) => (
+                      <tr className="border" key={index}>
+                        <td className="p-2 border">{item.orderId}</td>
+                        <td className="p-2 border">
+                          {item.firstname} {item.lastname}
+                        </td>
+                        <td className="p-2 border">{item.total}</td>
+                        <td className="p-2 border">{item.status}</td>
+                        <td className="p-2 border">
+                          {moment(item.orderDate).format("DD-MM-YYYY")}
+                        </td>
+                      </tr>
+                    ))}
+                  </Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="col-span-2 bg-white p-4">
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold">Total income</span>
+              <div className="border rounded-lg bg-gray-500 flex justify-between items-center px-4 text-white">
+                <FaMoneyCheckAlt size={35} style={{ color: "#F3F0CA" }} />
+                <div className="flex flex-col gap-2 items-center justify-between">
+                  <h3>Total</h3>
+                  <h1 className="font-semibold text-lg">
+                    {getOrder.totalSum} $
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-semibold">Total income per week</span>
+              <div className="border rounded-lg bg-red-400 flex justify-between items-center px-4 text-white">
+                <FaMoneyCheckAlt size={35} style={{ color: "#F3F0CA" }} />
+                <div className="flex flex-col gap-2 items-center justify-between">
+                  <h3>Total</h3>
+                  <h1 className="font-semibold text-lg">
+                    {totalWeek.totalWeekSales} $
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex gap-2 mx-2">
         <div className="flex-7 bg-white">
           <div className="border-b h-[40px] px-4 flex items-center">
             <span className="text-lg font-semibold">Products by category</span>
           </div>
           <div className="min-h-[430px]">
-            <Bar
-              data={productByCategory}
-            />
+            <Bar data={productByCategory} />
           </div>
         </div>
         <div className="flex-3 bg-white">
@@ -232,13 +356,9 @@ const Dashboard = () => {
           </span>
         </div>
         <div className="pr-4 pl-8">
-          <Line
-            data={top10SellProducts}
-            height="100px"
-          />
+          <Line data={top10SellProducts} height="100px" />
         </div>
       </div>
-      <div>order</div>
     </div>
   );
 };

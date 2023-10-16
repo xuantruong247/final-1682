@@ -51,7 +51,7 @@ const DetailBlog = () => {
           </span>
         </div>
       </div>
-      <div className="w-main mx-auto">
+      <div className="w-main mx-auto customer-blog">
         {getBlog?.description?.length > 1 &&
           getBlog?.description?.map((item, index) => <p key={index}>{item}</p>)}
         {getBlog?.description?.length === 1 && (

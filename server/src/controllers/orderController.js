@@ -1,34 +1,38 @@
 const Order = require("../models/order")
 const User = require("../models/user")
-const Coupon = require("../models/coupon")
-const aysncHandler = require("express-async-handler")
+const asyncHandler = require("express-async-handler")
+const moment = require("moment")
 
-const createNewOrder = aysncHandler(async (req, res) => {
-    const { _id } = req.user
-    const { coupon } = req.body
-    const userCart = await User.findById(_id).select('cart').populate("cart.product", "title price")
-    const products = userCart?.cart?.map(el => ({
-        product: el.product._id,
-        count: el.quantity
-    }))
-    let total = userCart?.cart?.reduce((sum, el) => el.product.price * el.quantity + sum, 0)
-    const createData = { products, total, orderBy: _id }
-    if (coupon) {
-        const selectedCoupon = await Coupon.findById(coupon)
-        total = Math.round(total * (1 - +selectedCoupon?.discount / 100) / 1000) * 1000 || total
-        createData.total = total
-        createData.coupon = coupon
+
+const createNewOrder = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { products, total, address, status } = req.body;
+
+    if (address) {
+        await User.findByIdAndUpdate(_id, { address, cart: [] });
     }
-    const response = await Order.create(createData)
+
+    const data = {
+        products,
+        total,
+        postedBy: _id, // Thêm trường postedBy để lưu ID của người đặt hàng
+    };
+
+    if (status) {
+        data.status = status;
+    }
+
+    const response = await Order.create(data);
+
     return res.status(200).json({
         success: response ? true : false,
         response: response ? response : "Something went wrong",
-        userCart
-    })
+    });
+
 })
 
 
-const updateStatusOrder = aysncHandler(async (req, res) => {
+const updateStatusOrder = asyncHandler(async (req, res) => {
     const { oid } = req.params
     const { status } = req.body
     if (!status) throw new Error("Missting status")
@@ -40,7 +44,7 @@ const updateStatusOrder = aysncHandler(async (req, res) => {
 })
 
 
-const getUserOrder = aysncHandler(async (req, res) => {
+const getUserOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user
     const response = await Order.find({ orderBy: _id })
     return res.status(200).json({
@@ -50,16 +54,90 @@ const getUserOrder = aysncHandler(async (req, res) => {
 })
 
 
-const getAllOrders = aysncHandler(async (req, res) => {
-    const response = await Order.find()
+const getAllOrders = asyncHandler(async (req, res) => {
+    const response = await Order.find();
+    const counts = await Order.find().countDocuments();
+
+    // Tính tổng của trường "total"
+    let totalSum = 0;
+    for (const order of response) {
+        totalSum += order.total;
+    }
+
     return res.status(200).json({
         success: response ? true : false,
+        counts,
+        totalSum, // Tổng của trường "total"
         response: response ? response : "Something went wrong"
-    })
-})
+    });
+});
 
 
-const deleteOrder = aysncHandler(async (req, res) => {
+
+const getWeekSales = asyncHandler(async (req, res) => {
+    const today = moment();
+    const dayOfWeek = today.day();
+
+    // Tính ngày đầu của tuần hiện tại (ngày chủ nhật)
+    const startOfWeek = today.clone().subtract(dayOfWeek, 'days');
+
+    // Tính ngày đầu của tuần kế tiếp (ngày chủ nhật)
+    const startOfNextWeek = startOfWeek.clone().add(7, 'days');
+
+    const weekSale = await Order.aggregate([
+        {
+            $match: { createdAt: { $gte: new Date(startOfWeek), $lt: new Date(startOfNextWeek) } },
+        },
+        {
+            $lookup: {
+                from: 'users', // Tên của collection User
+                localField: 'postedBy',
+                foreignField: '_id',
+                as: 'user'
+            }
+        },
+        {
+            $project: {
+                day: { $dayOfWeek: "$createdAt" },
+                sales: "$total",
+                postedBy: "$postedBy",
+                orderDate: "$createdAt",
+                status: "$status",
+                orderId: "$_id",
+                firstname: { $arrayElemAt: ["$user.firstname", 0] },
+                lastname: { $arrayElemAt: ["$user.lastname", 0] }
+            },
+        },
+        {
+            $group: {
+                _id: "$day",
+                total: { $sum: "$sales" },
+                salesInfo: {
+                    $push: {
+                        status: "$status",
+                        orderDate: "$orderDate",
+                        userId: "$postedBy",
+                        firstname: "$firstname",
+                        lastname: "$lastname",
+                        total: "$sales",
+                        orderId: "$orderId",
+                    }
+                }
+            },
+        },
+    ]);
+
+    const totalWeekSales = weekSale.reduce((total, day) => total + day.total, 0);
+
+    return res.status(200).json({
+        success: weekSale ? true : false,
+        weekSale: weekSale ? weekSale : "Something went wrong",
+        totalWeekSales,
+    });
+});
+
+
+const deleteOrder = asyncHandler(async (req, res) => {
     const { oid } = req.params
     const response = await Order.findByIdAndDelete(oid)
     return res.status(200).json({
@@ -72,6 +150,7 @@ module.exports = {
     createNewOrder,
     updateStatusOrder,
     getUserOrder,
+    getWeekSales,
     getAllOrders,
     deleteOrder
 }

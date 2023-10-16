@@ -44,7 +44,7 @@ const getAllBlogs = asyncHandler(async (req, res) => {
     const response = await query.exec()
     return res.status(200).json({
         success: response ? true : false,
-        getBlogs: response ? response : "Cannot update blog ",
+        getBlogs: response ? response : "Cannot get blog ",
         counts
     })
 })

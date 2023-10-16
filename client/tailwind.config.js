@@ -52,7 +52,7 @@ module.exports = {
         "slide-right": {
           "0% ": {
             "-webkit-transform": "translateX(-5000px)",
-            transform: "translateX(-5000px)"
+            transform: "translateX(-5000px)k"
           },
           "100%": {
             "-webkit-transform": " translateX(0)",

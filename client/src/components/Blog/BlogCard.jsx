@@ -86,4 +86,5 @@ const BlogCard = ({ title, description, imageThum, createdAt, blogs }) => {
   );
 };
 
+
 export default memo(BlogCard);
