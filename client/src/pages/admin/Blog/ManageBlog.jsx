@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { apiDeleteBlog, apiGetBlogs } from "../../../apis";
 import Swal from "sweetalert2";
 import UpdateBlog from "./UpdateBlog";

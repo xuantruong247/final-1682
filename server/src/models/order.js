@@ -8,12 +8,20 @@ var orderSchema = new mongoose.Schema({
         avatar: String,
         title: String,
     }],
-    status: {
+    statusPayment: {
         type: String,
-        default: "Cancelled",
+        default: "Succeed",
         enum: ['Cancelled', "Succeed"]
     },
-    total: Number,
+    statusOrder: {
+        type: String,
+        default: "Preparing the order",
+        enum: ["Preparing the order", "The order has been shipped", "The delivery person is delivering to you", "Received goods successfully"],
+    },
+
+    total: {
+        type: Number,
+    },
     postedBy: {
         type: mongoose.Types.ObjectId,
         ref: "User"

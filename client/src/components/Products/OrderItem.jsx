@@ -76,7 +76,7 @@ const OrderItem = ({ item, defaultQuantity = 1 }) => {
         />
       </span>
       <span className="col-span-3 w-full font-semibold flex items-center justify-end">
-        {formatMoney(item.product.price * quantity) + " VND"}
+        {formatMoney(item.product.price * quantity) + "VND"}
       </span>
     </div>
   );

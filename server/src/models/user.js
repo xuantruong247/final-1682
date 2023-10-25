@@ -43,6 +43,14 @@ var userSchema = new mongoose.Schema({
     }],
     address: String,
     wishlist: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
+    purchaseHistory: [{
+        order: { type: mongoose.Types.ObjectId, ref: "Order" },
+        status: {
+            type: String,
+            enum: ['Preparing', 'PickedUp', 'Delivered', 'PendingRefund', 'Refunded'],
+            default: 'Preparing'
+        },
+    }],
     isBlocked: {
         type: Boolean,
         default: false

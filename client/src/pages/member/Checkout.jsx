@@ -14,7 +14,6 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const address = watch("address");
   useEffect(() => {
-    console.log(current.address);
     setValue("address", current?.address);
   }, [current.address]);
   useEffect(() => {
@@ -49,7 +48,7 @@ const Checkout = () => {
                 <td className="p-2">{item.product.title}</td>
                 <td className="text-center p-2">{item.quantity}</td>
                 <td className="text-end p-2">
-                  {formatMoney(item.product.price)} VND
+                  {formatMoney(item.product.price) + "VND"}
                 </td>
               </tr>
             ))}
@@ -62,8 +61,8 @@ const Checkout = () => {
               currentCart?.reduce(
                 (sum, el) => +el.product.price * el.quantity + sum,
                 0
-              )
-            ) + " VND"}
+              ) / 23500
+            ) + " $"}
           </span>
         </span>
         <div className="flex flex-col gap-1 w-3/5">
@@ -84,20 +83,21 @@ const Checkout = () => {
               setIsSuccess={setIsSuccess}
               payload={{
                 products: currentCart,
-                total: Math.round(
+                total: (
                   +currentCart?.reduce(
                     (sum, el) => +el.product.price * el.quantity + sum,
                     0
-                  ) / 235000
-                ),
+                  ) / 23500
+                ).toFixed(2),
+
                 address,
               }}
-              amount={Math.round(
+              amount={(
                 +currentCart?.reduce(
                   (sum, el) => +el.product.price * el.quantity + sum,
                   0
-                ) / 235000
-              )}
+                ) / 23500
+              ).toFixed(2)}
             />
           </div>
         )}

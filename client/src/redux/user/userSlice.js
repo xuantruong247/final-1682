@@ -38,7 +38,9 @@ export const userSlide = createSlice({
                     return el
                 }
             })
+            
             state.currentCart = updatedCart
+
 
         }
     },

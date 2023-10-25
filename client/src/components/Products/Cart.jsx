@@ -65,7 +65,7 @@ const Cart = () => {
                   <span className="text-sm">{item.product.title}</span>
                   <span>Quantity: {item.quantity}</span>
                   <span className="text-base">
-                    {formatMoney(item.product.price * item.quantity) + " VND"}
+                    {formatMoney(item.product.price * item.quantity) + "VND"}
                   </span>
                 </div>
               </div>
@@ -88,8 +88,8 @@ const Cart = () => {
               currentCart?.reduce(
                 (sum, el) => +el.product.price * el.quantity + sum,
                 0
-              )
-            ) + " VND"}
+              ) / 23500
+            ) + " $"}
           </span>
         </div>
         <span className="flex justify-center text-gray-500 italic text-sm">

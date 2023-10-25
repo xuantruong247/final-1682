@@ -1,13 +1,14 @@
 const Order = require("../models/order")
 const User = require("../models/user")
+const Product = require("../models/product")
 const asyncHandler = require("express-async-handler")
 const moment = require("moment")
 
 
 const createNewOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
-    const { products, total, address, status } = req.body;
-
+    const { products, total, address } = req.body;
+    console.log(req.body);
     if (address) {
         await User.findByIdAndUpdate(_id, { address, cart: [] });
     }
@@ -15,33 +16,51 @@ const createNewOrder = asyncHandler(async (req, res) => {
     const data = {
         products,
         total,
-        postedBy: _id, // Thêm trường postedBy để lưu ID của người đặt hàng
+        postedBy: _id,
     };
-
-    if (status) {
-        data.status = status;
-    }
-
+    console.log(data);
     const response = await Order.create(data);
+    console.log(response);
+    // for (const product of products) {
+    //     const { _id: productId, quantity } = product;
+
+    //     // Tìm sản phẩm và chỉ cập nhật trường "sold"
+    //     await Product.findByIdAndUpdate(productId, {
+    //         $inc: { sold: quantity },
+    //     });
+    // }
+
+    // Lấy ID của đơn hàng vừa tạo
+    const orderId = response._id;
+
+    // Cập nhật mảng `purchaseHistory` của người dùng
+    await User.findByIdAndUpdate(_id, {
+        $push: {
+            purchaseHistory: {
+                order: orderId,
+            }
+        }
+    });
 
     return res.status(200).json({
         success: response ? true : false,
         response: response ? response : "Something went wrong",
     });
-
 })
 
 
-const updateStatusOrder = asyncHandler(async (req, res) => {
-    const { oid } = req.params
-    const { status } = req.body
-    if (!status) throw new Error("Missting status")
-    const response = await Order.findByIdAndUpdate(oid, { status }, { new: true })
-    return res.status(200).json({
-        success: response ? true : false,
-        response: response ? response : "Something went wrong"
-    })
-})
+
+
+// const updateStatusOrder = asyncHandler(async (req, res) => {
+//     const { oid } = req.params
+//     const { status } = req.body
+//     if (!status) throw new Error("Missting status")
+//     const response = await Order.findByIdAndUpdate(oid, { status }, { new: true })
+//     return res.status(200).json({
+//         success: response ? true : false,
+//         response: response ? response : "Something went wrong"
+//     })
+// })
 
 
 const getUserOrder = asyncHandler(async (req, res) => {
@@ -53,26 +72,52 @@ const getUserOrder = asyncHandler(async (req, res) => {
     })
 })
 
-
 const getAllOrders = asyncHandler(async (req, res) => {
-    const response = await Order.find();
-    const counts = await Order.find().countDocuments();
+    // const { page = 1, limit = 12 } = req.query;
+    const query = Order.find();
+    query.populate({
+        path: "postedBy",
+        select: "lastname firstname"
+    });
+    const counts = await Order.countDocuments();
 
+    // Gắn limit và skip vào truy vấn
+    // query.limit(parseInt(limit)).skip((page - 1) * limit);
+
+    const response = await query.exec();
     // Tính tổng của trường "total"
     let totalSum = 0;
     for (const order of response) {
         totalSum += order.total;
     }
+    // const formattedTotalSum = totalSum.toFixed(2);
 
     return res.status(200).json({
         success: response ? true : false,
         counts,
         totalSum, // Tổng của trường "total"
-        response: response ? response : "Something went wrong"
+        getOrders: response ? response : "Cannot get order ",
     });
 });
 
 
+const getDetailOrder = asyncHandler(async (req, res) => {
+    const { oid } = req.params
+    console.log(oid);
+    const order = await Order.findById(oid).populate('products.product', 'avatar title price').populate({
+        path: 'postedBy',
+        select: 'lastname firstname'
+    });
+
+
+    if (!order) throw new Error("Order not found")
+
+    return res.status(200).json({
+        success: order ? true : false,
+        getDetailOrder: order ? order : 'Order not found'
+    })
+
+})
 
 const getWeekSales = asyncHandler(async (req, res) => {
     const today = moment();
@@ -102,7 +147,8 @@ const getWeekSales = asyncHandler(async (req, res) => {
                 sales: "$total",
                 postedBy: "$postedBy",
                 orderDate: "$createdAt",
-                status: "$status",
+                statusPayment: "$statusPayment", // Thêm trường này
+                statusOrder: "$statusOrder", // Thêm trường này
                 orderId: "$_id",
                 firstname: { $arrayElemAt: ["$user.firstname", 0] },
                 lastname: { $arrayElemAt: ["$user.lastname", 0] }
@@ -114,7 +160,8 @@ const getWeekSales = asyncHandler(async (req, res) => {
                 total: { $sum: "$sales" },
                 salesInfo: {
                     $push: {
-                        status: "$status",
+                        statusPayment: "$statusPayment", // Sử dụng trường statusPayment
+                        statusOrder: "$statusOrder", // Sử dụng trường statusOrder
                         orderDate: "$orderDate",
                         userId: "$postedBy",
                         firstname: "$firstname",
@@ -129,10 +176,14 @@ const getWeekSales = asyncHandler(async (req, res) => {
 
     const totalWeekSales = weekSale.reduce((total, day) => total + day.total, 0);
 
+
+    const formattedTotalSum = totalWeekSales.toFixed(2);
+
+
     return res.status(200).json({
         success: weekSale ? true : false,
         weekSale: weekSale ? weekSale : "Something went wrong",
-        totalWeekSales,
+        totalWeekSales: formattedTotalSum,
     });
 });
 
@@ -148,7 +199,8 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 module.exports = {
     createNewOrder,
-    updateStatusOrder,
+    // updateStatusOrder,
+    getDetailOrder,
     getUserOrder,
     getWeekSales,
     getAllOrders,

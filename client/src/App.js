@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from "react-router-dom"
-import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailCart, DetailBlog } from "./pages/public"
+import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailBlog } from "./pages/public"
 import { Admin, CreateBlog, CreateBrand, CreateCategory, CreateProduct, Dashboard, ManageBlog, ManageBrand, ManageCategory, ManageOder, ManageProduct, ManageUser } from './pages/admin'
-import { Checkout, History, Menber, Personal, Wishlist } from './pages/member'
+import { Checkout, History, Menber, MyCart, Personal, Wishlist } from './pages/member'
 import path from "./utils/path"
 import { getCategories } from './redux/category/asyncAction';
 import { useDispatch, useSelector } from "react-redux"
@@ -73,7 +73,7 @@ function App() {
         {/* Menber */}
         <Route path={path.MEMBER} element={<Menber />}>
           <Route path={path.PERSONAL} element={<Personal />} />
-          <Route path={path.MY_CART} element={<DetailCart />} />
+          <Route path={path.MY_CART} element={<MyCart />} />
           <Route path={path.HISTORY} element={<History />} />
           <Route path={path.WISHLIST} element={<Wishlist />} />
         </Route>

@@ -18,3 +18,14 @@ export const apiWeekSales = () => axios({
     url: '/order/week-sales',
     method: 'get',
 })
+
+export const apiDeleteOrder = (oid) => axios({
+    url: '/order/delete/' + oid,
+    method: 'delete',
+})
+
+
+export const apiDetailOrder = (oid) => axios({
+    url: '/order/detail-order/' + oid,
+    method: 'get',
+})

@@ -118,7 +118,7 @@ const ManageProduct = () => {
                   <td className="px-4 py-2">{item.title}</td>
                   <td className="px-4 py-2">{item.brand.title}</td>
                   <td className="px-4 py-2">{item.category.title}</td>
-                  <td className="px-4 py-2">{`${formatMoney(item.price)}`}</td>
+                  <td className="px-4 py-2">{`${formatMoney(item.price)} VND`}</td>
                   <td className="px-4 py-2 text-center">{item.quantity}</td>
                   <td className="px-4 py-2 text-center">{item.sold}</td>
                   <td className="px-4 py-2 text-center">{item.totalRatings}</td>

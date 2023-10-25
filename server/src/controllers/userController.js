@@ -314,6 +314,52 @@ const createUsers = asyncHandler(async (req, res) => {
     })
 })
 
+
+
+const getHistoryBuyProduct = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const user = await User.findById(_id).populate({
+        path: 'purchaseHistory.order',
+        select: 'products statusPayment statusOrder total',
+        populate: {
+            path: 'products.product',
+            select: 'avatar title price',
+        },
+    });
+    if (!user) {
+        throw new Error("User not found")
+    }
+
+    return res.status(200).json({
+        success: true,
+        purchaseHistory: user.purchaseHistory
+    });
+});
+
+// const updateStatusPurchaseHistory = asyncHandler(async (req, res) => {
+//     const { _id } = req.user
+//     const { orderId, newStatus } = req.body
+//     console.log(req.body);
+
+//     const user = await User.findByIdAndUpdate(_id, {
+//         $set: {
+//             "purchaseHistory.$[element].status": newStatus
+//         }
+//     }, {
+//         arrayFilters: [{ "element.order": mongoose.Types.ObjectId(orderId) }],
+//         new: true
+//     });
+//     if (!user) {
+//         throw new Error('Người dùng không tồn tại');
+//     }
+//     return res.status(200).json({
+//         success: true,
+//         message: 'Cập nhật trạng thái đơn hàng thành công'
+//     });
+// })
+
+
+
 module.exports = {
     register,
     login,
@@ -330,5 +376,7 @@ module.exports = {
     updateCart,
     finalRegister,
     createUsers,
-    removeProductInCart
+    removeProductInCart,
+    getHistoryBuyProduct,
+    // updateStatusPurchaseHistory
 }

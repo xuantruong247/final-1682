@@ -73,3 +73,9 @@ export const apiRemoveCart = (pid) => axios({
     url: '/user/remove/' + pid,
     method: 'delete',
 })
+
+
+export const apiGetHistoryBuyOrder = () => axios({
+    url: '/user/purchase-history',
+    method: 'get',
+})

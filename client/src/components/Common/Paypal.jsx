@@ -21,6 +21,7 @@ const ButtonWrapper = ({
 }) => {
   const navigate = useNavigate();
   const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
+  console.log(currency, payload);
   useEffect(
     () => {
       dispatch({
@@ -34,18 +35,11 @@ const ButtonWrapper = ({
     currency,
     showSpinner
   );
-
-  // Tỷ giá hối đoái từ USD sang VND
-  const exchangeRateUSDToVND = 23000; // Đổi số này cho phù hợp với tỷ giá thực tế
-
-  // Chuyển đổi số tiền từ USD sang VND
-  const amountInVND = amount * exchangeRateUSDToVND;
-
   const handleSaveOrder = async () => {
     const response = await apiCreateOrder({
       ...payload,
-      status: "Succeed", // Lưu số tiền trong VND
-      amount: amountInVND,
+      statusPayment: "Succeed",
+      statusOrder: "Preparing the order",
     });
     console.log(response);
     if (response.data.success) {

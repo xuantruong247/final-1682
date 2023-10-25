@@ -18,7 +18,6 @@ const BlogsComponent = () => {
   const navigate = useNavigate()
   const fetchBlogs = async () => {
     const response = await apiGetBlogs();
-    console.log(response);
     setGetBlogs(response.data.getBlogs);
   };
 

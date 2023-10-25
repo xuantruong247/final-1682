@@ -33,7 +33,7 @@ const Dashboard = () => {
   const [totalWeek, setTotalWeek] = useState([]);
 
   const fetchAllProducts = async () => {
-    const perPage = 12; // Số lượng sản phẩm trên mỗi trang
+    const perPage = 12;
     let allProducts = [];
     let page = 1;
     let totalPages = 1;
@@ -45,7 +45,6 @@ const Dashboard = () => {
         const products = resp.data.products;
         allProducts = allProducts.concat(products);
 
-        // Tính tổng số trang dựa trên số lượng sản phẩm và số lượng sản phẩm trên mỗi trang
         totalPages = Math.ceil(resp.data.counts / perPage);
 
         page++;
@@ -73,7 +72,6 @@ const Dashboard = () => {
         const users = resp.data.users;
         allUsers = allUsers.concat(users);
 
-        // Tính tổng số trang dựa trên số lượng người dùng và số lượng người dùng trên mỗi trang
         totalPages = Math.ceil(resp.data.counts / limit);
 
         page++;
@@ -118,11 +116,11 @@ const Dashboard = () => {
 
   // Chuyển dữ liệu từ object categoryCounts thành mảng để sử dụng cho biểu đồ
   const productByCategory = {
-    labels: Object.keys(categoryCounts), // Tên các danh mục
+    labels: Object.keys(categoryCounts),
     datasets: [
       {
         label: "Count product by category",
-        data: Object.values(categoryCounts), // Số lượng sản phẩm cho từng danh mục
+        data: Object.values(categoryCounts),
         backgroundColor: "rgb(75, 192, 192)",
       },
     ],
@@ -155,9 +153,7 @@ const Dashboard = () => {
       {
         label: "Number of products sold",
         data: productSellCounts,
-        fill: false,
-        borderColor: "rgb(255, 99, 132)",
-        tension: 0.5,
+        backgroundColor: "rgb(255, 99, 132)",
       },
     ],
   };
@@ -271,10 +267,10 @@ const Dashboard = () => {
             <table className="table border w-full mb-3 text-left">
               <thead>
                 <tr>
-                  <th className="border-l-4 pl-2 px-2 py-1">ID</th>
-                  <th className="border-l-4 pl-2 px-2 py-1">Name</th>
-                  <th className="border-l-4 pl-2 px-2 py-1">Price</th>
-                  <th className="border-l-4 pl-2 px-2 py-1">Status</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">Name User</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">Status Payment</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">Status Order</th>
+                  <th className="border-l-4 pl-2 px-2 py-1">Total</th>
                   <th className="border-l-4 pl-2 px-2 py-1">CreatedAt</th>
                 </tr>
               </thead>
@@ -283,12 +279,12 @@ const Dashboard = () => {
                   <Fragment key={el._id}>
                     {el.salesInfo.map((item, index) => (
                       <tr className="border" key={index}>
-                        <td className="p-2 border">{item.orderId}</td>
                         <td className="p-2 border">
                           {item.firstname} {item.lastname}
                         </td>
+                        <td className="p-2 border">{item.statusPayment}</td>
+                        <td className="p-2 border">{item.statusOrder}</td>
                         <td className="p-2 border">{item.total}</td>
-                        <td className="p-2 border">{item.status}</td>
                         <td className="p-2 border">
                           {moment(item.orderDate).format("DD-MM-YYYY")}
                         </td>
@@ -317,7 +313,7 @@ const Dashboard = () => {
             <div className="flex flex-col">
               <span className="font-semibold">Total income per week</span>
               <div className="border rounded-lg bg-red-400 flex justify-between items-center px-4 text-white">
-                <FaMoneyCheckAlt size={35} style={{ color: "#F3F0CA" }} />
+                <FaMoneyCheckAlt size={35} />
                 <div className="flex flex-col gap-2 items-center justify-between">
                   <h3>Total</h3>
                   <h1 className="font-semibold text-lg">
@@ -356,7 +352,7 @@ const Dashboard = () => {
           </span>
         </div>
         <div className="pr-4 pl-8">
-          <Line data={top10SellProducts} height="100px" />
+          <Bar data={top10SellProducts} height="100px" />
         </div>
       </div>
     </div>

@@ -42,6 +42,8 @@ export { default as NotFound404 } from "./NotFound404/NotFound404"
 export { default as BlogCard } from "./Blog/BlogCard"
 export { default as Congrat } from "./Common/Congrat"
 export { default as EditorQuill } from "./Common/EditorQuill"
+export { default as ContactConponent } from "./Common/ContactConponent"
+export { default as ShowDetailOrder } from "./Order/ShowDetailOrder"
 
 
 
