@@ -176,9 +176,57 @@ export const manageRoles = [
         text: "user",
         value: "user"
     },
-
 ]
 
+export const statusPayment = [
+    {
+        id: 1,
+        text: "Succeed",
+        value: "Succeed"
+    }, {
+        id: 2,
+        text: "Cancelled",
+        value: "Cancelled"
+    }
+]
+
+export const statusOrder = [
+    {
+        id: 1,
+        text: "Preparing the order",
+        value: "Preparing the order"
+    },
+    {
+        id: 2,
+        text: "The order has been shipped",
+        value: "The order has been shipped"
+    },
+    {
+        id: 3,
+        text: "The delivery person is delivering to you",
+        value: "The delivery person is delivering to you"
+    },
+    {
+        id: 4,
+        text: "Received goods successfully",
+        value: "Received goods successfully"
+    },
+    {
+        id: 5,
+        text: "Refunded",
+        value: "Refunded"
+    },
+    {
+        id: 6,
+        text: "Processing",
+        value: "Processing"
+    },
+    {
+        id: 7,
+        text: "Cancelled",
+        value: "Cancelled"
+    },
+]
 
 export const blockStatus = [
     {

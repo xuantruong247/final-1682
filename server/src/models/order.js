@@ -16,7 +16,7 @@ var orderSchema = new mongoose.Schema({
     statusOrder: {
         type: String,
         default: "Preparing the order",
-        enum: ["Preparing the order", "The order has been shipped", "The delivery person is delivering to you", "Received goods successfully"],
+        enum: ["Preparing the order", "The order has been shipped", "The delivery person is delivering to you", "Received goods successfully", "Refunded", "Processing", "Cancelled"],
     },
 
     total: {

@@ -51,16 +51,16 @@ const createNewOrder = asyncHandler(async (req, res) => {
 
 
 
-// const updateStatusOrder = asyncHandler(async (req, res) => {
-//     const { oid } = req.params
-//     const { status } = req.body
-//     if (!status) throw new Error("Missting status")
-//     const response = await Order.findByIdAndUpdate(oid, { status }, { new: true })
-//     return res.status(200).json({
-//         success: response ? true : false,
-//         response: response ? response : "Something went wrong"
-//     })
-// })
+const updateStatusOrder = asyncHandler(async (req, res) => {
+    const { oid } = req.params
+    const { statusPayment, statusOrder } = req.body
+    if (!statusPayment || !statusOrder) throw new Error("Missting status")
+    const response = await Order.findByIdAndUpdate(oid, { statusPayment, statusOrder }, { new: true })
+    return res.status(200).json({
+        success: response ? true : false,
+        response: response ? response : "Something went wrong"
+    })
+})
 
 
 const getUserOrder = asyncHandler(async (req, res) => {
@@ -73,29 +73,46 @@ const getUserOrder = asyncHandler(async (req, res) => {
 })
 
 const getAllOrders = asyncHandler(async (req, res) => {
-    // const { page = 1, limit = 12 } = req.query;
-    const query = Order.find();
+    const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays } = req.query;
+    let query = Order.find();
+
+    // Kiểm tra nếu có giá trị startDate và endDate từ người dùng
+    if (startDays && endDays) {
+        // Chuyển ngày bắt đầu và ngày kết thúc thành đối tượng Date
+        const startDaysTime = new Date(startDays);
+        const endDaysTime = new Date(endDays);
+
+        // Thêm điều kiện để lọc theo khoảng thời gian
+        query = query.where('createdAt').gte(startDaysTime).lte(endDaysTime);
+    }
+
     query.populate({
         path: "postedBy",
         select: "lastname firstname"
     });
     const counts = await Order.countDocuments();
 
-    // Gắn limit và skip vào truy vấn
-    // query.limit(parseInt(limit)).skip((page - 1) * limit);
+    if (sortField && sortOrder) {
+        const sortOption = {};
+        sortOption[sortField] = sortOrder === 'asc' ? 1 : -1;
+        query = query.sort(sortOption);
+    }
+
+
+    query = query.limit(parseInt(limit)).skip((page - 1) * limit);
 
     const response = await query.exec();
-    // Tính tổng của trường "total"
+
     let totalSum = 0;
     for (const order of response) {
         totalSum += order.total;
     }
-    // const formattedTotalSum = totalSum.toFixed(2);
+    const formattedTotalSum = totalSum.toFixed(2);
 
     return res.status(200).json({
         success: response ? true : false,
         counts,
-        totalSum, // Tổng của trường "total"
+        totalSum: formattedTotalSum,
         getOrders: response ? response : "Cannot get order ",
     });
 });
@@ -197,12 +214,31 @@ const deleteOrder = asyncHandler(async (req, res) => {
     })
 })
 
+
+const cancelOrder = asyncHandler(async (req, res) => {
+    const { oid } = req.params
+    const order = await Order.findById(oid)
+
+    if (!order) throw new Error("oid not found")
+
+    order.statusOrder = "Processing"
+    await order.save()
+
+    return res.status(200).json({
+        success: true,
+        response: order
+    });
+
+})
+
+
 module.exports = {
     createNewOrder,
-    // updateStatusOrder,
+    updateStatusOrder,
     getDetailOrder,
     getUserOrder,
     getWeekSales,
     getAllOrders,
-    deleteOrder
+    deleteOrder,
+    cancelOrder
 }

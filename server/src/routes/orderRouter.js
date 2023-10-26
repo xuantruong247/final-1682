@@ -10,7 +10,9 @@ router.get("/", [verifyAccessToken, isAdmin], ctrls.getAllOrders)
 router.get("/week-sales", [verifyAccessToken, isAdmin], ctrls.getWeekSales)
 router.get("/detail-order/:oid", [verifyAccessToken], ctrls.getDetailOrder)
 
+router.put("/cancelOrder/:oid", [verifyAccessToken], ctrls.cancelOrder)
+
 
 router.delete("/delete/:oid", [verifyAccessToken, isAdmin], ctrls.deleteOrder)
-// router.put("/status/:oid", [verifyAccessToken, isAdmin], ctrls.updateStatusOrder)
+router.put("/status/:oid", [verifyAccessToken, isAdmin], ctrls.updateStatusOrder)
 module.exports = router

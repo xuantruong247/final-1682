@@ -198,7 +198,7 @@ const Dashboard = () => {
     datasets: [
       {
         label: "Revenue every day of the week",
-        data: weekSale.map((data) => data.amount),
+        data: weekSale.map((data) => (data.amount * 100).toFixed(2)), // Định dạng amount với 2 chữ số thập phân sau dấu chấm
         fill: false,
         borderColor: "rgb(255, 99, 132)",
         tension: 0.5,
@@ -284,7 +284,7 @@ const Dashboard = () => {
                         </td>
                         <td className="p-2 border">{item.statusPayment}</td>
                         <td className="p-2 border">{item.statusOrder}</td>
-                        <td className="p-2 border">{item.total}</td>
+                        <td className="p-2 border">{item.total} $</td>
                         <td className="p-2 border">
                           {moment(item.orderDate).format("DD-MM-YYYY")}
                         </td>
