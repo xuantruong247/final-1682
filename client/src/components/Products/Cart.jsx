@@ -106,16 +106,6 @@ const Cart = () => {
             <span>Shopping Cart</span>
             <BsArrowRightShort />
           </Button>
-          <Link
-            target="_blank"
-            to={`/${path.CHECKOUT}`}
-            className=" 
-            rounded-none w-full bg-main py-2 flex items-center justify-center
-            "
-          >
-            <span>Checkout</span>
-            <BsArrowRightShort />
-          </Link>
         </div>
       </div>
     </div>

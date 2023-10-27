@@ -9,6 +9,8 @@ import { apiUpdateCurrent } from "../../apis";
 import Swal from "sweetalert2";
 import { getCurrent } from "../../redux/user/asyncAction";
 import { showModal } from "../../redux/category/categorySlide";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import path from "../../utils/path";
 
 const Personal = () => {
   const {
@@ -19,6 +21,9 @@ const Personal = () => {
   } = useForm();
   const dispatch = useDispatch();
   const { current } = useSelector((state) => state.user);
+  const [searchParams] = useSearchParams();
+  console.log(searchParams.get("redirect"));
+  const naviagate = useNavigate();
   useEffect(() => {
     reset({
       avatar: current?.avatar,
@@ -26,6 +31,7 @@ const Personal = () => {
       lastname: current?.lastname,
       email: current?.email,
       mobile: current?.mobile,
+      address: current?.address,
     });
   }, [current]);
 
@@ -48,6 +54,9 @@ const Personal = () => {
         icon: "success",
         text: "Update user successfully!",
       });
+      if (searchParams.get("redirect")) {
+        naviagate(`/${path.MEMBER}/${path.MY_CART}`);
+      }
     } else {
       Swal.fire({
         icon: "error",
@@ -77,6 +86,14 @@ const Personal = () => {
             fullWidth
             errors={errors}
             id={"lastname"}
+            validate={{ required: "Require fill." }}
+          />
+          <InputForm
+            label={"Address"}
+            register={register}
+            fullWidth
+            errors={errors}
+            id={"address"}
             validate={{ required: "Require fill." }}
           />
           <InputForm
@@ -132,7 +149,6 @@ const Personal = () => {
               />
             </label>
             <input type="file" id="file" hidden {...register("avatar")} />
-            
           </div>
         </div>
         {isDirty && (

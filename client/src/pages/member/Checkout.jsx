@@ -4,18 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatMoney } from "../../utils/helpers";
 import Paypal from "../../components/Common/Paypal";
 import { Congrat } from "../../components";
-import { useForm } from "react-hook-form";
 import { getCurrent } from "../../redux/user/asyncAction";
 
 const Checkout = () => {
-  const { register, watch, setValue } = useForm();
   const { currentCart, current } = useSelector((state) => state.user);
   const [isSuccess, setIsSuccess] = useState(false);
   const dispatch = useDispatch();
-  const address = watch("address");
-  useEffect(() => {
-    setValue("address", current?.address);
-  }, [current.address]);
+
   useEffect(() => {
     if (isSuccess) {
       dispatch(getCurrent());
@@ -28,7 +23,7 @@ const Checkout = () => {
         <img
           src={imgPayment}
           alt="imgPayment"
-          className="h-[70%] object-contain"
+          className="object-contain"
         />
       </div>
 
@@ -65,42 +60,33 @@ const Checkout = () => {
             ) + " $"}
           </span>
         </span>
-        <div className="flex flex-col gap-1 w-3/5">
-          <label htmlFor="">Your address:</label>
-          <input
-            type="text"
-            className="border border-black p-2 w-full"
-            placeholder="Please type your address for ship"
-            id="address"
-            {...register("address", {
-              required: "Need fill this field",
-            })}
-          />
-        </div>
-        {address && (
-          <div className="w-full">
-            <Paypal
-              setIsSuccess={setIsSuccess}
-              payload={{
-                products: currentCart,
-                total: (
-                  +currentCart?.reduce(
-                    (sum, el) => +el.product.price * el.quantity + sum,
-                    0
-                  ) / 23500
-                ).toFixed(2),
-
-                address,
-              }}
-              amount={(
+        <span className="flex items-center justify-end gap-3 text-sm">
+          <span>Address: </span>
+          <span className="font-bold text-main text-base">
+            {current?.address}
+          </span>
+        </span>
+        <div className="w-full">
+          <Paypal
+            setIsSuccess={setIsSuccess}
+            payload={{
+              products: currentCart,
+              total: (
                 +currentCart?.reduce(
                   (sum, el) => +el.product.price * el.quantity + sum,
                   0
                 ) / 23500
-              ).toFixed(2)}
-            />
-          </div>
-        )}
+              ).toFixed(2),
+              address: current?.address,
+            }}
+            amount={(
+              +currentCart?.reduce(
+                (sum, el) => +el.product.price * el.quantity + sum,
+                0
+              ) / 23500
+            ).toFixed(2)}
+          />
+        </div>
       </div>
     </div>
   );

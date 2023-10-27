@@ -3,11 +3,37 @@ import { useSelector } from "react-redux";
 import { Button, OrderItem } from "../../components";
 import { formatMoney } from "../../utils/helpers";
 import { BsArrowRightShort } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import path from "../../utils/path";
+import Swal from "sweetalert2";
 const MyCart = () => {
-  const { currentCart } = useSelector((state) => state.user);
+  const { currentCart, current } = useSelector((state) => state.user);
   const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    if (!current.address) {
+      Swal.fire({
+        icon: "info",
+        title: "Almost!",
+        text: "Please update your address before checkout. ",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Go update",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate({
+            pathname: `/${path.MEMBER}/${path.PERSONAL}`,
+            search: createSearchParams({
+              redirect: location.pathname,
+            }).toString(),
+          });
+        }
+      });
+    } else {
+      window.open(`/${path.CHECKOUT}`, "_blank");
+    }
+  };
 
   return (
     <div>
@@ -55,10 +81,9 @@ const MyCart = () => {
             >
               Continue Shopping
             </Button>
-            <Link
-              target="_blank"
-              to={`/${path.CHECKOUT}`}
-              className=" 
+            <Button
+              handlerOnclick={handleSubmit}
+              style=" 
             px-4
             py-2
             rounded-md
@@ -71,7 +96,7 @@ const MyCart = () => {
             >
               <span>Checkout</span>
               <BsArrowRightShort />
-            </Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -80,7 +105,6 @@ const MyCart = () => {
 };
 
 export default MyCart;
-
 
 // {getHistory.map((item) => (
 //   <Fragment key={item._id}>
