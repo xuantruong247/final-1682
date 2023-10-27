@@ -31,7 +31,7 @@ const MyCart = () => {
         }
       });
     } else {
-      window.open(`/${path.CHECKOUT}`, "_blank");
+      navigate(`/${path.CHECKOUT}`);
     }
   };
 
@@ -57,8 +57,8 @@ const MyCart = () => {
                 currentCart?.reduce(
                   (sum, el) => +el.product.price * el.quantity + sum,
                   0
-                ) / 23500
-              ) + " $"}
+                )
+              ) + " VND"}
             </span>
           </span>
           <span className="text-xs italic">

@@ -33,7 +33,7 @@ const ManageOder = () => {
   const [endDays, setEndDays] = useState("");
   const dispatch = useDispatch();
   const [params] = useSearchParams();
-  
+
   const fetchOrder = async (params) => {
     const response = await apiGetOrders(params);
     setGetOrder(response.data.getOrders);
@@ -47,8 +47,14 @@ const ManageOder = () => {
 
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
+    if (startDays) {
+      queries.startDays = startDays;
+    }
+    if (endDays) {
+      queries.endDays = endDays;
+    }
     fetchOrder(queries);
-  }, [params, update]);
+  }, [params, update, startDays, endDays]);
 
   useEffect(() => {
     const filtered = getOrder.filter((order) => {
@@ -59,7 +65,6 @@ const ManageOder = () => {
 
   const handleShowDetail = async (oid) => {
     const response = await apiDetailOrder(oid);
-    console.log(response.data.getDetailOrder);
     dispatch(
       showModal({
         isShowModal: true,
@@ -116,8 +121,18 @@ const ManageOder = () => {
       <div className="w-full p-4">
         <div className="flex justify-center gap-20 items-center py-1">
           <div className="flex gap-2">
-            <input type="date" className="rounded-sm border p-2" />
-            <input type="date" className="rounded-sm border p-2" />
+            <input
+              type="date"
+              className="rounded-sm border p-2"
+              value={startDays}
+              onChange={(e) => setStartDays(e.target.value)}
+            />
+            <input
+              type="date"
+              className="rounded-sm border p-2"
+              value={endDays}
+              onChange={(e) => setEndDays(e.target.value)}
+            />
           </div>
           <input
             type="text"

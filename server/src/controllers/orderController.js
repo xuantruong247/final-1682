@@ -1,6 +1,5 @@
 const Order = require("../models/order")
 const User = require("../models/user")
-const Product = require("../models/product")
 const asyncHandler = require("express-async-handler")
 const moment = require("moment")
 
@@ -8,7 +7,6 @@ const moment = require("moment")
 const createNewOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     const { products, total, address } = req.body;
-    console.log(req.body);
     if (address) {
         await User.findByIdAndUpdate(_id, { address, cart: [] });
     }
@@ -18,9 +16,7 @@ const createNewOrder = asyncHandler(async (req, res) => {
         total,
         postedBy: _id,
     };
-    console.log(data);
     const response = await Order.create(data);
-    console.log(response);
     // for (const product of products) {
     //     const { _id: productId, quantity } = product;
 
@@ -83,7 +79,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
         const endDaysTime = new Date(endDays);
 
         // Thêm điều kiện để lọc theo khoảng thời gian
-        query = query.where('createdAt').gte(startDaysTime).lte(endDaysTime);
+        query = query.where('createdAt').gte(startDaysTime).lt(new Date(endDaysTime.getTime() + 86400000));
     }
 
     query.populate({
@@ -120,7 +116,6 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
 const getDetailOrder = asyncHandler(async (req, res) => {
     const { oid } = req.params
-    console.log(oid);
     const order = await Order.findById(oid).populate('products.product', 'avatar title price').populate({
         path: 'postedBy',
         select: 'lastname firstname'

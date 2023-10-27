@@ -31,7 +31,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState("");
   const [searchParams] = useSearchParams();
-  console.log(searchParams.get("redirect"));
   const handleForgotPassword = async () => {
     dispacth(showModal({ isShowModal: true, modalChildren: <Loading /> }));
     const response = await apiForgotPassword({ email });

@@ -13,7 +13,6 @@ const History = () => {
   const fetchApiGetHistory = async () => {
     const response = await apiGetHistoryBuyOrder();
     setGetHistory(response.data.purchaseHistory);
-    console.log(response.data.purchaseHistory);
   };
 
   useEffect(() => {

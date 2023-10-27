@@ -336,28 +336,6 @@ const getHistoryBuyProduct = asyncHandler(async (req, res) => {
     });
 });
 
-// const updateStatusPurchaseHistory = asyncHandler(async (req, res) => {
-//     const { _id } = req.user
-//     const { orderId, newStatus } = req.body
-//     console.log(req.body);
-
-//     const user = await User.findByIdAndUpdate(_id, {
-//         $set: {
-//             "purchaseHistory.$[element].status": newStatus
-//         }
-//     }, {
-//         arrayFilters: [{ "element.order": mongoose.Types.ObjectId(orderId) }],
-//         new: true
-//     });
-//     if (!user) {
-//         throw new Error('Người dùng không tồn tại');
-//     }
-//     return res.status(200).json({
-//         success: true,
-//         message: 'Cập nhật trạng thái đơn hàng thành công'
-//     });
-// })
-
 
 
 module.exports = {
@@ -378,5 +356,4 @@ module.exports = {
     createUsers,
     removeProductInCart,
     getHistoryBuyProduct,
-    // updateStatusPurchaseHistory
 }

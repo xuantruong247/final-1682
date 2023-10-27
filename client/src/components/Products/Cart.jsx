@@ -29,7 +29,6 @@ const Cart = () => {
       });
     }
   };
-
   return (
     <div
       onClick={(e) => {
@@ -88,8 +87,8 @@ const Cart = () => {
               currentCart?.reduce(
                 (sum, el) => +el.product.price * el.quantity + sum,
                 0
-              ) / 23500
-            ) + " $"}
+              )
+            ) + " VND"}
           </span>
         </div>
         <span className="flex justify-center text-gray-500 italic text-sm">

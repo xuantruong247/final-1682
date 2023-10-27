@@ -41,7 +41,7 @@ const ButtonWrapper = ({
       statusPayment: "Succeed",
       statusOrder: "Preparing the order",
     });
-    console.log(response);
+    (response);
     if (response.data.success) {
       setIsSuccess(true);
       setTimeout(() => {
@@ -71,8 +71,7 @@ const ButtonWrapper = ({
         }
         onApprove={(data, actions) =>
           actions.order.capture().then(async (response) => {
-            console.log(response);
-            console.log(payload);
+
             if (response.status === "COMPLETED") {
               handleSaveOrder(payload);
             }

@@ -19,7 +19,6 @@ const DetailBlog = () => {
     setGetBlog(response?.data?.getBlog);
   };
 
-  console.log(getBlog?.likes);
 
   useEffect(() => {
     if (bid) {
