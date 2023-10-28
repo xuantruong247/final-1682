@@ -24,6 +24,8 @@ const ManageOder = () => {
     watch,
   } = useForm();
 
+  const [statusOrderId, setStatusOrderId] = useState([]);
+
   const [getOrder, setGetOrder] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [filterOrder, setFilterOrder] = useState([]);
@@ -32,21 +34,25 @@ const ManageOder = () => {
   const [startDays, setStartDays] = useState("");
   const [endDays, setEndDays] = useState("");
   const dispatch = useDispatch();
+
   const [params] = useSearchParams();
 
-  const fetchOrder = async (params) => {
-    const response = await apiGetOrders(params);
+  const fetchOrder = async (queries) => {
+    const response = await apiGetOrders(queries);
     setGetOrder(response.data.getOrders);
     setFilterOrder(response.data.getOrders);
     setTotalCount(response.data.counts);
   };
-
+  console.log(statusOrderId);
   const render = useCallback(() => {
     setUpdate(!update);
   }, [update]);
 
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
+    if (statusOrderId) {
+      queries.statusOrderId = statusOrderId;
+    }
     if (startDays) {
       queries.startDays = startDays;
     }
@@ -54,7 +60,7 @@ const ManageOder = () => {
       queries.endDays = endDays;
     }
     fetchOrder(queries);
-  }, [params, update, startDays, endDays]);
+  }, [params, update, startDays, endDays, statusOrderId]);
 
   useEffect(() => {
     const filtered = getOrder.filter((order) => {
@@ -74,7 +80,6 @@ const ManageOder = () => {
       })
     );
   };
-
   const handleDelete = async (oid) => {
     Swal.fire({
       title: "Are you sure....",
@@ -119,7 +124,7 @@ const ManageOder = () => {
         Manage Orders
       </h1>
       <div className="w-full p-4">
-        <div className="flex justify-center gap-20 items-center py-1">
+        <div className="flex justify-around items-center py-1">
           <div className="flex gap-2">
             <input
               type="date"
@@ -134,6 +139,20 @@ const ManageOder = () => {
               onChange={(e) => setEndDays(e.target.value)}
             />
           </div>
+          <select
+            className="p-2"
+            onChange={(e) => {
+              setStatusOrderId(e.target.value);
+            }}
+          >
+            <option value="">---CHOOSE---</option>
+            {statusOrder.map((item, index) => (
+              <option value={item.value} key={index}>
+                {item.text}
+              </option>
+            ))}
+          </select>
+
           <input
             type="text"
             value={searchOrder}
@@ -141,7 +160,7 @@ const ManageOder = () => {
               setSearchOrder(e.target.value);
             }}
             placeholder="Search..."
-            className="px-4 py-2 rounded-sm my-2 border w-[500px] outline-none placeholder:text-sm placeholder:italic"
+            className="px-4 py-2 rounded-sm my-2 border w-[400px] outline-none placeholder:text-sm placeholder:italic"
           />
         </div>
         <form onSubmit={handleSubmit(handleUpdate)}>

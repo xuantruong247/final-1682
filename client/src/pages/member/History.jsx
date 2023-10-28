@@ -76,18 +76,6 @@ const History = () => {
                     {formatMoney(item.product.price * item.quantity) + " VND"}
                   </span>
                   <span className="col-span-2 w-full justify-center flex items-center ">
-                    {/* {isProcessingRef.current ? (
-                      <p>đang sử lý...</p>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          handleCancelOrder(el.order._id);
-                        }}
-                        className="border p-2 hover:bg-gray-50"
-                      >
-                        Cancel order
-                      </button>
-                    )} */}
                     {el.order.statusOrder === "Preparing the order" && (
                       <button
                         onClick={() => {

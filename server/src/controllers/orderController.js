@@ -69,7 +69,7 @@ const getUserOrder = asyncHandler(async (req, res) => {
 })
 
 const getAllOrders = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays } = req.query;
+    const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays, statusOrderId } = req.query;
     let query = Order.find();
 
     // Kiểm tra nếu có giá trị startDate và endDate từ người dùng
@@ -82,11 +82,21 @@ const getAllOrders = asyncHandler(async (req, res) => {
         query = query.where('createdAt').gte(startDaysTime).lt(new Date(endDaysTime.getTime() + 86400000));
     }
 
+    let statusOrderArray = [];
+    if (statusOrderId) {
+        statusOrderArray = statusOrderId.split(','); // Tách chuỗi thành mảng dựa trên dấu phẩy
+    }
+    let objectFind = {};
+    if (statusOrderArray.length > 0) {
+        objectFind.statusOrder = { $in: statusOrderArray }; // Sử dụng $in để tìm các danh mục trong mảng
+    }
     query.populate({
         path: "postedBy",
         select: "lastname firstname"
     });
-    const counts = await Order.countDocuments();
+    const counts = await Order.find(objectFind).countDocuments();
+
+    query = Order.find(objectFind)
 
     if (sortField && sortOrder) {
         const sortOption = {};
