@@ -25,6 +25,7 @@ const ManageOder = () => {
   } = useForm();
 
   const [statusOrderId, setStatusOrderId] = useState([]);
+
   const [getOrder, setGetOrder] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [filterOrder, setFilterOrder] = useState([]);
@@ -38,7 +39,6 @@ const ManageOder = () => {
 
   const fetchOrder = async (queries) => {
     const response = await apiGetOrders(queries);
-    console.log(response.data.getOrders);
     setGetOrder(response.data.getOrders);
     setFilterOrder(response.data.getOrders);
     setTotalCount(response.data.counts);
@@ -140,6 +140,7 @@ const ManageOder = () => {
           </div>
           <select
             className="p-2"
+            value={statusOrderId}
             onChange={(e) => {
               setStatusOrderId(e.target.value);
             }}

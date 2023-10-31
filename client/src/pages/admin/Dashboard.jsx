@@ -210,7 +210,6 @@ const Dashboard = () => {
     ],
   };
 
-  console.log(selectedDate);
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
     if (selectedDate) {

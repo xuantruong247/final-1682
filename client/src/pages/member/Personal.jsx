@@ -22,7 +22,6 @@ const Personal = () => {
   const dispatch = useDispatch();
   const { current } = useSelector((state) => state.user);
   const [searchParams] = useSearchParams();
-  console.log(searchParams.get("redirect"));
   const naviagate = useNavigate();
   useEffect(() => {
     reset({

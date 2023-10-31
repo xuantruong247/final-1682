@@ -60,7 +60,8 @@ const updateStatusOrder = asyncHandler(async (req, res) => {
 
 
 const getUserOrder = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 12, sortField, sortOrder, statusOrderId } = req.query;
+    const { page = 1, limit = 12, statusOrderId } = req.query;
+
     const { _id } = req.user;
 
     let query = Order.find();
@@ -81,12 +82,6 @@ const getUserOrder = asyncHandler(async (req, res) => {
 
     query = Order.find(objectFind);
 
-
-    if (sortField && sortOrder) {
-        const sortOption = {};
-        sortOption[sortField] = sortOrder === 'asc' ? 1 : -1;
-        query = query.sort(sortOption);
-    }
 
     query = query.limit(parseInt(limit)).skip((page - 1) * limit);
 
@@ -139,6 +134,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
     const counts = await Order.find(objectFind).countDocuments();
 
+    query = Order.find(objectFind);
     query = query.populate({
         path: 'postedBy',
         select: 'firstname lastname',
@@ -195,18 +191,13 @@ const getWeekSales = asyncHandler(async (req, res) => {
 
     if (req.query.startDays && req.query.endDays) {
 
-        // Sử dụng startDays nếu đã truyền
         startOfWeek = moment(req.query.endDays).subtract(req.query.startDays, 'days');
-        startOfNextWeek = moment(req.query.endDays).add(1, 'days'); // Bao gồm cả ngày endDays
-        console.log(req.query.endDays);
-        console.log(req.query.startDays);
+        startOfNextWeek = moment(req.query.endDays).add(1, 'days');
     } else {
-        // Sử dụng khoảng thời gian mặc định nếu không có tham số truyền vào
         startOfWeek = today.clone().subtract(dayOfWeek, 'days');
         startOfNextWeek = startOfWeek.clone().add(7, 'days');
     }
 
-    console.log(req.query.startDays, req.query.endDays);
 
     const weekSale = await Order.aggregate([
         {
@@ -214,7 +205,7 @@ const getWeekSales = asyncHandler(async (req, res) => {
         },
         {
             $lookup: {
-                from: 'users', // Tên của collection User
+                from: 'users',
                 localField: 'postedBy',
                 foreignField: '_id',
                 as: 'user'

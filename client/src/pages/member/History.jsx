@@ -1,7 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { apiGetHistoryBuyOrder } from "./../../apis/user";
-import { formatMoney } from "../../utils/helpers";
-import Swal from "sweetalert2";
+import React, {  useEffect,  useState } from "react";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../redux/category/categorySlide";
 import { ShowInforBank } from "../../components";
@@ -17,7 +14,6 @@ const History = () => {
 
   const fetchApiGetHistory = async (queries) => {
     const response = await apiGetUserOrders(queries);
-    console.log(response.data.getOrders);
     setGetHistory(response.data.getOrders);
   };
 
