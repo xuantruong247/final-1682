@@ -27,7 +27,7 @@ const updateBlog = asyncHandler(async (req, res) => {
         }
     }
 
-        const updatedFields = {...req.body}
+    const updatedFields = { ...req.body }
 
     const response = await Blog.findByIdAndUpdate(bid, updatedFields, { new: true })
     return res.status(200).json({
@@ -54,7 +54,6 @@ const getAllBlogs = asyncHandler(async (req, res) => {
 const likeBlog = asyncHandler(async (req, res) => {
     const { _id } = req.user
     const { bid } = req.params
-    if (!bid) throw new Error("Blog not found")
     const blog = await Blog.findById(bid)
     const alreadyDisliked = blog?.dislikes?.find(el => el.toString() === _id)
     if (alreadyDisliked) {

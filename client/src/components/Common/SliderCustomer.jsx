@@ -18,7 +18,7 @@ const SliderCustomer = ({ products, activeTab, normal }) => {
           {products?.map((item, index) => (
             <ItemProduct
               key={index}
-              pid={item.pid}
+              pid={item._id}
               productData={item}
               isNew={activeTab === 1 ? false : true}
               normal={normal}

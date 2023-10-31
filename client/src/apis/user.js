@@ -79,3 +79,8 @@ export const apiGetHistoryBuyOrder = () => axios({
     url: '/user/purchase-history',
     method: 'get',
 })
+
+export const apiUpdateWishlist = (pid) => axios({
+    url: '/user/wishlist/' + pid,
+    method: 'put',
+})

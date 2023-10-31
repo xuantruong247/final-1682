@@ -15,9 +15,16 @@ export const apiGetOrders = (params) => axios({
 })
 
 
-export const apiWeekSales = () => axios({
+export const apiGetUserOrders = (params) => axios({
+    url: '/order/userorder',
+    method: 'get',
+    params
+})
+
+export const apiWeekSales = (params) => axios({
     url: '/order/week-sales',
     method: 'get',
+    params
 })
 
 export const apiDeleteOrder = (oid) => axios({

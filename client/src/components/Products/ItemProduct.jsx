@@ -8,12 +8,12 @@ import { BsFillCartCheckFill, BsFillCartPlusFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
 import { useDispatch, useSelector } from "react-redux";
-import { apiUpdateCart } from "../../apis";
+import { apiUpdateCart, apiUpdateWishlist } from "../../apis";
 import Swal from "sweetalert2";
 import { getCurrent } from "../../redux/user/asyncAction";
 import { toast } from "react-toastify";
 
-const ItemProduct = ({ productData, isNew, normal }) => {
+const ItemProduct = ({ productData, isNew, normal, pid, onMouseLeave }) => {
   const [isShowOption, setIsShowOption] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +21,13 @@ const ItemProduct = ({ productData, isNew, normal }) => {
   const handleClickOptions = async (e, flag) => {
     e.stopPropagation();
     if (flag === "WISHLIST") {
-      console.log("WISHLIST");
+      const response = await apiUpdateWishlist(pid);
+      if (response) {
+        toast.success("Updated your wishlist.");
+        dispatch(getCurrent());
+      } else {
+        toast.error("Failed to update wishlist.");
+      }
     }
     if (flag === "ADD-CART") {
       if (!current) {
@@ -65,6 +71,9 @@ const ItemProduct = ({ productData, isNew, normal }) => {
         onMouseLeave={(e) => {
           e.stopPropagation();
           setIsShowOption(false);
+          if (onMouseLeave) {
+            onMouseLeave();
+          }
         }}
       >
         <div className="w-full relative">
@@ -76,7 +85,17 @@ const ItemProduct = ({ productData, isNew, normal }) => {
                   handleClickOptions(e, "WISHLIST");
                 }}
               >
-                <SelectOption icon={<AiFillHeart />} />
+                <SelectOption
+                  icon={
+                    <AiFillHeart
+                      color={
+                        current?.wishlist?.some((i) => i._id === pid)
+                          ? "red"
+                          : ""
+                      }
+                    />
+                  }
+                />
               </span>
               {current?.cart?.some(
                 (el) => el.product._id === productData._id

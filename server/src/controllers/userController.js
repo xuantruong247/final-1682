@@ -94,13 +94,18 @@ const login = asyncHandler(async (req, res) => {
 
 const getCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const user = await User.findById(_id).select('-refreshToken -password ').populate({
-        path: "cart",
-        populate: {
-            path: "product",
+    const user = await User.findById(_id).select('-refreshToken -password ')
+        .populate({
+            path: "cart",
+            populate: {
+                path: "product",
+                select: "title avatar price"
+            }
+        }).populate({
+            path: "wishlist",
             select: "title avatar price"
-        }
-    })
+        });
+
     return res.status(200).json({
         success: user ? true : false,
         rs: user ? user : 'User not found'
@@ -228,7 +233,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
     const { _id } = req.user
     const { firstname, lastname, email, mobile, address } = req.body
-    const data = { firstname, lastname, email, mobile, address}
+    const data = { firstname, lastname, email, mobile, address }
     if (req.file) {
         data.avatar = req.file.path
     }
@@ -316,26 +321,25 @@ const createUsers = asyncHandler(async (req, res) => {
 
 
 
-const getHistoryBuyProduct = asyncHandler(async (req, res) => {
+const updateWishlist = asyncHandler(async (req, res) => {
+    const { pid } = req.params
     const { _id } = req.user
-    const user = await User.findById(_id).populate({
-        path: 'purchaseHistory.order',
-        select: 'products statusPayment statusOrder total',
-        populate: {
-            path: 'products.product',
-            select: 'avatar title price',
-        },
-    });
-    if (!user) {
-        throw new Error("User not found")
+    const user = await User.findById(_id)
+    const alreadyWishlist = user.wishlist?.find(el => el.toString() === pid)
+    if (alreadyWishlist) {
+        const response = await User.findByIdAndUpdate(_id, { $pull: { wishlist: pid }, }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            message: response ? "Updated ypur wishlist." : "Failed to update wishlist"
+        })
+    } else {
+        const response = await User.findByIdAndUpdate(_id, { $push: { wishlist: pid }, }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            message: response ? "Updated your wishlist." : "Failed to update wishlist"
+        })
     }
-
-    return res.status(200).json({
-        success: true,
-        purchaseHistory: user.purchaseHistory
-    });
-});
-
+})
 
 
 module.exports = {
@@ -355,5 +359,5 @@ module.exports = {
     finalRegister,
     createUsers,
     removeProductInCart,
-    getHistoryBuyProduct,
+    updateWishlist
 }

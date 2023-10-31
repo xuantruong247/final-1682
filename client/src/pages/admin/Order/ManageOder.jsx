@@ -25,7 +25,6 @@ const ManageOder = () => {
   } = useForm();
 
   const [statusOrderId, setStatusOrderId] = useState([]);
-
   const [getOrder, setGetOrder] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [filterOrder, setFilterOrder] = useState([]);
@@ -39,11 +38,11 @@ const ManageOder = () => {
 
   const fetchOrder = async (queries) => {
     const response = await apiGetOrders(queries);
+    console.log(response.data.getOrders);
     setGetOrder(response.data.getOrders);
     setFilterOrder(response.data.getOrders);
     setTotalCount(response.data.counts);
   };
-  console.log(statusOrderId);
   const render = useCallback(() => {
     setUpdate(!update);
   }, [update]);
@@ -221,7 +220,7 @@ const ManageOder = () => {
                   <td className="px-4 py-2">
                     {moment(item.createdAt).format("DD-MM-YYYY")}
                   </td>
-                  <td className="px-4 py-2 flex">
+                  <td className="px-4 py-2 flex justify-center">
                     <button
                       onClick={() => {
                         handleShowDetail(item._id);

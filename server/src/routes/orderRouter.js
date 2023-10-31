@@ -5,8 +5,8 @@ const router = express.Router()
 
 
 router.post("/create", [verifyAccessToken], ctrls.createNewOrder)
-router.get("/userorder", [verifyAccessToken], ctrls.getUserOrder)
 router.get("/", [verifyAccessToken, isAdmin], ctrls.getAllOrders)
+router.get("/userorder", [verifyAccessToken], ctrls.getUserOrder)
 router.get("/week-sales", [verifyAccessToken, isAdmin], ctrls.getWeekSales)
 router.get("/detail-order/:oid", [verifyAccessToken], ctrls.getDetailOrder)
 

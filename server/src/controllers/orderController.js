@@ -60,13 +60,59 @@ const updateStatusOrder = asyncHandler(async (req, res) => {
 
 
 const getUserOrder = asyncHandler(async (req, res) => {
-    const { _id } = req.user
-    const response = await Order.find({ orderBy: _id })
+    const { page = 1, limit = 12, sortField, sortOrder, statusOrderId } = req.query;
+    const { _id } = req.user;
+
+    let query = Order.find();
+
+
+    let statusOrderArray = [];
+    if (statusOrderId) {
+        statusOrderArray = statusOrderId.split(','); // Tách chuỗi thành mảng dựa trên dấu phẩy
+    }
+    let objectFind = {};
+    if (statusOrderArray.length > 0) {
+        objectFind.statusOrder = { $in: statusOrderArray }; // Sử dụng $in để tìm các danh mục trong mảng
+    }
+
+    objectFind.postedBy = _id;
+
+    const counts = await Order.find(objectFind).countDocuments();
+
+    query = Order.find(objectFind);
+
+
+    if (sortField && sortOrder) {
+        const sortOption = {};
+        sortOption[sortField] = sortOrder === 'asc' ? 1 : -1;
+        query = query.sort(sortOption);
+    }
+
+    query = query.limit(parseInt(limit)).skip((page - 1) * limit);
+
+    query = query.populate({
+        path: 'products.product',
+        select: 'avatar title price'
+    });
+
+    const response = await query.exec();
+
+    let totalSum = 0;
+    for (const order of response) {
+        totalSum += order.total;
+    }
+    const formattedTotalSum = totalSum.toFixed(2);
+
     return res.status(200).json({
         success: response ? true : false,
-        response: response ? response : "Something went wrong"
-    })
-})
+        counts,
+        totalSum: formattedTotalSum,
+        getOrders: response ? response : "Cannot get order ",
+    });
+});
+
+
+
 
 const getAllOrders = asyncHandler(async (req, res) => {
     const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays, statusOrderId } = req.query;
@@ -90,20 +136,19 @@ const getAllOrders = asyncHandler(async (req, res) => {
     if (statusOrderArray.length > 0) {
         objectFind.statusOrder = { $in: statusOrderArray }; // Sử dụng $in để tìm các danh mục trong mảng
     }
-    query.populate({
-        path: "postedBy",
-        select: "lastname firstname"
-    });
+
     const counts = await Order.find(objectFind).countDocuments();
 
-    query = Order.find(objectFind)
+    query = query.populate({
+        path: 'postedBy',
+        select: 'firstname lastname',
+    });
 
     if (sortField && sortOrder) {
         const sortOption = {};
         sortOption[sortField] = sortOrder === 'asc' ? 1 : -1;
         query = query.sort(sortOption);
     }
-
 
     query = query.limit(parseInt(limit)).skip((page - 1) * limit);
 
@@ -145,11 +190,23 @@ const getWeekSales = asyncHandler(async (req, res) => {
     const today = moment();
     const dayOfWeek = today.day();
 
-    // Tính ngày đầu của tuần hiện tại (ngày chủ nhật)
-    const startOfWeek = today.clone().subtract(dayOfWeek, 'days');
 
-    // Tính ngày đầu của tuần kế tiếp (ngày chủ nhật)
-    const startOfNextWeek = startOfWeek.clone().add(7, 'days');
+    let startOfWeek, startOfNextWeek;
+
+    if (req.query.startDays && req.query.endDays) {
+
+        // Sử dụng startDays nếu đã truyền
+        startOfWeek = moment(req.query.endDays).subtract(req.query.startDays, 'days');
+        startOfNextWeek = moment(req.query.endDays).add(1, 'days'); // Bao gồm cả ngày endDays
+        console.log(req.query.endDays);
+        console.log(req.query.startDays);
+    } else {
+        // Sử dụng khoảng thời gian mặc định nếu không có tham số truyền vào
+        startOfWeek = today.clone().subtract(dayOfWeek, 'days');
+        startOfNextWeek = startOfWeek.clone().add(7, 'days');
+    }
+
+    console.log(req.query.startDays, req.query.endDays);
 
     const weekSale = await Order.aggregate([
         {
@@ -210,6 +267,10 @@ const getWeekSales = asyncHandler(async (req, res) => {
 });
 
 
+
+
+
+
 const deleteOrder = asyncHandler(async (req, res) => {
     const { oid } = req.params
     const response = await Order.findByIdAndDelete(oid)
@@ -245,5 +306,5 @@ module.exports = {
     getWeekSales,
     getAllOrders,
     deleteOrder,
-    cancelOrder
+    cancelOrder,
 }

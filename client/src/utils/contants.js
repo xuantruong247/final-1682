@@ -6,6 +6,40 @@ import { RiBillFill, RiProductHuntFill } from 'react-icons/ri'
 import { TbCategory, TbBrandCodesandbox, TbBrandBlogger } from "react-icons/tb";
 
 
+export const dateOfYear = [
+    {
+        id: 1,
+        startDays: "7",
+        endDays: "2023-10-07",
+        text: "01/10 To 07/10"
+    },
+    {
+        id: 2,
+        startDays: "7",
+        endDays: "2023-10-14",
+        text: "08/10 To 14/10"
+    },
+    {
+        id: 3,
+        startDays: "7",
+        endDays: "2023-10-21",
+        text: "15/10 To 07/21"
+    },
+    {
+        id: 4,
+        startDays: "7",
+        endDays: "2023-10-28",
+        text: "22/10 To 28/10"
+    },
+    {
+        id: 5,
+        startDays: "7",
+        endDays: "2023-11-04",
+        text: "29/10 To 04/11"
+    },
+]
+
+
 export const navigation = [
     {
         id: 1,

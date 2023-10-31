@@ -17,6 +17,8 @@ import {
 } from "../../apis";
 import moment from "moment";
 import { FaMoneyCheckAlt } from "react-icons/fa";
+import { dateOfYear } from "../../utils/contants";
+import { useSearchParams } from "react-router-dom";
 
 const Dashboard = () => {
   const [productCount, setProductCount] = useState([]);
@@ -28,9 +30,11 @@ const Dashboard = () => {
   const [getOrder, setGetOrder] = useState([]);
   const [brands, setBrands] = useState([]);
   const [top10Products, setTop10Products] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
   const [weekSale, setWeekSale] = useState([]);
   const [getTableUser, setGetTableUser] = useState([]);
   const [totalWeek, setTotalWeek] = useState([]);
+  const [params] = useSearchParams();
 
   const fetchAllProducts = async () => {
     const perPage = 12;
@@ -158,8 +162,8 @@ const Dashboard = () => {
     ],
   };
 
-  const fetchApiWeekSale = async () => {
-    const response = await apiWeekSales();
+  const fetchApiWeekSale = async (queries) => {
+    const response = await apiWeekSales(queries);
     const rawData = response.data.weekSale;
     setGetTableUser(response.data.weekSale);
     setTotalWeek(response.data);
@@ -198,20 +202,31 @@ const Dashboard = () => {
     datasets: [
       {
         label: "Revenue every day of the week",
-        data: weekSale.map((data) => (data.amount * 100).toFixed(2)), // Định dạng amount với 2 chữ số thập phân sau dấu chấm
+        data: weekSale.map((data) => (data.amount * 100).toFixed(2)),
         fill: false,
         borderColor: "rgb(255, 99, 132)",
         tension: 0.5,
       },
     ],
   };
+
+  console.log(selectedDate);
+  useEffect(() => {
+    const queries = Object.fromEntries([...params]);
+    if (selectedDate) {
+      const [startDays, endDays] = selectedDate.split(" ");
+      queries.startDays = startDays;
+      queries.endDays = endDays;
+    }
+    fetchApiWeekSale(queries);
+  }, [params, selectedDate]);
+
   useEffect(() => {
     fetchAllProducts();
     fetchAllUsers();
     fetchCategories();
     fetchBrands();
     fetchOrder();
-    fetchApiWeekSale();
   }, []);
   return (
     <div className="w-full flex flex-col gap-2">
@@ -256,6 +271,20 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="mx-2 bg-white">
+        <div className="flex justify-center mt-1">
+          <select
+            className="p-1 border bg-gray-50 rounded-md"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          >
+            <option value="">---CHOOSE---</option>
+            {dateOfYear.map((item) => (
+              <option value={`${item.startDays} ${item.endDays}`} key={item.id}>
+                {item.text}
+              </option>
+            ))}
+          </select>
+        </div>
         <Line data={orderWeekSale} height="100px" />
       </div>
       <div className="grid grid-cols-10 gap-2 mx-2">
