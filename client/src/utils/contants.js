@@ -23,7 +23,7 @@ export const dateOfYear = [
         id: 3,
         startDays: "7",
         endDays: "2023-10-21",
-        text: "15/10 To 07/21"
+        text: "15/10 To 21/10"
     },
     {
         id: 4,

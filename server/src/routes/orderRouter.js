@@ -5,12 +5,14 @@ const router = express.Router()
 
 
 router.post("/create", [verifyAccessToken], ctrls.createNewOrder)
+router.post("/refundPaypal", [verifyAccessToken], ctrls.refundPaypal)
 router.get("/", [verifyAccessToken, isAdmin], ctrls.getAllOrders)
 router.get("/userorder", [verifyAccessToken], ctrls.getUserOrder)
 router.get("/week-sales", [verifyAccessToken, isAdmin], ctrls.getWeekSales)
 router.get("/detail-order/:oid", [verifyAccessToken], ctrls.getDetailOrder)
 
 router.put("/cancelOrder/:oid", [verifyAccessToken], ctrls.cancelOrder)
+router.put("/refundOrder/:oid", [verifyAccessToken], ctrls.refundOrder)
 
 
 router.delete("/delete/:oid", [verifyAccessToken, isAdmin], ctrls.deleteOrder)

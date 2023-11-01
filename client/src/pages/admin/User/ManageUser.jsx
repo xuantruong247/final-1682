@@ -288,3 +288,122 @@ const ManageUser = () => {
 };
 
 export default ManageUser;
+
+
+{/* <form onSubmit={handleSubmit(handleUpdate)}>
+{watch("_id") && (
+  <button
+    type="submit"
+    className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded"
+  >
+    Update
+  </button>
+)}
+<table className="table w-full mb-3 border-b border-sky-300 text-center">
+  <thead className="bg-sky-500 text-white border text-[15px] rounded-sm">
+    <tr>
+      <th className="px-4 py-2">#</th>
+      <th className="px-4 py-2">Name</th>
+      <th className="px-4 py-2">Total</th>
+      <th className="px-4 py-2">Status Payment</th>
+      <th className="px-4 py-2">Status Order</th>
+      <th className="px-4 py-2">CreatedAt</th>
+      <th className="px-4 py-2">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {filterOrder?.map((item, index) => (
+      <tr key={index}>
+        <td className="px-4 py-2">{index + 1}</td>
+        <td className="px-4 py-2">
+          {item?.postedBy?.firstname} {item?.postedBy?.lastname}
+        </td>
+        <td className="px-4 py-2">{item.total}</td>
+        <td className="px-4 py-2">
+          {watch("_id") === item._id ? (
+            <Select
+              register={register}
+              fullWidth
+              errors={errors}
+              id={"statusPayment"}
+              options={statusPayment}
+            />
+          ) : (
+            <span>{item.statusPayment}</span>
+          )}
+        </td>
+        <td className="px-4 py-2">
+          {watch("_id") === item._id ? (
+            <Select
+              register={register}
+              fullWidth
+              errors={errors}
+              id={"statusOrder"}
+              options={statusOrder}
+            />
+          ) : (
+            <span>{item.statusOrder}</span>
+          )}
+        </td>
+        <td className="px-4 py-2">
+          {moment(item.createdAt).format("DD-MM-YYYY")}
+        </td>
+        <td className="px-4 py-2 flex justify-end">
+          {item.statusOrder === "Processing" && (
+            <button 
+            onClick={() => { 
+              handleRefund(item._id)
+             }}
+            className="cursor-pointer bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-2 rounded mr-3">
+              Refund
+            </button>
+          )}
+          <button
+            onClick={() => {
+              handleShowDetail(item._id);
+            }}
+            className="cursor-pointer bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded mr-3"
+          >
+            Order detail
+          </button>
+          {watch("_id") === item._id ? (
+            <button
+              className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded mr-3"
+              onClick={() => {
+                reset({
+                  email: "",
+                  firstname: "",
+                  lastname: "",
+                  role: "",
+                  phone: "",
+                  status: "",
+                  _id: "",
+                });
+              }}
+            >
+              Back
+            </button>
+          ) : (
+            <div
+              className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded mr-3"
+              onClick={() => {
+                reset(item);
+              }}
+            >
+              Edit
+            </div>
+          )}
+          <button
+            onClick={() => {
+              handleDelete(item._id);
+            }}
+            className="cursor-pointer bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+</form> */}

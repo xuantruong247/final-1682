@@ -1,17 +1,21 @@
-import React, {  useEffect,  useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { showModal } from "../../redux/category/categorySlide";
 import { ShowInforBank } from "../../components";
 import { apiGetUserOrders } from "../../apis";
-import { useSearchParams } from "react-router-dom";
+import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 import { statusOrder } from "../../utils/contants";
+import Swal from "sweetalert2";
+import path from "../../utils/path";
 
 const History = () => {
   const [getHistory, setGetHistory] = useState([]);
   const [statusOrderId, setStatusOrderId] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
-
+  const { current } = useSelector((state) => state.user);
+  console.log(current);
   const fetchApiGetHistory = async (queries) => {
     const response = await apiGetUserOrders(queries);
     setGetHistory(response.data.getOrders);
@@ -26,12 +30,33 @@ const History = () => {
   }, [params, statusOrderId]);
 
   const handleCancelOrder = (oid) => {
-    dispatch(
-      showModal({
-        isShowModal: true,
-        modalChildren: <ShowInforBank oid={oid} />,
-      })
-    );
+    if (!current?.numberBank || !current?.nameBank) {
+      Swal.fire({
+        icon: "info",
+        title: "Almost!",
+        text: "Please update your name bank and number bank before send request. ",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Go update",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate({
+            pathname: `/${path.MEMBER}/${path.PERSONAL}`,
+            search: createSearchParams({
+              redirectHistory: location.pathname,
+            }).toString(),
+          });
+        }
+      });
+    } else {
+      dispatch(
+        showModal({
+          isShowModal: true,
+          modalChildren: <ShowInforBank oid={oid} />,
+        })
+      );
+    }
   };
 
   return (

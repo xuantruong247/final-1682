@@ -2,6 +2,8 @@ const Order = require("../models/order")
 const User = require("../models/user")
 const asyncHandler = require("express-async-handler")
 const moment = require("moment")
+const paypal = require("paypal-rest-sdk")
+const axios = require("axios")
 
 
 const createNewOrder = asyncHandler(async (req, res) => {
@@ -47,16 +49,6 @@ const createNewOrder = asyncHandler(async (req, res) => {
 
 
 
-const updateStatusOrder = asyncHandler(async (req, res) => {
-    const { oid } = req.params
-    const { statusPayment, statusOrder } = req.body
-    if (!statusPayment || !statusOrder) throw new Error("Missting status")
-    const response = await Order.findByIdAndUpdate(oid, { statusPayment, statusOrder }, { new: true })
-    return res.status(200).json({
-        success: response ? true : false,
-        response: response ? response : "Something went wrong"
-    })
-})
 
 
 const getUserOrder = asyncHandler(async (req, res) => {
@@ -225,6 +217,9 @@ const getWeekSales = asyncHandler(async (req, res) => {
             },
         },
         {
+            $match: { statusPayment: { $ne: "Cancelled" } } // Lọc những đơn hàng không có statusPayment là "Cancelled"
+        },
+        {
             $group: {
                 _id: "$day",
                 total: { $sum: "$sales" },
@@ -288,6 +283,87 @@ const cancelOrder = asyncHandler(async (req, res) => {
 
 })
 
+const updateStatusOrder = asyncHandler(async (req, res) => {
+    const { oid } = req.params
+    const { statusPayment, statusOrder } = req.body
+    if (!statusPayment || !statusOrder) throw new Error("Missting status")
+    const response = await Order.findByIdAndUpdate(oid, { statusPayment, statusOrder }, { new: true })
+    return res.status(200).json({
+        success: response ? true : false,
+        response: response ? response : "Something went wrong"
+    })
+})
+
+
+const refundOrder = asyncHandler(async (req, res) => {
+    const { oid } = req.params
+    const order = await Order.findById(oid)
+
+    if (!order) throw new Error("oid not found")
+
+    order.statusOrder = "Refunded"
+    order.statusPayment = "Cancelled"
+    await order.save()
+
+    return res.status(200).json({
+        success: true,
+        response: order
+    });
+
+})
+
+
+const clientId = "AS8eoaxB80zyUZm-uhTe0575nhoK1MY6xKtsPRGiugspLyldNP4BecSrPkdc2kBgekw2zFzLc2GvPc4s";
+const clientSecret = "EH66neN7Xsrh0emTOJPV8PmHRhj5LDuQ2IJ3a-Kphc0cMqeC3rAXd2k-i28hyg-oABPhhWL-ZfXnG2Vi";
+
+// Endpoint để lấy token xác thực từ PayPal
+const authEndpoint = "https://api.sandbox.paypal.com/v1/oauth2/token";
+
+
+
+
+const refundPaypal = asyncHandler(async (req, res) => {
+    try {
+        // Lấy token xác thực từ PayPal
+        const authResponse = await axios.post(authEndpoint, null, {
+            auth: {
+                username: clientId,
+                password: clientSecret,
+            },
+            params: {
+                grant_type: "client_credentials",
+            },
+        });
+
+        const accessToken = authResponse.data.access_token;
+
+        // Thông tin đơn hàng cần hoàn tiền
+        const captureId = req.query.captureId; // ID của giao dịch bạn muốn hoàn tiền
+        const amount = req.query.amount; // Số tiền bạn muốn hoàn và loại tiền tệ
+        console.log(captureId);
+        console.log(amount);
+        // Endpoint để thực hiện hoàn tiền
+        const refundEndpoint = `https://api.sandbox.paypal.com/v2/payments/captures/${captureId}/refund`;
+
+        // Thực hiện yêu cầu hoàn tiền
+        const refundResponse = await axios.post(
+            refundEndpoint,
+            { amount: { value: amount, currency_code: "USD" } },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+        console.log("Hoàn tiền thành công: ", refundResponse.data);
+        res.status(200).json({ success: true, message: "Hoàn tiền thành công" });
+    } catch (error) {
+        console.error("Lỗi khi thực hiện hoàn tiền: ", error);
+        res.status(500).json({ success: false, message: "Lỗi khi hoàn tiền" });
+    }
+})
+
 
 module.exports = {
     createNewOrder,
@@ -298,4 +374,9 @@ module.exports = {
     getAllOrders,
     deleteOrder,
     cancelOrder,
+    refundPaypal,
+    refundOrder
 }
+
+
+

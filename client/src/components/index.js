@@ -45,6 +45,7 @@ export { default as EditorQuill } from "./Common/EditorQuill"
 export { default as ContactConponent } from "./Common/ContactConponent"
 export { default as ShowDetailOrder } from "./Order/ShowDetailOrder"
 export { default as ShowInforBank } from "./Products/ShowInforBank"
+export { default as ShowQRCode } from "./Order/ShowQRCode"
 
 
 

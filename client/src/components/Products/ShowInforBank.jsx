@@ -12,7 +12,6 @@ const ShowInforBank = ({ oid }) => {
   const modalRef = useRef();
   const form = useRef();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     modalRef.current.scrollIntoView({ block: "center", behavior: "smooth" });
@@ -71,50 +70,18 @@ const ShowInforBank = ({ oid }) => {
           className="p-2 w-full outline-none border"
           hidden
         />
-        <div className="flex gap-14 w-full items-center">
-          <label htmlFor="user_name" className="w-[150px]">
-            Your name:
+        <div className="flex w-full gap-2 items-center">
+          <label htmlFor="reason">
+            Reason:
           </label>
           <input
             type="text"
-            name="user_name"
+            name="reason"
             required
             className="p-1 w-full outline-none border"
           />
         </div>
-        <div className="flex gap-14 w-full items-center">
-          <label htmlFor="user_name" className="w-[150px]">
-            Your phone:
-          </label>
-          <input
-            type="number"
-            name="user_phone"
-            required
-            className="p-1 w-full outline-none border"
-          />
-        </div>
-        <div className="flex gap-14 w-full items-center">
-          <label htmlFor="user_name" className="w-[150px]">
-            Bank name:
-          </label>
-          <input
-            type="text"
-            name="bank_name"
-            required
-            className="p-1 w-full outline-none border"
-          />
-        </div>
-        <div className="flex gap-2 w-full items-center">
-          <label htmlFor="user_name" className="w-[220px]">
-            Account number:
-          </label>
-          <input
-            type="text"
-            name="account_number"
-            required
-            className="p-1 w-full outline-none border"
-          />
-        </div>
+
         <div className="flex justify-center">
           <button className="p-2 w-full bg-main text-white hover:bg-gray-800">
             Request cancellation and refund

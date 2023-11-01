@@ -232,8 +232,8 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const { firstname, lastname, email, mobile, address } = req.body
-    const data = { firstname, lastname, email, mobile, address }
+    const { firstname, lastname, email, mobile, address, numberBank, nameBank } = req.body
+    const data = { firstname, lastname, email, mobile, address, numberBank, nameBank }
     if (req.file) {
         data.avatar = req.file.path
     }

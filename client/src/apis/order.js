@@ -50,3 +50,9 @@ export const apiUpdateStatus = (data, oid) => axios({
     method: 'put',
     data
 })
+
+
+export const apiRefundPaypal = (oid) => axios({
+    url: '/order/refundOrder/' + oid,
+    method: 'put',
+})

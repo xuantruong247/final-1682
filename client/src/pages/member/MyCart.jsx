@@ -106,37 +106,3 @@ const MyCart = () => {
 
 export default MyCart;
 
-// {getHistory.map((item) => (
-//   <Fragment key={item._id}>
-//     {item.order.products.map((product, index) => (
-//       <div
-//         className="grid grid-cols-10 w-main mx-auto border p-3 text-center"
-//         key={index}
-//       >
-//         <span className="col-span-5 w-full flex items-center">
-//           <img
-//             src={product.product.avatar}
-//             alt="avatar"
-//             className="w-44 h-w-44 object-cover"
-//           />
-//           <div className="flex flex-col gap-2 text-start ml-5">
-//             <span className="text-sm hover:text-main cursor-pointer"></span>
-//             <span className="text-sm hover:text-main cursor-pointer">
-//               Remove
-//             </span>
-//           </div>
-//         </span>
-//         <span className="col-span-2 w-full flex items-center justify-center">
-//           {product.quantity}
-//         </span>
-//         <span className="col-span-2 w-full font-semibold flex items-center justify-center">
-//           {formatMoney(product.product.price * product.quantity) + "VND"}
-//         </span>
-//         <span className="col-span-1 w-full font-semibold flex items-center justify-end">
-//           Cancel
-//         </span>
-//       </div>
-//     ))}
-//   </Fragment>
-// ));
-// }

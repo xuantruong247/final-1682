@@ -4,7 +4,7 @@ import {
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
 import { useEffect } from "react";
-import { apiCreateOrder } from "../../apis/order";
+import { apiCreateOrder, apiRefundPaypal } from "../../apis/order";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +41,7 @@ const ButtonWrapper = ({
       statusPayment: "Succeed",
       statusOrder: "Preparing the order",
     });
-    (response);
+    response;
     if (response.data.success) {
       setIsSuccess(true);
       setTimeout(() => {
@@ -52,6 +52,7 @@ const ButtonWrapper = ({
     }
   };
 
+ 
   return (
     <>
       {showSpinner && isPending && <div className="spinner" />}
@@ -71,10 +72,8 @@ const ButtonWrapper = ({
         }
         onApprove={(data, actions) =>
           actions.order.capture().then(async (response) => {
-
             if (response.status === "COMPLETED") {
               handleSaveOrder(payload);
-              
             }
           })
         }

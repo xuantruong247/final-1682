@@ -31,6 +31,8 @@ const Personal = () => {
       email: current?.email,
       mobile: current?.mobile,
       address: current?.address,
+      numberBank: current?.numberBank,
+      nameBank: current?.nameBank,
     });
   }, [current]);
 
@@ -55,6 +57,8 @@ const Personal = () => {
       });
       if (searchParams.get("redirect")) {
         naviagate(`/${path.MEMBER}/${path.MY_CART}`);
+      } else if (searchParams.get("redirectHistory")) {
+        naviagate(`/${path.MEMBER}/${path.HISTORY}`);
       }
     } else {
       Swal.fire({
@@ -96,6 +100,22 @@ const Personal = () => {
             validate={{ required: "Require fill." }}
           />
           <InputForm
+            label={"Number Bank"}
+            register={register}
+            fullWidth
+            errors={errors}
+            id={"numberBank"}
+            validate={{ required: "Require fill." }}
+          />
+          <InputForm
+            label={"Name Bank"}
+            register={register}
+            fullWidth
+            errors={errors}
+            id={"nameBank"}
+            validate={{ required: "Require fill." }}
+          />
+          <InputForm
             label={"Email address"}
             register={register}
             fullWidth
@@ -125,29 +145,36 @@ const Personal = () => {
             }}
           />
         </div>
-        <div className="flex flex-col mt-14 w-3/5 mx-auto">
-          <div className="flex gap-2">
-            <span className="font-medium">Account status:</span>
-            <span>{current?.isBlocked ? "Blocked" : "Actived"}</span>
+        <div className="flex justify-between mt-14 w-3/5 mx-auto">
+          <div className="">
+            <div className="flex flex-col mx-auto">
+              <div className="flex gap-2">
+                <span className="font-medium">Account status:</span>
+                <span>{current?.isBlocked ? "Blocked" : "Actived"}</span>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <span className="font-medium">Role:</span>
+                <span>{current?.role}</span>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <span className="font-medium">Create At:</span>
+                <span>{moment(current?.createdAt).fromNow()}</span>
+              </div>
+              <div className="flex flex-col gap-2 mt-2">
+                <span className="font-medium">Profile image:</span>
+                <label htmlFor="file">
+                  <img
+                    src={current?.avatar || avatar}
+                    alt="avatar"
+                    className="w-20 h-20 object-cover rounded-full ml-10 cursor-pointer"
+                  />
+                </label>
+                <input type="file" id="file" hidden {...register("avatar")} />
+              </div>
+            </div>
           </div>
-          <div className="flex gap-2 mt-2">
-            <span className="font-medium">Role:</span>
-            <span>{current?.role}</span>
-          </div>
-          <div className="flex gap-2 mt-2">
-            <span className="font-medium">Create At:</span>
-            <span>{moment(current?.createdAt).fromNow()}</span>
-          </div>
-          <div className="flex flex-col gap-2 mt-2">
-            <span className="font-medium">Profile image:</span>
-            <label htmlFor="file">
-              <img
-                src={current?.avatar || avatar}
-                alt="avatar"
-                className="w-20 h-20 object-cover rounded-full ml-10 cursor-pointer"
-              />
-            </label>
-            <input type="file" id="file" hidden {...register("avatar")} />
+          <div>
+            
           </div>
         </div>
         {isDirty && (

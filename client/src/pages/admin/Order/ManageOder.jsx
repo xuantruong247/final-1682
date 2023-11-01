@@ -7,9 +7,14 @@ import {
 import moment from "moment";
 import Swal from "sweetalert2";
 import path from "../../../utils/path";
-import { Pagination, Select, ShowDetailOrder } from "../../../components";
+import {
+  Pagination,
+  Select,
+  ShowDetailOrder,
+  ShowQRCode,
+} from "../../../components";
 import { apiDetailOrder } from "./../../../apis/order";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showModal } from "../../../redux/category/categorySlide";
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -19,13 +24,16 @@ const ManageOder = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors },
     reset,
     watch,
-  } = useForm();
+    formState: { errors },
+  } = useForm({
+    statusOrder: "",
+    statusPayment: "",
+    _id: "",
+  });
 
   const [statusOrderId, setStatusOrderId] = useState([]);
-
   const [getOrder, setGetOrder] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [filterOrder, setFilterOrder] = useState([]);
@@ -34,7 +42,6 @@ const ManageOder = () => {
   const [startDays, setStartDays] = useState("");
   const [endDays, setEndDays] = useState("");
   const dispatch = useDispatch();
-
   const [params] = useSearchParams();
 
   const fetchOrder = async (queries) => {
@@ -43,6 +50,7 @@ const ManageOder = () => {
     setFilterOrder(response.data.getOrders);
     setTotalCount(response.data.counts);
   };
+
   const render = useCallback(() => {
     setUpdate(!update);
   }, [update]);
@@ -68,7 +76,26 @@ const ManageOder = () => {
     setFilterOrder(filtered);
   }, [searchOrder, getOrder]);
 
+  const handleUpdate = async (data) => {
+    const response = await apiUpdateStatus(data, watch("_id"));
+    if (response) {
+      Swal.fire({
+        icon: "success",
+        text: "Update status success!!",
+      });
+      reset({ statusOrder: "", statusPayment: "", _id: "" });
+      render();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...!",
+        text: "Something went wrong!",
+      });
+    }
+  };
+
   const handleShowDetail = async (oid) => {
+    console.log(oid);
     const response = await apiDetailOrder(oid);
     dispatch(
       showModal({
@@ -79,7 +106,9 @@ const ManageOder = () => {
       })
     );
   };
+
   const handleDelete = async (oid) => {
+    console.log(oid);
     Swal.fire({
       title: "Are you sure....",
       text: "Are you ready remove this order?",
@@ -99,28 +128,21 @@ const ManageOder = () => {
     });
   };
 
-  const handleUpdate = async (data) => {
-    const response = await apiUpdateStatus(data, watch("_id"));
-    if (response) {
-      Swal.fire({
-        icon: "success",
-        text: "Update status success!!",
-      });
-      reset({ statusOrder: "", statusPayment: "", _id: "" });
-      render();
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...!",
-        text: "Something went wrong!",
-      });
-    }
+  const handleRefund = async (oid) => {
+    console.log(oid);
+    const response = await apiDetailOrder(oid);
+    console.log(response);
+    dispatch(
+      showModal({
+        isShowModal: true,
+        modalChildren: <ShowQRCode id={response.data.getDetailOrder._id} />,
+      })
+    );
   };
-
   return (
     <div className="w-full">
       <h1 className="h-[60px] flex justify-between items-center text-2xl font-bold px-4 border-b border-sky-300">
-        Manage Orders
+        <span>Manage Orders</span>
       </h1>
       <div className="w-full p-4">
         <div className="flex justify-around items-center py-1">
@@ -164,14 +186,6 @@ const ManageOder = () => {
           />
         </div>
         <form onSubmit={handleSubmit(handleUpdate)}>
-          {watch("_id") && (
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded"
-            >
-              Update
-            </button>
-          )}
           <table className="table w-full mb-3 border-b border-sky-300 text-center">
             <thead className="bg-sky-500 text-white border text-[15px] rounded-sm">
               <tr>
@@ -221,26 +235,32 @@ const ManageOder = () => {
                   <td className="px-4 py-2">
                     {moment(item.createdAt).format("DD-MM-YYYY")}
                   </td>
-                  <td className="px-4 py-2 flex justify-center">
-                    <button
+                  <td className="px-4 py-2 flex  gap-2 justify-end">
+                    {item.statusOrder === "Processing" && (
+                      <div
+                        onClick={() => {
+                          handleRefund(item._id);
+                        }}
+                        className="cursor-pointer bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-2 rounded"
+                      >
+                        Refund
+                      </div>
+                    )}
+                    <div
                       onClick={() => {
                         handleShowDetail(item._id);
                       }}
-                      className="cursor-pointer bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded mr-3"
+                      className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded"
                     >
                       Order detail
-                    </button>
+                    </div>
                     {watch("_id") === item._id ? (
                       <button
-                        className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded mr-3"
+                        className="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded mr-3"
                         onClick={() => {
                           reset({
-                            email: "",
-                            firstname: "",
-                            lastname: "",
-                            role: "",
-                            phone: "",
-                            status: "",
+                            statusOrder: "",
+                            statusPayment: "",
                             _id: "",
                           });
                         }}
@@ -249,7 +269,7 @@ const ManageOder = () => {
                       </button>
                     ) : (
                       <div
-                        className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded mr-3"
+                        className="cursor-pointer bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded"
                         onClick={() => {
                           reset(item);
                         }}
@@ -257,24 +277,20 @@ const ManageOder = () => {
                         Edit
                       </div>
                     )}
-                    <button
+                    <div
                       onClick={() => {
                         handleDelete(item._id);
                       }}
                       className="cursor-pointer bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded"
                     >
                       Delete
-                    </button>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </form>
-
-        <div className="w-full flex justify-center items-center">
-          <Pagination totalCount={totalCount} />
-        </div>
       </div>
     </div>
   );
