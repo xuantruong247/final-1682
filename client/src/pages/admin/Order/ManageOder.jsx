@@ -265,7 +265,7 @@ const ManageOder = () => {
                         onClick={() => {
                           handleRefund(item._id);
                         }}
-                        className="cursor-pointer bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-2 rounded"
+                        className="cursor-pointer bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-2 rounded flex justify-center items-center"
                       >
                         Refund
                       </div>
@@ -280,7 +280,7 @@ const ManageOder = () => {
                     </div>
                     {watch("_id") === item._id ? (
                       <button
-                        className="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded mr-3"
+                        className="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded mr-3 flex justify-center items-center"
                         onClick={() => {
                           reset({
                             statusOrder: "",
@@ -293,7 +293,7 @@ const ManageOder = () => {
                       </button>
                     ) : (
                       <div
-                        className="cursor-pointer bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded"
+                        className="cursor-pointer bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded flex justify-center items-center"
                         onClick={() => {
                           reset(item);
                         }}
@@ -305,7 +305,7 @@ const ManageOder = () => {
                       onClick={() => {
                         handleDelete(item._id);
                       }}
-                      className="cursor-pointer bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded"
+                      className="cursor-pointer bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded flex justify-center items-center"
                     >
                       Delete
                     </div>

@@ -104,16 +104,8 @@ const getUserOrder = asyncHandler(async (req, res) => {
 const getAllOrders = asyncHandler(async (req, res) => {
     const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays, statusOrderId } = req.query;
     let query = Order.find();
+    console.log(sortField, sortOrder, startDays, endDays, statusOrderId);
 
-    // Kiểm tra nếu có giá trị startDate và endDate từ người dùng
-    if (startDays && endDays) {
-        // Chuyển ngày bắt đầu và ngày kết thúc thành đối tượng Date
-        const startDaysTime = new Date(startDays);
-        const endDaysTime = new Date(endDays);
-
-        // Thêm điều kiện để lọc theo khoảng thời gian
-        query = query.where('createdAt').gte(startDaysTime).lt(new Date(endDaysTime.getTime() + 86400000));
-    }
 
     let statusOrderArray = [];
     if (statusOrderId) {
@@ -124,9 +116,21 @@ const getAllOrders = asyncHandler(async (req, res) => {
         objectFind.statusOrder = { $in: statusOrderArray }; // Sử dụng $in để tìm các danh mục trong mảng
     }
 
+    if (startDays || endDays) {
+        objectFind.createdAt = {};
+        if (startDays) {
+            objectFind.createdAt.$gte = new Date(startDays);
+            objectFind.createdAt.$lte = new Date(startDays + 'T23:59:59.999Z');
+        }
+        if (endDays) {
+            objectFind.createdAt.$lte = new Date(endDays + 'T23:59:59.999Z');
+        }
+    }
+
+
     const counts = await Order.find(objectFind).countDocuments();
 
-    query = Order.find(objectFind);
+    query = Order.find(objectFind).select('-updatedAt');
     query = query.populate({
         path: 'postedBy',
         select: 'firstname lastname',
