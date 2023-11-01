@@ -186,6 +186,14 @@ const ManageOder = () => {
           />
         </div>
         <form onSubmit={handleSubmit(handleUpdate)}>
+          {watch("_id") && (
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-2 rounded"
+            >
+              Update
+            </button>
+          )}
           <table className="table w-full mb-3 border-b border-sky-300 text-center">
             <thead className="bg-sky-500 text-white border text-[15px] rounded-sm">
               <tr>
@@ -205,7 +213,7 @@ const ManageOder = () => {
                   <td className="px-4 py-2">
                     {item?.postedBy?.firstname} {item?.postedBy?.lastname}
                   </td>
-                  <td className="px-4 py-2">{item.total}</td>
+                  <td className="px-4 py-2">{item.total}$</td>
                   <td className="px-4 py-2">
                     {watch("_id") === item._id ? (
                       <Select
@@ -216,7 +224,15 @@ const ManageOder = () => {
                         options={statusPayment}
                       />
                     ) : (
-                      <span>{item.statusPayment}</span>
+                      <span
+                        className={
+                          item.statusPayment === "Cancelled"
+                            ? "text-main font-medium"
+                            : ""
+                        }
+                      >
+                        {item.statusPayment}
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-2">
@@ -229,7 +245,15 @@ const ManageOder = () => {
                         options={statusOrder}
                       />
                     ) : (
-                      <span>{item.statusOrder}</span>
+                      <span
+                        className={
+                          item.statusOrder === "Refunded"
+                            ? "text-main font-medium"
+                            : ""
+                        }
+                      >
+                        {item.statusOrder}
+                      </span>
                     )}
                   </td>
                   <td className="px-4 py-2">
