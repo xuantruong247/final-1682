@@ -34,6 +34,7 @@ const ManageOder = () => {
   });
 
   const [statusOrderId, setStatusOrderId] = useState([]);
+  const [statusPaymentId, setStatusPaymentId] = useState([]);
   const [getOrder, setGetOrder] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [filterOrder, setFilterOrder] = useState([]);
@@ -60,6 +61,9 @@ const ManageOder = () => {
     if (statusOrderId) {
       queries.statusOrderId = statusOrderId;
     }
+    if (statusPaymentId) {
+      queries.statusPaymentId = statusPaymentId;
+    }
     if (startDays) {
       queries.startDays = startDays;
     }
@@ -67,7 +71,7 @@ const ManageOder = () => {
       queries.endDays = endDays;
     }
     fetchOrder(queries);
-  }, [params, update, startDays, endDays, statusOrderId]);
+  }, [params, update, startDays, endDays, statusOrderId, statusPaymentId]);
 
   useEffect(() => {
     const filtered = getOrder.filter((order) => {
@@ -95,7 +99,6 @@ const ManageOder = () => {
   };
 
   const handleShowDetail = async (oid) => {
-    console.log(oid);
     const response = await apiDetailOrder(oid);
     dispatch(
       showModal({
@@ -108,7 +111,6 @@ const ManageOder = () => {
   };
 
   const handleDelete = async (oid) => {
-    console.log(oid);
     Swal.fire({
       title: "Are you sure....",
       text: "Are you ready remove this order?",
@@ -129,9 +131,7 @@ const ManageOder = () => {
   };
 
   const handleRefund = async (oid) => {
-    console.log(oid);
     const response = await apiDetailOrder(oid);
-    console.log(response);
     dispatch(
       showModal({
         isShowModal: true,
@@ -145,46 +145,77 @@ const ManageOder = () => {
         <span>Manage Orders</span>
       </h1>
       <div className="w-full p-4">
-        <div className="flex justify-around items-center py-1">
-          <div className="flex gap-2">
-            <input
-              type="date"
-              className="rounded-sm border p-2"
-              value={startDays}
-              onChange={(e) => setStartDays(e.target.value)}
-            />
-            <input
-              type="date"
-              className="rounded-sm border p-2"
-              value={endDays}
-              onChange={(e) => setEndDays(e.target.value)}
-            />
+        <input
+          type="text"
+          value={searchOrder}
+          onChange={(e) => {
+            setSearchOrder(e.target.value);
+          }}
+          placeholder="Search..."
+          className="px-4 py-2 rounded-sm my-2 border w-full outline-none placeholder:text-sm placeholder:italic"
+        />
+        <div className="flex justify-between items-center py-1">
+          <div className="flex">
+            <div className="flex flex-col gap-1">
+              <label htmlFor="" className="font-semibold px-1">
+                Sort by date
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="date"
+                  className="rounded-sm border p-2"
+                  value={startDays}
+                  onChange={(e) => setStartDays(e.target.value)}
+                />
+                <input
+                  type="date"
+                  className="rounded-sm border p-2"
+                  value={endDays}
+                  onChange={(e) => setEndDays(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
-          <select
-            className="p-2"
-            value={statusOrderId}
-            onChange={(e) => {
-              setStatusOrderId(e.target.value);
-            }}
-          >
-            <option value="">---CHOOSE---</option>
-            {statusOrder.map((item, index) => (
-              <option value={item.value} key={index}>
-                {item.text}
-              </option>
-            ))}
-          </select>
-
-          <input
-            type="text"
-            value={searchOrder}
-            onChange={(e) => {
-              setSearchOrder(e.target.value);
-            }}
-            placeholder="Search..."
-            className="px-4 py-2 rounded-sm my-2 border w-[400px] outline-none placeholder:text-sm placeholder:italic"
-          />
+          <div className="flex flex-col gap-1">
+            <label htmlFor="" className="px-1 font-semibold">
+              Sort by Status Payment
+            </label>
+            <select
+              className="p-2"
+              value={statusPaymentId}
+              onChange={(e) => {
+                setStatusPaymentId(e.target.value);
+              }}
+            >
+              <option value="">---CHOOSE---</option>
+              {statusPayment.map((item, index) => (
+                <option value={item.value} key={index}>
+                  {item.text}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="" className="px-1 font-semibold">
+              Sort by Status Order
+            </label>
+            <select
+              className="p-2"
+              value={statusOrderId}
+              onChange={(e) => {
+                setStatusOrderId(e.target.value);
+              }}
+            >
+              <option value="">---CHOOSE---</option>
+              {statusOrder.map((item, index) => (
+                <option value={item.value} key={index}>
+                  {item.text}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
         <form onSubmit={handleSubmit(handleUpdate)}>
           {watch("_id") && (
             <button

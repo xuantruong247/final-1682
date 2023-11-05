@@ -44,6 +44,10 @@ var productSchema = new mongoose.Schema({
     images: {
         type: Array
     },
+    isHidden: {
+        type: Boolean,
+        default: false,
+    },
     ratings: [
         {
             star: { type: Number },

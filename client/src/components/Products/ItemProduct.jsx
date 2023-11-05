@@ -54,7 +54,7 @@ const ItemProduct = ({ productData, isNew, normal, pid, onMouseLeave }) => {
       }
     }
   };
-
+  console.log(current);
   return (
     <div className="w-full px-[8px]">
       <div
@@ -97,9 +97,7 @@ const ItemProduct = ({ productData, isNew, normal, pid, onMouseLeave }) => {
                   }
                 />
               </span>
-              {current?.cart?.some(
-                (el) => el.product._id === productData._id
-              ) ? (
+              {current?.cart?.some((el) => el.product._id === pid) ? (
                 <span title="Added to cart">
                   <SelectOption icon={<BsFillCartCheckFill color="green" />} />
                 </span>

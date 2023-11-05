@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  useParams,
   useSearchParams,
   useNavigate,
   createSearchParams,
-  useRoutes,
 } from "react-router-dom";
 import {
   ItemProduct,

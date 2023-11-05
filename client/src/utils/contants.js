@@ -10,34 +10,110 @@ export const dateOfYear = [
     {
         id: 1,
         startDays: "7",
-        endDays: "2023-10-07",
+        endDays: "2023-10-08",
         text: "01/10 To 07/10"
     },
     {
         id: 2,
         startDays: "7",
-        endDays: "2023-10-14",
+        endDays: "2023-10-15",
         text: "08/10 To 14/10"
     },
     {
         id: 3,
         startDays: "7",
-        endDays: "2023-10-21",
+        endDays: "2023-10-22",
         text: "15/10 To 21/10"
     },
     {
         id: 4,
         startDays: "7",
-        endDays: "2023-10-28",
+        endDays: "2023-10-29",
         text: "22/10 To 28/10"
     },
     {
         id: 5,
         startDays: "7",
-        endDays: "2023-11-04",
+        endDays: "2023-11-05",
         text: "29/10 To 04/11"
     },
+    {
+        id: 6,
+        startDays: "7",
+        endDays: "2023-11-12",
+        text: "05/11 To 11/11"
+    },
+    {
+        id: 7,
+        startDays: "7",
+        endDays: "2023-11-19",
+        text: "12/11 To 18/11"
+    },
+    {
+        id: 8,
+        startDays: "7",
+        endDays: "2023-11-26",
+        text: "19/11 To 25/11"
+    },
+    {
+        id: 9,
+        startDays: "7",
+        endDays: "2023-12-03",
+        text: "26/11 To 02/12"
+    },
+    {
+        id: 10,
+        startDays: "7",
+        endDays: "2023-12-10",
+        text: "03/12 To 09/12"
+    },
+    {
+        id: 11,
+        startDays: "7",
+        endDays: "2023-12-17",
+        text: "10/12 To 16/12"
+    },
+    {
+        id: 12,
+        startDays: "7",
+        endDays: "2023-12-24",
+        text: "17/12 To 23/12"
+    },
+    {
+        id: 13,
+        startDays: "7",
+        endDays: "2023-12-31",
+        text: "24/12 To 30/12"
+    },
+
 ]
+
+
+export const sortByQuantity = [
+    {
+        id: 1,
+        value: 'quantity-asc',
+        text: 'Out of stock'
+
+    },
+    {
+        id: 2,
+        value: 'quantity-desc',
+        text: 'Stocking'
+    },
+    {
+        id: 3,
+        value: 'sold-asc',
+        text: 'Sell at least'
+
+    },
+    {
+        id: 4,
+        value: 'sold-desc',
+        text: 'Best seller'
+    },
+]
+
 
 
 export const navigation = [

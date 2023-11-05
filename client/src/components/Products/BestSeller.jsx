@@ -72,7 +72,7 @@ const BestSeller = () => {
           {products?.map((product, index) => (
             <ItemProduct
               key={index}
-              pid={product._id}
+              pid={product?._id}
               productData={product}
               isNew={activeTab === 1 ? false : true}
             />

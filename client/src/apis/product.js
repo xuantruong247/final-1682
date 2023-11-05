@@ -33,6 +33,10 @@ export const apiUpdateProduct = (data,pid) => axios({
 
 export const apiDeleteProduct = (pid) => axios({
     url: '/product/delete/' + pid,
-    method: 'delete',
-    
+    method: 'delete',   
+})
+
+export const apiHiddenProduct = (pid) => axios({
+    url: '/product/hidden/' + pid,
+    method: 'put',   
 })

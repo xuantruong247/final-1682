@@ -102,20 +102,27 @@ const getUserOrder = asyncHandler(async (req, res) => {
 
 
 const getAllOrders = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays, statusOrderId } = req.query;
+    const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays, statusOrderId, statusPaymentId } = req.query;
     let query = Order.find();
-    console.log(sortField, sortOrder, startDays, endDays, statusOrderId);
 
 
     let statusOrderArray = [];
     if (statusOrderId) {
         statusOrderArray = statusOrderId.split(','); // Tách chuỗi thành mảng dựa trên dấu phẩy
     }
+
+    let statusPaymentArray = []
+    if (statusPaymentId) {
+        statusPaymentArray = statusPaymentId.split(",")
+    }
+
     let objectFind = {};
     if (statusOrderArray.length > 0) {
         objectFind.statusOrder = { $in: statusOrderArray }; // Sử dụng $in để tìm các danh mục trong mảng
     }
-
+    if (statusPaymentArray.length > 0) {
+        objectFind.statusPayment = { $in: statusPaymentArray }; // Sử dụng $in để tìm các danh mục trong mảng
+    }
     if (startDays || endDays) {
         objectFind.createdAt = {};
         if (startDays) {

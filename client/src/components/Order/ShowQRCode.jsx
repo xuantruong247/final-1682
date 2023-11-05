@@ -13,9 +13,7 @@ const ShowQRCode = ({ id }) => {
   }, []);
   const qrData = `"Information bank"${current.numberBank}${current.nameBank}`;
 
-  console.log(id);
   const finalRefund = async () => {
-    console.log(id);
     const response = await apiRefundPaypal(id);
     if (response) {
       Swal.fire({

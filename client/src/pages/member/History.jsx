@@ -15,7 +15,6 @@ const History = () => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const { current } = useSelector((state) => state.user);
-  console.log(current);
   const fetchApiGetHistory = async (queries) => {
     const response = await apiGetUserOrders(queries);
     setGetHistory(response.data.getOrders);

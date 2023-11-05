@@ -270,7 +270,7 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="mx-2 bg-white">
-        <div className="flex justify-center mt-1">
+        <div className="flex justify-center mt-1 ">
           <select
             className="p-1 border bg-gray-50 rounded-md"
             value={selectedDate}
@@ -327,18 +327,6 @@ const Dashboard = () => {
         <div className="col-span-2 bg-white p-4">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col">
-              <span className="text-lg font-semibold">Total income</span>
-              <div className="border rounded-lg bg-gray-500 flex justify-between items-center px-4 text-white">
-                <FaMoneyCheckAlt size={35} style={{ color: "#F3F0CA" }} />
-                <div className="flex flex-col gap-2 items-center justify-between">
-                  <h3>Total</h3>
-                  <h1 className="font-semibold text-lg">
-                    {getOrder.totalSum} $
-                  </h1>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col">
               <span className="font-semibold">Total income per week</span>
               <div className="border rounded-lg bg-red-400 flex justify-between items-center px-4 text-white">
                 <FaMoneyCheckAlt size={35} />
@@ -346,6 +334,18 @@ const Dashboard = () => {
                   <h3>Total</h3>
                   <h1 className="font-semibold text-lg">
                     {totalWeek.totalWeekSales} $
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold">Total income</span>
+              <div className="border rounded-lg bg-gray-500 flex justify-between items-center px-4 text-white">
+                <FaMoneyCheckAlt size={35} style={{ color: "#F3F0CA" }} />
+                <div className="flex flex-col gap-2 items-center justify-between">
+                  <h3>Total</h3>
+                  <h1 className="font-semibold text-lg">
+                    {getOrder.totalSum} $
                   </h1>
                 </div>
               </div>

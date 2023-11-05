@@ -76,6 +76,8 @@ const getAllProducts = asyncHandler(async (req, res) => {
         objectFind.title = { $regex: queries.title, $options: 'i' };
     }
 
+    objectFind.isHidden = false
+
     // Thêm điều kiện lọc theo giá trị
     if (userMinPrice || userMaxPrice) {
         objectFind.price = {}; // Khởi tạo điều kiện giá tiền
@@ -131,6 +133,22 @@ const getAllProducts = asyncHandler(async (req, res) => {
                 sortOption.totalRatings = -1;
                 isSort = true;
                 query = query.where('totalRatings').equals(5); // Chỉ lấy sản phẩm có số sao là 5
+                break;
+            case "quantity-desc":
+                sortOption.quantity = -1;
+                isSort = true;
+                break;
+            case "quantity-asc":
+                sortOption.quantity = 1;
+                isSort = true;
+                break;
+            case "sold-desc":
+                sortOption.sold = -1;
+                isSort = true;
+                break;
+            case "sold-asc":
+                sortOption.sold = 1;
+                isSort = true;
                 break;
             default:
                 break;
@@ -271,6 +289,23 @@ const uploadImagesProduct = asyncHandler(async (req, res) => {
     })
 })
 
+const hideProduct = asyncHandler(async (req, res) => {
+    const { pid } = req.params
+
+    const productToHide = await Product.findById(pid);
+
+    if (!productToHide) throw new Error("pid not found")
+
+    productToHide.isHidden = true;
+
+    const updatedProduct = await productToHide.save();
+
+    return res.status(200).json({
+        success: true,
+        hiddenProduct: updatedProduct,
+    });
+})
+
 module.exports = {
     createProduct,
     getDetailProduct,
@@ -279,5 +314,6 @@ module.exports = {
     deleteProduct,
     ratings,
     uploadAvatarProduct,
-    uploadImagesProduct
+    uploadImagesProduct,
+    hideProduct
 }

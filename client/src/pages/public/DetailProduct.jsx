@@ -201,13 +201,26 @@ const DetailProduct = ({ data }) => {
       </div>
       <div className="w-main mx-auto">
         <div className="flex items-center gap-2 relative bottom-[-1px]">
-          <span
-            className="p-2 rounded-sm px-4 cursor-pointer bg-white border border-b-0 text-main"
-          >
+          <span className="p-2 rounded-sm px-4 cursor-pointer bg-white border border-b-0 text-main">
             DESCRIPTION
           </span>
         </div>
-        <div className="w-full border p-4">{product?.description}</div>
+        <div className="w-full border p-4">
+          {product?.description?.length > 1 &&
+            product?.description?.map((item, index) => (
+              <li className=" leading-6" key={index}>
+                {item}
+              </li>
+            ))}
+          {product?.description?.length === 1 && (
+            <div
+              className="text-sm"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(product?.description[0]),
+              }}
+            ></div>
+          )}
+        </div>
       </div>
 
       <div className="w-main m-auto mt-8">
