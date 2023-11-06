@@ -47,6 +47,7 @@ export { default as ShowDetailOrder } from "./Order/ShowDetailOrder"
 export { default as ShowInforBank } from "./Products/ShowInforBank"
 export { default as ShowQRCode } from "./Order/ShowQRCode"
 export { default as ItemWishlist } from "./Products/ItemWishlist"
+export { default as TotalRevenue } from "./TotalRevenue"
 
 
 

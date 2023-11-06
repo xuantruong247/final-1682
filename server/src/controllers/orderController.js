@@ -324,6 +324,46 @@ const refundOrder = asyncHandler(async (req, res) => {
 })
 
 
+const totalDay = asyncHandler(async (req, res) => {
+    let { day } = req.query;
+
+    if (!day) {
+        day = new Date().toISOString().split('T')[0];
+    }
+
+    console.log(day);
+
+    const startDate = new Date(day);
+    const endDate = new Date(day);
+    endDate.setDate(startDate.getDate() + 1);
+
+    const orders = await Order.find({
+        createdAt: {
+            $gte: startDate,
+            $lt: endDate
+        }
+    }).populate({
+        path: 'postedBy',
+        select: 'firstname lastname'
+    });
+
+    let totalRevenue = 0;
+    const orderList = [];
+
+    for (const order of orders) {
+        totalRevenue += order.total;
+        orderList.push(order);
+    }
+
+    return res.status(200).json({
+        success: true,
+        totalRevenue: totalRevenue.toFixed(2),
+        orders: orderList
+    });
+});
+
+
+
 const clientId = "AS8eoaxB80zyUZm-uhTe0575nhoK1MY6xKtsPRGiugspLyldNP4BecSrPkdc2kBgekw2zFzLc2GvPc4s";
 const clientSecret = "EH66neN7Xsrh0emTOJPV8PmHRhj5LDuQ2IJ3a-Kphc0cMqeC3rAXd2k-i28hyg-oABPhhWL-ZfXnG2Vi";
 
@@ -386,7 +426,8 @@ module.exports = {
     deleteOrder,
     cancelOrder,
     refundPaypal,
-    refundOrder
+    refundOrder,
+    totalDay
 }
 
 

@@ -9,6 +9,10 @@ router.post("/refundPaypal", [verifyAccessToken], ctrls.refundPaypal)
 router.get("/", [verifyAccessToken, isAdmin], ctrls.getAllOrders)
 router.get("/userorder", [verifyAccessToken], ctrls.getUserOrder)
 router.get("/week-sales", [verifyAccessToken, isAdmin], ctrls.getWeekSales)
+
+router.get("/total-day", [verifyAccessToken, isAdmin], ctrls.totalDay)
+
+
 router.get("/detail-order/:oid", [verifyAccessToken], ctrls.getDetailOrder)
 
 router.put("/cancelOrder/:oid", [verifyAccessToken], ctrls.cancelOrder)

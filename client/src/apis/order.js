@@ -56,3 +56,10 @@ export const apiRefundPaypal = (oid) => axios({
     url: '/order/refundOrder/' + oid,
     method: 'put',
 })
+
+
+export const apiRevenueDay = (params) => axios({
+    url: '/order/total-day',
+    method: 'get',
+    params
+})
