@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { apiRevenueDay } from "../apis";
 import { Line } from "react-chartjs-2";
-import moment from "moment";
 
 const TotalRevenue = () => {
   const [selectedDay, setSelectedDay] = useState("");
@@ -10,7 +9,6 @@ const TotalRevenue = () => {
 
   const fetchData = async () => {
     const response = await apiRevenueDay({ day: selectedDay });
-    console.log(response);
     setTotalRevenue(response.data.totalRevenue);
     setOrderList(response.data.orders);
   };
@@ -33,18 +31,6 @@ const TotalRevenue = () => {
       "10:00",
       "11:00",
       "12:00",
-      "13:00",
-      "14:00",
-      "15:00",
-      "16:00",
-      "17:00",
-      "18:00",
-      "19:00",
-      "20:00",
-      "21:00",
-      "22:00",
-      "23:00",
-      "24:00",
     ],
     datasets: [
       {

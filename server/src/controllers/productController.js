@@ -189,19 +189,17 @@ const updateProduct = asyncHandler(async (req, res) => {
         req.body.slug = slugify(req.body.title);
     }
 
-    const updatedFields = { ...req.body }; // Tạo một bản sao của req.body để lưu thông tin cập nhật
+    const updatedFields = { ...req.body };
 
-    // Xử lý cập nhật category nếu có
     if (req.body.category_id) {
         updatedFields.category = req.body.category_id;
     }
 
-    // Xử lý cập nhật brand nếu có
+
     if (req.body.brand_id) {
         updatedFields.brand = req.body.brand_id;
     }
 
-    // Cập nhật sản phẩm
     const updatedProduct = await Product.findByIdAndUpdate(pid, updatedFields, { new: true });
 
     return res.status(200).json({

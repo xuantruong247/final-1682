@@ -54,7 +54,6 @@ const ItemProduct = ({ productData, isNew, normal, pid, onMouseLeave }) => {
       }
     }
   };
-  console.log(current);
   return (
     <div className="w-full px-[8px]">
       <div

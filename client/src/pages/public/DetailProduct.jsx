@@ -119,7 +119,7 @@ const DetailProduct = ({ data }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-4">
       <div className="h-[81px] flex items-center justify-center bg-gray-100">
         <div ref={titleRef} className="w-main flex flex-col gap-1">
           <h3 className="font-medium uppercase">{product?.title}</h3>
@@ -232,13 +232,12 @@ const DetailProduct = ({ data }) => {
           rerender={rerender}
         />
       </div>
-      <div className="w-main m-auto   mt-8">
+      <div className="w-main m-auto mt-8">
         <h3 className="font-semibold text-[20px] py-[15px] border-b-2 border-main mb-4">
           OTHER CUSTOMER ALSO LIKED
         </h3>
         <SliderCustomer products={relatedProducts} normal={true} />
       </div>
-      <div className="h-[500px]"></div>
     </div>
   );
 };

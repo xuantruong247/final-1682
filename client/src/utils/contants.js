@@ -40,13 +40,13 @@ export const dateOfYear = [
     {
         id: 6,
         startDays: "7",
-        endDays: "2023-11-12",
+        endDays: "2023-11-11",
         text: "05/11 To 11/11"
     },
     {
         id: 7,
         startDays: "7",
-        endDays: "2023-11-19",
+        endDays: "2023-11-18",
         text: "12/11 To 18/11"
     },
     {

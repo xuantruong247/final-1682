@@ -63,3 +63,11 @@ export const apiRevenueDay = (params) => axios({
     method: 'get',
     params
 })
+
+
+export const apiTotalByDay = (params) => axios({
+    url: '/order/total-by-day',
+    method: 'get',
+    params
+})
+

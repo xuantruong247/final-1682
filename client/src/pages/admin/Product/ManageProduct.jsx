@@ -42,7 +42,6 @@ const ManageProduct = () => {
       page,
       pageSize,
     });
-    console.log(response);
     setMapProduct(response.data.products);
     setFilterProduct(response.data.products);
     setTotalCount(response.data.counts);
@@ -68,7 +67,6 @@ const ManageProduct = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const response = await apiHiddenProduct(pid);
-        console.log(response);
         if (response) {
           Swal.fire({
             icon: "success",

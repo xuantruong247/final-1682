@@ -187,24 +187,19 @@ const getDetailOrder = asyncHandler(async (req, res) => {
 
 const getWeekSales = asyncHandler(async (req, res) => {
     const today = moment();
-    const dayOfWeek = today.day();
-
-
-    let startOfWeek, startOfNextWeek;
-
+    let startOfWeek, endOfWeek;
     if (req.query.startDays && req.query.endDays) {
-
         startOfWeek = moment(req.query.endDays).subtract(req.query.startDays, 'days');
-        startOfNextWeek = moment(req.query.endDays).add(1, 'days');
+        endOfWeek = moment(req.query.endDays);
     } else {
-        startOfWeek = today.clone().subtract(dayOfWeek, 'days');
-        startOfNextWeek = startOfWeek.clone().add(7, 'days');
+        startOfWeek = today.clone().startOf('week').day(0);
+        endOfWeek = today.clone().startOf('week').day(6);
     }
 
 
     const weekSale = await Order.aggregate([
         {
-            $match: { createdAt: { $gte: new Date(startOfWeek), $lt: new Date(startOfNextWeek) } },
+            $match: { createdAt: { $gte: new Date(startOfWeek), $lt: new Date(endOfWeek) } },
         },
         {
             $lookup: {
@@ -220,15 +215,15 @@ const getWeekSales = asyncHandler(async (req, res) => {
                 sales: "$total",
                 postedBy: "$postedBy",
                 orderDate: "$createdAt",
-                statusPayment: "$statusPayment", // Thêm trường này
-                statusOrder: "$statusOrder", // Thêm trường này
+                statusPayment: "$statusPayment",
+                statusOrder: "$statusOrder",
                 orderId: "$_id",
                 firstname: { $arrayElemAt: ["$user.firstname", 0] },
                 lastname: { $arrayElemAt: ["$user.lastname", 0] }
             },
         },
         {
-            $match: { statusPayment: { $ne: "Cancelled" } } // Lọc những đơn hàng không có statusPayment là "Cancelled"
+            $match: { statusPayment: { $ne: "Cancelled" } }
         },
         {
             $group: {
@@ -236,8 +231,8 @@ const getWeekSales = asyncHandler(async (req, res) => {
                 total: { $sum: "$sales" },
                 salesInfo: {
                     $push: {
-                        statusPayment: "$statusPayment", // Sử dụng trường statusPayment
-                        statusOrder: "$statusOrder", // Sử dụng trường statusOrder
+                        statusPayment: "$statusPayment",
+                        statusOrder: "$statusOrder",
                         orderDate: "$orderDate",
                         userId: "$postedBy",
                         firstname: "$firstname",
@@ -264,7 +259,85 @@ const getWeekSales = asyncHandler(async (req, res) => {
 });
 
 
+const revenueByDay = asyncHandler(async (req, res) => {
+    const { startDay, endDay } = req.query
+    if (!startDay && !endDay) {
+        return res.status(200).json({
+            success: false,
+            weekSale: [],
+            totalWeekSales: '0.00',
+        });
+    }
+    console.log(req.query);
+    const formattedStartDay = moment(startDay).startOf('day');
+    const formattedEndDay = moment(endDay).endOf('day');
+    const weekSale = await Order.aggregate([
+        {
+            $match:
+            {
+                createdAt:
+                {
+                    $gte: formattedStartDay.toDate(),
+                    $lte: formattedEndDay.toDate()
+                }
+            },
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'postedBy',
+                foreignField: '_id',
+                as: 'user'
+            }
+        },
+        {
+            $project: {
+                day: { $dayOfWeek: "$createdAt" },
+                sales: "$total",
+                postedBy: "$postedBy",
+                orderDate: "$createdAt",
+                statusPayment: "$statusPayment",
+                statusOrder: "$statusOrder",
+                orderId: "$_id",
+                firstname: { $arrayElemAt: ["$user.firstname", 0] },
+                lastname: { $arrayElemAt: ["$user.lastname", 0] }
+            },
+        },
+        {
+            $match: { statusPayment: { $ne: "Cancelled" } }
+        },
+        {
+            $group: {
+                _id: "$day",
+                total: { $sum: "$sales" },
+                salesInfo: {
+                    $push: {
+                        statusPayment: "$statusPayment",
+                        statusOrder: "$statusOrder",
+                        orderDate: "$orderDate",
+                        userId: "$postedBy",
+                        firstname: "$firstname",
+                        lastname: "$lastname",
+                        total: "$sales",
+                        orderId: "$orderId",
+                    }
+                }
+            },
+        },
+    ]);
 
+    const totalWeekSales = weekSale.reduce((total, day) => total + day.total, 0);
+
+
+    const formattedTotalSum = totalWeekSales.toFixed(2);
+
+
+    return res.status(200).json({
+        success: weekSale ? true : false,
+        weekSale: weekSale ? weekSale : "Something went wrong",
+        totalWeekSales: formattedTotalSum,
+    });
+})
 
 
 
@@ -427,7 +500,8 @@ module.exports = {
     cancelOrder,
     refundPaypal,
     refundOrder,
-    totalDay
+    totalDay,
+    revenueByDay
 }
 
 

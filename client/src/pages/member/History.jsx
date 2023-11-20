@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { showModal } from "../../redux/category/categorySlide";
 import { ShowInforBank } from "../../components";
 import { apiGetUserOrders } from "../../apis";
-import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { statusOrder } from "../../utils/contants";
 import Swal from "sweetalert2";
 import path from "../../utils/path";
@@ -19,7 +23,6 @@ const History = () => {
     const response = await apiGetUserOrders(queries);
     setGetHistory(response.data.getOrders);
   };
-
   useEffect(() => {
     const queries = Object.fromEntries([...params]);
     if (statusOrderId) {
@@ -57,7 +60,6 @@ const History = () => {
       );
     }
   };
-
   return (
     <div className="w-full">
       <h1 className="h-[60px] flex justify-between items-center text-2xl font-bold px-4 border-b border-sky-300">
@@ -98,21 +100,23 @@ const History = () => {
                         <span key={index}>
                           <span className="flex gap-2 items-center">
                             <img
-                              src={item.product.avatar}
+                              src={item?.product?.avatar}
                               alt="img"
                               className="w-20 h-20 rounded-md object-cover"
                             />
                             <span>
-                              <p className="text-main">{item.product.title}</p>
+                              <p className="text-main">
+                                {item?.product?.title}
+                              </p>
                               <span className="flex gap-2">
                                 <p>Price: </p>
                                 <p className="text-main">
-                                  {item.product.price}
+                                  {item?.product?.price}
                                 </p>
                               </span>
                               <span className="flex gap-2">
                                 <p>Quantity: </p>
-                                <p className="text-main">{item.quantity}</p>
+                                <p className="text-main">{item?.quantity}</p>
                               </span>
                             </span>
                           </span>
@@ -120,33 +124,33 @@ const History = () => {
                       ))}
                     </span>
                   </td>
-                  <td className="text-center text-lg ">{el.total} $</td>
-                  <td className="text-center text-lg">{el.statusOrder}</td>
+                  <td className="text-center text-lg ">{el?.total} $</td>
+                  <td className="text-center text-lg">{el?.statusOrder}</td>
                   <td className="text-center">
-                    {el.statusOrder === "Preparing the order" && (
+                    {el?.statusOrder === "Preparing the order" && (
                       <button
                         onClick={() => {
-                          handleCancelOrder(el._id);
+                          handleCancelOrder(el?._id);
                         }}
                         className="border p-2 hover:bg-gray-100"
                       >
                         Cancel order
                       </button>
                     )}
-                    {el.statusOrder === "Processing" && (
+                    {el?.statusOrder === "Processing" && (
                       <span>Yêu cầu đang được sử lý</span>
                     )}
-                    {el.statusOrder === "The order has been shipped" && (
+                    {el?.statusOrder === "The order has been shipped" && (
                       <span>Đơn hàng đang được giao đến bạn</span>
                     )}
-                    {el.statusOrder ===
+                    {el?.statusOrder ===
                       "The delivery person is delivering to you" && (
                       <span>Đơn hàng đang được giao đến bạn</span>
                     )}
-                    {el.statusOrder === "Refunded" && (
+                    {el?.statusOrder === "Refunded" && (
                       <span>Đơn hàng đang được hoàn tiền</span>
                     )}
-                    {el.statusOrder === "Cancelled" && (
+                    {el?.statusOrder === "Cancelled" && (
                       <span>Đơn hàng đã được huỷ</span>
                     )}
                   </td>

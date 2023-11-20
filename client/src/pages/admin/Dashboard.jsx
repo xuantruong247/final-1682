@@ -19,7 +19,7 @@ import moment from "moment";
 import { FaMoneyCheckAlt } from "react-icons/fa";
 import { dateOfYear } from "../../utils/contants";
 import { useSearchParams } from "react-router-dom";
-import { TotalRevenue } from "../../components";
+import { TotalByDay, TotalRevenue } from "../../components";
 
 const Dashboard = () => {
   const [productCount, setProductCount] = useState([]);
@@ -355,8 +355,11 @@ const Dashboard = () => {
         </div>
       </div>
       <div>
-        <TotalRevenue />
+        <TotalByDay />
       </div>
+      {/* <div>
+        <TotalRevenue />
+      </div> */}
       <div className="flex gap-2 mx-2">
         <div className="flex-7 bg-white">
           <div className="border-b h-[40px] px-4 flex items-center">

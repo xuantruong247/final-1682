@@ -14,7 +14,7 @@ import {
   ShowQRCode,
 } from "../../../components";
 import { apiDetailOrder } from "./../../../apis/order";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { showModal } from "../../../redux/category/categorySlide";
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
