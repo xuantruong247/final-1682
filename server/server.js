@@ -15,8 +15,6 @@ app.use(cors({
     credentials: true
 }))
 
-"dhaskjdhskj"
-
 connectDB()
 
 indexRoutes(app)
