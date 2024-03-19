@@ -139,6 +139,21 @@ const ManageOder = () => {
       })
     );
   };
+
+  const [sortOrder, setSortOrder] = useState("desc");
+
+  const handleSortByTotal = () => {
+    const sortedOrders = [...filterOrder];
+    if (sortOrder === "asc") {
+      sortedOrders.sort((a, b) => b.total - a.total);
+      setSortOrder("desc"); 
+    } else {
+      sortedOrders.sort((a, b) => a.total - b.total); 
+      setSortOrder("asc");
+    }
+    setFilterOrder(sortedOrders);
+  };
+
   return (
     <div className="w-full">
       <h1 className="h-[60px] flex justify-between items-center text-2xl font-bold px-4 border-b border-sky-300">
@@ -154,6 +169,16 @@ const ManageOder = () => {
           placeholder="Search..."
           className="px-4 py-2 rounded-sm my-2 border w-full outline-none placeholder:text-sm placeholder:italic"
         />
+        <div>
+          <button
+            className="p-2 bg-red-500"
+            onClick={() => {
+              handleSortByTotal();
+            }}
+          >
+            Sort by total
+          </button>
+        </div>
         <div className="flex justify-between items-center py-1">
           <div className="flex">
             <div className="flex flex-col gap-1">

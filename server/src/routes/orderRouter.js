@@ -11,6 +11,7 @@ router.get("/userorder", [verifyAccessToken], ctrls.getUserOrder)
 router.get("/week-sales", [verifyAccessToken, isAdmin], ctrls.getWeekSales)
 router.get("/total-by-day", [verifyAccessToken,isAdmin],ctrls.revenueByDay)
 router.get("/total-day", [verifyAccessToken, isAdmin], ctrls.totalDay)
+router.get("/total-month", [verifyAccessToken, isAdmin], ctrls.getTotalMonths)
 
 
 router.get("/detail-order/:oid", [verifyAccessToken], ctrls.getDetailOrder)

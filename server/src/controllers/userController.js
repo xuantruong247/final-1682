@@ -10,6 +10,7 @@ const { users } = require("../utils/constant")
 
 const register = asyncHandler(async (req, res) => {
     const { email, password, firstname, lastname, mobile } = req.body
+    console.log(req.body);
     if (!email || !password || !firstname || !lastname || !mobile) {
         return res.status(400).json({
             sucess: false,
@@ -29,7 +30,7 @@ const register = asyncHandler(async (req, res) => {
         if (newUser) {
             const html = `<h2>Register code: </h2> <br/> <blockquote>${token}</blockquote>`
 
-            await sendMail({ email, html, subject: "Confirm register account in Perfume Since 2001" })
+            await sendMail({ email, html, subject: "Confirm register account in Perfume Since 2001"})
         }
 
         setTimeout(async () => {
@@ -51,12 +52,15 @@ const finalRegister = asyncHandler(async (req, res) => {
     if (notActivedEmail) {
         notActivedEmail.email = atob(notActivedEmail?.email?.split('@')[0])
         notActivedEmail.save()
-    }
+}
     return res.status(200).json({
         success: notActivedEmail ? true : false,
         response: notActivedEmail ? 'Register is SUccessfully. Please go login~~' : "Something went wrong, please try later"
     })
 })
+
+
+
 
 
 //login

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { apiTotalByDay } from "../apis";
-import { useSearchParams } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import moment from "moment";
 
@@ -11,37 +10,96 @@ const TotalByDay = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
 
   const fetchApiTotalByDay = async () => {
-    const response = await apiTotalByDay({
-      startDay,
-      endDay,
-    });
-    setMapData(response.data.weekSale);
-    setTotalRevenue(response.data.totalWeekSales);
+    try {
+      const response = await apiTotalByDay({
+        startDays: startDay,
+        endDays: endDay,
+      });
+      setMapData(response.data.monthSales);
+      setTotalRevenue(response.data.totalMonthSales);
+    } catch (error) {
+      console.error("Something went wrong", error);
+    }
   };
+console.log(mapData);
+  const fetchDefaultData = async () => {
+    try {
+      const response = await apiTotalByDay();
+      setMapData(response.data.monthSales);
+      setTotalRevenue(response.data.totalMonthSales);
+    } catch (error) {
+      console.error("Something went wrong", error);
+    }
+  };
+
   useEffect(() => {
-    if (startDay !== "" && endDay !== "") {
+    if (!startDay && !endDay) {
+      fetchDefaultData();
+    } else if (startDay !== "" && endDay !== "") {
       fetchApiTotalByDay();
     }
   }, [startDay, endDay]);
 
   const revenueData =
-    mapData.length > 0 ? mapData.map((order) => order?.total) : [];
+    mapData?.length > 0 ? mapData.map((order) => order?.total) : [];
 
-    const data = {
-      labels: mapData.map((el) =>
-        el.salesInfo.length > 0 ? moment(el.salesInfo[0].orderDate).format("YYYY/MM/DD") : "N/A"
-      ),
-      datasets: [
-        {
-          label: "Total Revenue",
-          data: revenueData,
-          borderColor: "rgba(75, 192, 192, 1)",
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          fill: true,
-        },
-      ],
-    };
-    
+  const data = {};
+
+  const monthDays = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31",
+  ];
+
+
+  if (!startDay || !endDay) {
+    data.labels = monthDays;
+
+  } else {
+    data.labels = mapData?.map((el) =>
+      el.salesInfo.length > 0
+        ? moment(el.salesInfo[0].orderDate).format("YYYY/MM/DD")
+        : "N/A"
+    );
+  }
+
+  data.datasets = [
+    {
+      label: "Total Revenue",
+      data: revenueData,
+      borderColor: "rgba(75, 192, 192, 1)",
+      backgroundColor: "rgba(75, 192, 192, 0.2)",
+      fill: true,
+    },
+  ];
 
   return (
     <div className="flex flex-col">

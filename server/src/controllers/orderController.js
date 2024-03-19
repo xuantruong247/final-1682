@@ -102,7 +102,7 @@ const getUserOrder = asyncHandler(async (req, res) => {
 
 
 const getAllOrders = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays, statusOrderId, statusPaymentId } = req.query;
+    const { page = 1, limit = 12, sortField, sortOrder, startDays, endDays, statusOrderId, statusPaymentId, sortTotal } = req.query;
     let query = Order.find();
 
 
@@ -143,11 +143,16 @@ const getAllOrders = asyncHandler(async (req, res) => {
         select: 'firstname lastname',
     });
 
-    if (sortField && sortOrder) {
+    if (sortTotal) {
+        query = query.sort({ total: sortTotal === "totalPrice" ? -1 : 1 });
+    } else if (sortField && sortOrder) {
         const sortOption = {};
         sortOption[sortField] = sortOrder === 'asc' ? 1 : -1;
         query = query.sort(sortOption);
     }
+
+
+
 
     query = query.limit(parseInt(limit)).skip((page - 1) * limit);
 
@@ -259,8 +264,97 @@ const getWeekSales = asyncHandler(async (req, res) => {
 });
 
 
+
+const getTotalMonths = asyncHandler(async (req, res) => {
+    let startOfMonth, endOfMonth;
+
+    if (req.body && req.body.startDays && req.body.endDays) {
+        startOfMonth = moment(req.body.startDays).startOf('day');
+        endOfMonth = moment(req.body.endDays).endOf('day');
+    } else {
+        const today = moment();
+        startOfMonth = today.clone().startOf('month').startOf('day');
+        endOfMonth = today.clone().endOf('month').endOf('day');
+    }
+    try {
+
+
+        const monthSales = await Order.aggregate([
+            {
+                $match: { createdAt: { $gte: new Date(startOfMonth), $lte: new Date(endOfMonth) } },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'postedBy',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $project: {
+                    day: { $dayOfWeek: "$createdAt" },
+                    sales: "$total",
+                    postedBy: "$postedBy",
+                    orderDate: "$createdAt",
+                    statusPayment: "$statusPayment",
+                    statusOrder: "$statusOrder",
+                    orderId: "$_id",
+                    firstname: { $arrayElemAt: ["$user.firstname", 0] },
+                    lastname: { $arrayElemAt: ["$user.lastname", 0] }
+                },
+            },
+            {
+                $match: { statusPayment: { $ne: "Cancelled" } }
+            },
+            {
+                $group: {
+                    _id: "$day",
+                    total: { $sum: "$sales" },
+                    salesInfo: {
+                        $push: {
+                            statusPayment: "$statusPayment",
+                            statusOrder: "$statusOrder",
+                            orderDate: "$orderDate",
+                            userId: "$postedBy",
+                            firstname: "$firstname",
+                            lastname: "$lastname",
+                            total: "$sales",
+                            orderId: "$orderId",
+                        }
+                    }
+                },
+            },
+        ]);
+
+        const totalMonthSales = monthSales.reduce((total, day) => total + day.total, 0);
+        const formattedTotalSum = totalMonthSales.toFixed(2);
+
+
+
+        return res.status(200).json({
+            success: monthSales ? true : false,
+            monthSales: monthSales ? monthSales : "Đã xảy ra lỗi",
+            totalMonthSales: formattedTotalSum,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: 'Đã xảy ra lỗi khi lấy dữ liệu.' });
+    }
+});
+
 const revenueByDay = asyncHandler(async (req, res) => {
     const { startDay, endDay } = req.query
+    const today = moment();
+    console.log(req.query);
+    let startOfWeek, endOfWeek;
+    if (req.query.startDays && req.query.endDays) {
+        startOfWeek = moment(req.query.endDays).subtract(req.query.startDays, 'days');
+        endOfWeek = moment(req.query.endDays);
+    } else {
+        startOfWeek = today.clone().startOf('month').day(0);
+        endOfWeek = today.clone().startOf('month').day(30);
+    }
+
     if (!startDay && !endDay) {
         return res.status(200).json({
             success: false,
@@ -501,7 +595,8 @@ module.exports = {
     refundPaypal,
     refundOrder,
     totalDay,
-    revenueByDay
+    revenueByDay,
+    getTotalMonths
 }
 
 

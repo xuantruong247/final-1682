@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from "react-router-dom"
-import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailBlog } from "./pages/public"
+import { Login, Home, Public, Products, DetailProduct, FAQ, Contact, FinalRegister, ResetPassword, Blog, DetailBlog, Register } from "./pages/public"
 import { Admin, CreateBlog, CreateBrand, CreateCategory, CreateProduct, Dashboard, ManageBlog, ManageBrand, ManageCategory, ManageOder, ManageProduct, ManageUser } from './pages/admin'
 import { Checkout, History, Menber, MyCart, Personal, Wishlist } from './pages/member'
 import path from "./utils/path"
@@ -81,6 +81,7 @@ function App() {
         <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
         <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
         <Route path={path.LOGIN} element={<Login />} />
+        <Route path={path.REGISTER} element={<Register />} />
 
 
       </Routes>

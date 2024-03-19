@@ -28,11 +28,9 @@ var userSchema = new mongoose.Schema({
     },
     numberBank: {
         type: String,
-        required: true,
     },
     nameBank: {
         type: String,
-        required: true,
     },
     password: {
         type: String,

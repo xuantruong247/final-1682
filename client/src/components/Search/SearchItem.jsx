@@ -113,7 +113,7 @@ const SearchItem = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelected([]);
-                    setSelectedBrand([])
+                    setSelectedBrand([]);
                   }}
                   className="underline hover:text-main"
                 >

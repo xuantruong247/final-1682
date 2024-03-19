@@ -15,6 +15,7 @@ const path = {
     NOT_FOUND_404: "*",
     DETAIL_BLOG_BID_TITLE: 'blog/:bid/:title',
     DETAIL_BLOG:'blog',
+    REGISTER:"register",
 
 
 

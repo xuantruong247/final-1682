@@ -74,10 +74,12 @@ const Login = () => {
   // SUBMIT Login and register
   const handlerSubmit = useCallback(async () => {
     const { firstname, lastname, mobile, ...data } = payload;
+    console.log(payload);
 
     const invalids = isRegister
       ? validate(payload, setInvalidFields)
       : validate(data, setInvalidFields);
+    console.log(invalids);
     if (invalids === 0) {
       if (isRegister) {
         dispacth(showModal({ isShowModal: true, modalChildren: <Loading /> }));

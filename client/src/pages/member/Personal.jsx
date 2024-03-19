@@ -121,6 +121,7 @@ const Personal = () => {
             fullWidth
             errors={errors}
             id={"email"}
+            disabled // Thêm thuộc tính disabled vào trường input
             validate={{
               required: "Require fill.",
               pattern: {
@@ -173,9 +174,7 @@ const Personal = () => {
               </div>
             </div>
           </div>
-          <div>
-            
-          </div>
+          <div></div>
         </div>
         {isDirty && (
           <div className="w-full flex justify-center mt-2">
